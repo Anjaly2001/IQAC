@@ -1,0 +1,120 @@
+
+.admin-dashboard {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.admin-container {
+    display: flex;
+    flex: 1;
+    height: 100vh;
+}
+
+.admin-sidebar {
+    width: 260px;
+    background-color: darkblue; /* Dark blue color */
+    color: darkblue;
+    padding: 20px;
+    height: 100vh; /* Full height */
+    position: left; /* Fixed position */
+    overflow-y: auto; /* Scroll if content overflows */
+}
+
+
+.user-sidebar {
+    width: 250px;
+    background-color: darkblue; /* Dark blue color */
+    color: white;
+    padding: 20px;
+    height: 100vh; /* Full height */
+    position: fixed; /* Fixed position */
+    top: 60px; /* Position it below the navbar */
+    left: 0;
+    overflow-y: auto; /* Scroll if content overflows */
+    z-index: 999; /* Ensure it stays on top but below navbar */
+  }
+  
+  .admin-sidebar .list-group-item {
+    background-color: darkblue; /* Maintain dark blue background */
+    color: white; /* White text color */
+    border: none; /* Remove the border */
+  }
+  
+  .admin-sidebar .list-group-item a {
+    color: white; /* White text color */
+    text-decoration: none; /* Remove underline from links */
+  }
+  
+  .admin-sidebar .list-group-item:hover {
+    background-color: darkblue; /* Darker blue on hover */
+  }
+  
+  .admin-sidebar .list-group-item a:hover {
+    text-decoration: underline; /* Underline on hover */
+  }
+
+.admin-content {
+    flex: 1;
+    padding: 20px;
+    margin-left: 1250px; /* Account for the fixed sidebar */
+    background-color: white; 
+}
+
+/* Top navbar styling */
+.admin-topnav {
+    background-color: darkblue; /* Dark blue color */
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+/* Title styling */
+.admin-topnav-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+}
+
+/* Top navbar links */
+.admin-topnav-links a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 16px;
+}
+
+.admin-topnav-links a:hover {
+    text-decoration: underline;
+}
+
+/* Content section styling */
+.admin-content-section {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .admin-container {
+        flex-direction: column;
+    }
+    
+    .admin-sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    .admin-content {
+        padding: 10px;
+        margin-left: 0;
+    }
+}

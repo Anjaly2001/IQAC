@@ -1,0 +1,52 @@
+.head-dashboard {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.head-topnav {
+  background-color: darkblue;
+  color: white;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 1550px;
+}
+
+.head-main {
+  display: flex;
+  flex: 1;
+}
+
+.head-sidebar {
+  width: 200px;
+  background-color: darkblue;
+  padding: 10px;
+  justify-content: center;
+}
+
+.head-sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.head-sidebar li {
+  margin: 10px 0;
+}
+
+.head-content {
+  flex: 1;
+  padding: 20px;
+}
+
+.departments, .collaborators, .settings, .approved, .pending, .create-event {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+button {
+  margin-top: 10px;
+}

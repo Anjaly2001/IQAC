@@ -5,15 +5,19 @@ import './Head.css';
 function HeadSidebar() {
   return (
     <div className="head-sidebar d-flex flex-column vh-100 position-fixed">
-            <ul className="list-group flex-grow-1">
+      <ul className="list-group flex-grow-1">
         <li className="list-group-item">
           <Link to="/department">Department</Link>
         </li>
         <li className="list-group-item">
-          <Link to="/collaborator">Collaborator</Link>
+          <Link to="/registerevent">Register Event</Link>
+        </li>
+
+        <li className="list-group-item">
+          <Link to="/createevent">Create Event</Link>
         </li>
         <li className="list-group-item">
-          <Link to="/setting">Settings</Link>
+          <Link to="/collaborator">Collaborator</Link>
         </li>
         <li className="list-group-item">
           <Link to="/approvedreport">Approved Reports</Link>
@@ -21,13 +25,11 @@ function HeadSidebar() {
         <li className="list-group-item">
           <Link to="/pendingreport">Pending Reports</Link>
         </li>
-        <li className="list-group-item">
-          <Link to="/createevent">Create Event</Link>
-        </li>
+
       </ul>
       <div className="footer mt-auto p-4 text-white text-break fst-italic text-center">
-                Designed & Developed by CHRIST Infotech
-            </div>
+        Designed & Developed by CHRIST Infotech
+      </div>
     </div>
   );
 }

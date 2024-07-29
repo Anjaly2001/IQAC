@@ -20,6 +20,7 @@ function UserDashboard() {
           <Routes>
             <Route path="/register" element={<Register />} />
             <Route path="/eventreport" element={<EventReport />} />
+            <Route path="/reportspending" element={<reports Pending />} />
             <Route path="/collaborators" element={<Collaborators />} />
           </Routes>
         </div>

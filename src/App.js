@@ -7,17 +7,18 @@ import HeadDashboard from './Components/Head/HeadDashboard';
 import Register from './Components/User/Register';
 import Collaborators from './Components/User/Collaborators';
 import EventReport from './Components/User/EventReport';
-import Departments from './Components/Admin/Departments';
+import Departments from './Components/Admin/CreateDepartments';
 import Users from './Components/Admin/Users';
 import Approved from './Components/Admin/Approved';
 import Pending from './Components/Admin/Pending';
 import Department from './Components/Head/Departments';
 import Collaborator from './Components/Head/Collaborator';
 import CreateEvent from './Components/Head/CreateEvent';
-import Settings from './Components/Head/Settings'; 
 import PendingReport from './Components/Head/PendingReport';
 import ApprovedReport from './Components/Head/ApprovedReport';
 import RegisterUser from './Components/Admin/RegisterUser';
+import RegisterEvent from './Components/Head/RegisterEvent';
+import ReportsPending from './Components/User/ReportsPending';
 
 const App = () => {
     return (
@@ -35,15 +36,18 @@ const App = () => {
                 <Route path="/collaborators" element={<Collaborators />} />
                 <Route path="/eventreport" element={<EventReport />} />
                 <Route path="/departments" element={< Departments/>} />
+                <Route path="/reportspending" element={< ReportsPending/>} />
+
 
                 <Route path="/head-dashboard" element={<HeadDashboard />} />
                 <Route path="/users" element={< Users/>} />
+                <Route path="/registerevent" element={<RegisterEvent />} />
                 <Route path="/approvedreport" element={< ApprovedReport/>} />
                 <Route path="/pendingreport" element={< PendingReport/>} />
                 <Route path="/department" element={<Department/>} />
                 <Route path="/collaborator" element={<Collaborator />} /> 
                 <Route path="/createevent" element={<CreateEvent />} />
-                <Route path="/setting" element={<Settings />} />
+                
                 
                
                 

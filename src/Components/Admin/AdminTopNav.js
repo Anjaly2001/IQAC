@@ -11,12 +11,15 @@ const AdminTopNav = () => {
     };
 
     return (
-        <div className="admin-topnav w-100">
-            <div className="container-fluid d-flex justify-content-between align-items-center">
-                <h1 className="admin-title">IQAC Admin</h1>
-                <button onClick={handleLogout} className="btn btn-primary">Logout</button>
+        <nav className="navbar bg-blue">
+            <div className="container-fluid mb-3">
+                <a className="text-white fw-bolder fs-4 text-decoration-none">
+                    CHRIST University Lavasa <br/>
+                    IQAC | <span className='fw-normal'> RMT</span>
+                </a>
+                <button className="d-flex btn btn-outline-success" type="submit">Logout</button>
             </div>
-        </div>
+        </nav>
     );
 };
 

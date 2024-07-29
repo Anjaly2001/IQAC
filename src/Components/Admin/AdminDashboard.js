@@ -1,9 +1,8 @@
 import React from 'react';
 import AdminSidebar from './AdminSidebar';
 import AdminTopNav from './AdminTopNav';
-import Departments from './Departments';
+import Departments from './CreateDepartments';
 import Users from './Users';
-import Settings from './Settings';
 import Approved from './Approved';
 import Pending from './Pending';
 import { Routes, Route } from 'react-router-dom';
@@ -19,10 +18,9 @@ const AdminDashboard = () => {
                 <AdminSidebar />
                 <div className="admin-content">
                     <Routes>
-                        <Route path="/departments" element={<Departments />} />
-                        <Route path="/registeruser" element={<RegisterUser />} />  
+                        <Route path="/registeruser" element={<RegisterUser />} />
                         <Route path="/users" element={<Users />} />
-                        <Route path="/settings" element={<Settings />} />
+                        <Route path="/departments" element={<Departments />} />
                         <Route path="/approved" element={<Approved />} />
                         <Route path="/pending" element={<Pending />} />
                     </Routes>

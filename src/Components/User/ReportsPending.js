@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import ReportService from '../../Services/ReportService';
-import './Admin.css';
+import './User.css';
 import Header from '../Common/Header';
-import AdminSidebar from './AdminSidebar';
+import UserSidebar from './UserSidebar';
 
-const Pending = () => {
+const ReportsPending = () => {
   const [pendingReports, setPendingReports] = useState([]);
   const [showRejectComment, setShowRejectComment] = useState(false);
   const [rejectComment, setRejectComment] = useState('');
@@ -54,7 +54,7 @@ const Pending = () => {
       <div className="container-fluid">
         <div className="row">
           <div className="col-md-2 p-0">
-            <AdminSidebar />
+            <UserSidebar />
           </div>
           <div className="col-md-10">
             <div className="container mt-3">
@@ -97,4 +97,4 @@ const Pending = () => {
   );
 };
 
-export default Pending;
+export default ReportsPending;

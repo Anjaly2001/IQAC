@@ -13,6 +13,9 @@ const UserSidebar = () => {
                 <li className="list-group-item">
                     <Link to="/eventreport">Event Report</Link>
                 </li>
+                <li className="list-group-item">
+                    <Link to="/reportspending">Reports pending</Link>
+                </li>
             </ul>
             <div className="footer mt-auto p-3 text-white text-break fst-italic text-center">
                 Designed & Developed by CHRIST Infotech

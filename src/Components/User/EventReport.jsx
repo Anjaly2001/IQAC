@@ -45,7 +45,7 @@ function EventReport() {
         <div className="col">
           <div className="event-report">
             <div className="text-center fw-bolder fs-5 mt-3">
-              Event 
+              Event Report Form
             </div>
             <div className="event-report">
               <form onSubmit={handleSubmit} className="p-4">

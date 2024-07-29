@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import '../../Styles/Login.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -51,38 +51,44 @@ const Login = () => {
     };
 
     return (
-        <div className="login-form">
-            <h2>Login</h2>
-            {error && <div className="error">{error}</div>}
-            {!otpSent ? (
-                <form onSubmit={handleSendOtp}>
-                    <div>
-                        <label>User Name</label>
-                        <input
-                            type="email"
-                            name="email"
-                            value={email}
-                            onChange={handleEmailChange}
-                            required
-                        />
-                    </div>
-                    <button type="submit">Send OTP</button>
-                </form>
-            ) : (
-                <form onSubmit={handleVerifyOtp}>
-                    <div>
-                        <label>OTP:</label>
-                        <input
-                            type="text"
-                            name="otp"
-                            value={otp}
-                            onChange={handleOtpChange}
-                            required
-                        />
-                    </div>
-                    <button type="submit">Verify OTP</button>
-                </form>
-            )}
+        <div className="d-flex justify-content-center align-items-center min-vh-100">
+            <div className="card p-4" style={{ width: '100%', maxWidth: '400px' }}>
+                <h2 className="text-center">Login</h2>
+                {error && <div className="alert alert-danger">{error}</div>}
+                {!otpSent ? (
+                    <form onSubmit={handleSendOtp}>
+                        <div className="form-group">
+                            <label htmlFor="email">User Name</label>
+                            <input
+                                type="email"
+                                className="form-control"
+                                id="email"
+                                name="email"
+                                value={email}
+                                onChange={handleEmailChange}
+                                required
+                            />
+                        </div>
+                        <button type="submit" className="btn btn-primary btn-block">Send OTP</button>
+                    </form>
+                ) : (
+                    <form onSubmit={handleVerifyOtp}>
+                        <div className="form-group">
+                            <label htmlFor="otp">OTP</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="otp"
+                                name="otp"
+                                value={otp}
+                                onChange={handleOtpChange}
+                                required
+                            />
+                        </div>
+                        <button type="submit" className="btn btn-primary btn-block">Verify OTP</button>
+                    </form>
+                )}
+            </div>
         </div>
     );
 };

@@ -1,44 +1,5 @@
-.user-dashboard {
-  display: flex;
-  flex-direction: column;
-  height: 100vh; /* Full viewport height */
-}
-
-.User-topnav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 20px;
-  background-color: darkblue; /* Dark blue background for the top navbar */
-  color: white; /* White text color for the top navbar */
-  font-family: 'Poppins', sans-serif;
-  position: left; /* Fixed position */
-  top: 0;
-  width: 1540px;
-  z-index: 1000; /* Ensure it stays on top */
-}
-
-.User-topnav h1 {
-  margin: 0;
-  color: white; /* White text color for the heading */
-  font-size: 20px; /* Adjust font size as needed */
-}
-
-.User-topnav .logout-button {
-  background-color: red; /* Red background for the logout button */
-  color: white; /* White text color for the logout button */
-  border: none;
-  padding: 10px;
-  cursor: pointer;
-  font-size: 16px;
-  border-radius: 5px;
-  font-family: 'Poppins', sans-serif;
-}
-
-.user-main {
-  display: flex;
-  flex-grow: 1;
-  margin-top: 60px; /* Adjust margin to account for the fixed navbar height */
+.bg-blue{
+  background-color: darkblue;
 }
 
 .user-sidebar {
@@ -48,197 +9,39 @@
   padding: 20px;
   height: 100vh; /* Full height */
   position: fixed; /* Fixed position */
-  top: 60px; /* Position it below the navbar */
+  top: 70px; /* Position it below the navbar */
   left: 0;
-  overflow-y: auto; /* Scroll if content overflows */
-  z-index: 999; /* Ensure it stays on top but below navbar */
+  overflow-y: auto; 
+  z-index: 999;
 }
-
-.user-sidebar .list-group-item {
-  background-color: darkblue; /* Maintain dark blue background */
-  color: white; /* White text color */
-  border: none; /* Remove the border */
-}
-
-.user-sidebar .list-group-item a {
-  color: white; /* White text color */
-  text-decoration: none; /* Remove underline from links */
-}
-
-.user-sidebar .list-group-item:hover {
-  background-color: #004080; /* Darker blue on hover */
-}
-
-.user-sidebar .list-group-item a:hover {
-  text-decoration: underline; /* Underline on hover */
-}
-
-.user-content {
-  flex: 1;
-  padding: 20px;
-  margin-left: 250px; /* Account for the fixed sidebar */
-  background-color: #f0f2f5; /* Light background color */
-}
-
-/* Form styling */
-.form-row {
+.user-topnav {
+  background-color: darkblue; /* Dark blue color */
+  color: white;
+  font-family: 'Poppins', sans-serif;
   display: flex;
-  flex-direction: column;
-  margin-bottom: 10px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 10px;
+  position: fixed;
 }
 
-form .form-row label {
-  margin-bottom: 5px;
-}
-
-form .form-row input,
-form .form-row select,
-form .form-row textarea {
-  padding: 5px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.center {
-  text-align: center;
-}
-
-button {
-  margin-top: 10px;
-  padding: 10px;
-  background-color: darkblue;
-  color: white;
+.list-group-item {
+  background-color: transparent;
   border: none;
-  cursor: pointer;
+  padding: 10px 20px;
 }
 
-button[type="button"] {
-  background-color: red;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-  .user-main {
-    flex-direction: column;
-  }
-
-  .user-sidebar {
-    width: 100%;
-    height: auto;
-    position: relative;
-    top: 0;
-    margin-bottom: 20px;
-  }
-
-  .user-content {
-    padding: 10px;
-    margin-left: 0;
-  }
-}
-
-.register {
-  max-width: 25%;
-  height: max-content;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.form-control {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-.register h2 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-
-/* eventreport */
-
-
-.event-report {
-  max-width: 900px;
-  height: 650px;
-  margin: 0 auto;
-  padding: 2px;
-  background-color: #ccc;
-  border-radius: 6px;
-}
-
-.event-report h2,
-.event-report h3.center {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.event-report h3.center {
-  margin-top: 40px;
-}
-
-.event-report .form-row {
-  margin-bottom: 15px;
-
-}
-
-.event-report .form-row label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-.event-report .form-row input[type="text"],
-.event-report .form-row input[type="date"],
-.event-report .form-row input[type="time"],
-.event-report .form-row input[type="number"],
-.event-report .form-row input[type="file"],
-.event-report .form-row textarea {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-.event-report .form-row textarea {
-  height: 100px;
-  resize: vertical;
-}
-
-.event-report button {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  background-color: darkblue;
+.list-group-item a {
   color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 20px;
+  text-decoration: none;
 }
 
-.event-report button:hover {
-  background-color: #002f6c;
+.list-group-item a:hover {
+  text-decoration: underline;
 }
 
-/* Responsive design */
-@media (max-width: 768px) {
-  .event-report {
-    padding: 10px;
-  }
-
-  .event-report h2,
-  .event-report h3.center {
-    font-size: 1.5rem;
-  }
-
-  .event-report .form-row input,
-  .event-report .form-row textarea {
-    padding: 8px;
-  }
+.footer {
+  border-top: 1px solid white;
+  
+    margin-bottom: 35px;
 }

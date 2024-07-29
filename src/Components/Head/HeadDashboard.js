@@ -1,25 +1,26 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import HeadSidebar from './HeadSidebar';
-import HeadTopNav from './HeadTopNav';
 import Department from './Departments';
-import Collaborators from './Collaborator';
+import Collaborator from './Collaborator';
 import Settings from './Settings';
-import Approved from './Approved';
+import Approved from './ApprovedReport';
 import Pending from './Pending';
 import CreateEvent from './CreateEvent';
 import './Head.css';
+import Header from '../Common/Header';
 
 function HeadDashboard() {
   return (
+    
     <div className="head-dashboard">
-      <HeadTopNav />
+      <Header />
       <div className="head-main">
         <HeadSidebar />
         <div className="head-content">
           <Routes>
-            <Route path="/departments" element={<Department />} />
-            <Route path="/collaborators" element={<Collaborators />} />
+            <Route path="/department" element={<Department />} />
+            <Route path="/collaborator" element={<Collaborator />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/approved" element={<Approved />} />
             <Route path="/pending" element={<Pending />} />

@@ -1,19 +1,33 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './HeadDashboard'
 import './Head.css';
 
 function HeadSidebar() {
   return (
-    <div className="head-sidebar">
-      <ul>
-        <li><Link to="/department">Department</Link></li>
-        <li><Link to="/collaborators">Collaborator</Link></li>
-        <li><Link to="/setting">Settings</Link></li>
-        <li><Link to="/approved">Approved</Link></li>
-        <li><Link to="/pending">Pending</Link></li>
-        <li><Link to="/createevent">Create Event</Link></li>
+    <div className="head-sidebar d-flex flex-column vh-100 position-fixed">
+            <ul className="list-group flex-grow-1">
+        <li className="list-group-item">
+          <Link to="/department">Department</Link>
+        </li>
+        <li className="list-group-item">
+          <Link to="/collaborator">Collaborator</Link>
+        </li>
+        <li className="list-group-item">
+          <Link to="/setting">Settings</Link>
+        </li>
+        <li className="list-group-item">
+          <Link to="/approvedreport">Approved Reports</Link>
+        </li>
+        <li className="list-group-item">
+          <Link to="/pending">Pending</Link>
+        </li>
+        <li className="list-group-item">
+          <Link to="/createevent">Create Event</Link>
+        </li>
       </ul>
+      <div className="footer mt-auto p-4 text-white text-break fst-italic text-center">
+                Designed & Developed by CHRIST Infotech
+            </div>
     </div>
   );
 }

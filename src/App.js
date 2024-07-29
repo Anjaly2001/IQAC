@@ -4,20 +4,19 @@ import Login from './Components/Common/Login';
 import AdminDashboard from './Components/Admin/AdminDashboard';
 import UserDashboard from './Components/User/UserDashboard';
 import HeadDashboard from './Components/Head/HeadDashboard';
-import './Styles/App.css';
 import Register from './Components/User/Register';
 import Collaborators from './Components/User/Collaborators';
 import EventReport from './Components/User/EventReport';
 import Departments from './Components/Admin/Departments';
-
 import Users from './Components/Admin/Users';
 import Approved from './Components/Admin/Approved';
-//import Pending from './Components/Admin/Pending';
+import Pending from './Components/Admin/Pending';
 import Department from './Components/Head/Departments';
 import Collaborator from './Components/Head/Collaborator';
 import CreateEvent from './Components/Head/CreateEvent';
 import Settings from './Components/Head/Settings'; 
 import Pendings from './Components/Head/Pending';
+import ApprovedReport from './Components/Head/ApprovedReport';
 
 const App = () => {
     return (
@@ -25,8 +24,9 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<Login />} />
                 <Route path="/admin-dashboard" element={<AdminDashboard />} />
-                
+                <Route path="/approved" element={<Approved />} />
                 <Route path="/collaborators" element={<Collaborators />} />
+                <Route path="/pending" element={<Pending />} />
 
                 <Route path="/user-dashboard" element={<UserDashboard />} />
                 <Route path="/register" element={<Register />} />
@@ -36,7 +36,7 @@ const App = () => {
 
                 <Route path="/head-dashboard" element={<HeadDashboard />} />
                 <Route path="/users" element={< Users/>} />
-                <Route path="/approved" element={< Approved/>} />
+                <Route path="/approvedreport" element={< ApprovedReport/>} />
                 <Route path="/pending" element={< Pendings/>} />
                 <Route path="/department" element={<Department/>} />
                 <Route path="/collaborator" element={<Collaborator />} /> 

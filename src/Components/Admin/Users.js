@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import UserService from '../../Services/UserService';
 import DepartmentService from '../../Services/DepartmentServices';
 import './Admin.css';
+import AdminSidebar from './AdminSidebar';
+import Header from '../Common/Header';
 
 const Users = () => {
     const [users, setUsers] = useState([]);
@@ -58,58 +60,91 @@ const Users = () => {
     };
 
     return (
-        <div className="users">
-            <h2>Users</h2>
-            <div className="user-actions">
-                <input
-                    type="text"
-                    placeholder="User Name"
-                    value={userName}
-                    onChange={(e) => setUserName(e.target.value)}
-                />
-                <select
-                    value={userDepartment}
-                    onChange={(e) => setUserDepartment(e.target.value)}
-                >
-                    <option value="">Select Department</option>
-                    {departments.map(department => (
-                        <option key={department.id} value={department.name}>{department.name}</option>
-                    ))}
-                </select>
-                <button onClick={createUser}>Create User</button>
-            </div>
-            <div className="user-list">
-                {users.map(user => (
-                    <div key={user.id} className="user-item">
-                        {editingUser && editingUser.id === user.id ? (
-                            <div>
-                                <input
-                                    type="text"
-                                    value={newUserName}
-                                    onChange={(e) => setNewUserName(e.target.value)}
-                                />
-                                <select
-                                    value={newUserDepartment}
-                                    onChange={(e) => setNewUserDepartment(e.target.value)}
-                                >
-                                    <option value="">Select Department</option>
-                                    {departments.map(department => (
-                                        <option key={department.id} value={department.name}>{department.name}</option>
-                                    ))}
-                                </select>
-                                <button onClick={editUser}>Save</button>
-                                <button onClick={() => setEditingUser(null)}>Cancel</button>
-                            </div>
-                        ) : (
-                            <div>
-                                <span>{user.name} ({user.department})</span>
-                                <span className={user.status === 'active' ? 'status-active' : 'status-inactive'}>{user.status}</span>
-                                <button onClick={() => startEditing(user)}>Edit</button>
-                                <button onClick={() => deleteUser(user.id)}>Delete</button>
-                            </div>
-                        )}
+        <div>
+            <Header />
+            <div className="container-fluid">
+                <div className="row">
+                    <div className="col-md-2 p-0">
+                        <AdminSidebar />
                     </div>
-                ))}
+                    <div className="col-md-10">
+                        <div className="container mt-3">
+                            <div className="text-center fw-bold fs-5 mb-4">
+                                Create User
+                            </div>
+
+                            <div className="register">
+                                <div className="user-actions mb-4">
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="User Name"
+                                        value={userName}
+                                        onChange={(e) => setUserName(e.target.value)}
+                                    />
+                                    <select
+                                        className="form-select mt-2"
+                                        value={userDepartment}
+                                        onChange={(e) => setUserDepartment(e.target.value)}
+                                    >
+                                        <option value="">Select Department</option>
+                                        {departments.map(department => (
+                                            <option key={department.id} value={department.name}>{department.name}</option>
+                                        ))}
+                                    </select>
+                                    <button
+                                        className="btn btn-primary mt-2"
+                                        onClick={createUser}
+                                    >
+                                        Create User
+                                    </button>
+                                </div>
+
+                                <div className="user-list">
+                                    {users.map(user => (
+                                        <div key={user.id} className="user-item d-flex justify-content-between align-items-center mb-2">
+                                            {editingUser && editingUser.id === user.id ? (
+                                                <div className="d-flex flex-column w-100">
+                                                    <input
+                                                        type="text"
+                                                        className="form-control"
+                                                        value={newUserName}
+                                                        onChange={(e) => setNewUserName(e.target.value)}
+                                                    />
+                                                    <select
+                                                        className="form-select mt-2"
+                                                        value={newUserDepartment}
+                                                        onChange={(e) => setNewUserDepartment(e.target.value)}
+                                                    >
+                                                        <option value="">Select Department</option>
+                                                        {departments.map(department => (
+                                                            <option key={department.id} value={department.name}>{department.name}</option>
+                                                        ))}
+                                                    </select>
+                                                    <div className="d-flex mt-2">
+                                                        <button className="btn btn-success me-2" onClick={editUser}>Save</button>
+                                                        <button className="btn btn-secondary" onClick={() => setEditingUser(null)}>Cancel</button>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <div className="d-flex justify-content-between w-100">
+                                                    <span>{user.name} ({user.department})</span>
+                                                    <span className={user.status === 'active' ? 'badge bg-success' : 'badge bg-secondary'}>
+                                                        {user.status}
+                                                    </span>
+                                                    <div className="d-flex">
+                                                        <button className="btn btn-warning me-2" onClick={() => startEditing(user)}>Edit</button>
+                                                        <button className="btn btn-danger" onClick={() => deleteUser(user.id)}>Delete</button>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

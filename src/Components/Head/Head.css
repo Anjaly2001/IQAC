@@ -4,15 +4,6 @@
   height: 100vh;
 }
 
-.head-topnav {
-  background-color: darkblue;
-  color: white;
-  padding: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 1550px;
-}
 
 .head-main {
   display: flex;
@@ -20,10 +11,16 @@
 }
 
 .head-sidebar {
-  width: 200px;
-  background-color: darkblue;
-  padding: 10px;
-  justify-content: center;
+  width: 250px;
+  background-color: darkblue; /* Dark blue color */
+  color: white;
+  padding: 20px;
+  height: 100vh; /* Full height */
+  position: fixed; /* Fixed position */
+  top: 80px; /* Position it below the navbar */
+  left: 0;
+  overflow-y: auto; 
+  z-index: 999;
 }
 
 .head-sidebar ul {
@@ -37,16 +34,20 @@
 
 .head-content {
   flex: 1;
-  padding: 20px;
+  padding: 10px;
 }
 
 .departments, .collaborators, .settings, .approved, .pending, .create-event {
   background-color: white;
   padding: 20px;
-  border-radius: 8px;
+  border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 button {
   margin-top: 10px;
 }
+.footer {
+  margin-bottom: 40px;
+}
+

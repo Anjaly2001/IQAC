@@ -9,7 +9,7 @@ const Header = () => {
     };
 
     return (
-        <nav className="navbar bg-blue">
+        <nav className="navbar bg-blue fixed-top">
             <div className="container-fluid mb-3">
                 <a className="text-white fw-bolder fs-4 text-decoration-none">
                     CHRIST University Lavasa <br/>

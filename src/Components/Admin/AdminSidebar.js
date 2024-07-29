@@ -11,16 +11,16 @@ const AdminSidebar = () => {
                     <Link to="/registeruser">Register User</Link>
                 </li>
                 <li className="list-group-item">
-                    <Link to="/users">User</Link>
+                    <Link to="/users"> Register Department</Link>
                 </li>
                 <li className="list-group-item">
-                    <Link to="/departments">Departments</Link>
+                    <Link to="/departments">Department Status</Link>
                 </li>
                 <li className="list-group-item">
-                    <Link to="/approved">Approved</Link>
+                    <Link to="/approved">Approved Reports</Link>
                 </li>
                 <li className="list-group-item">
-                    <Link to="/pending">Pending</Link>
+                    <Link to="/pending">Pending Reports</Link>
                 </li>
             </ul>
             <div className="footer mt-auto p-3 text-white text-break fst-italic text-center">

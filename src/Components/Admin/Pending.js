@@ -56,7 +56,7 @@ const Pending = () => {
           <div className="col-md-2 p-0">
             <AdminSidebar />
           </div>
-          <div className="col-md-10">
+          <div className="col-md-10  mt-5 pt-5">
             <div className="container mt-3">
               <div className="text-center fw-bold fs-5 mb-4">
                 Pending Reports

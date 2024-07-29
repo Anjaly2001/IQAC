@@ -16,7 +16,7 @@ function RegisterUser() {
         <div className="col-3">
           <AdminSidebar />
         </div>
-        <div className="col">
+        <div className="col  mt-5 pt-5">
           <div className="register">
             <div className="text-center fw-bolder fs-5 mt-3">
               User Registration Form

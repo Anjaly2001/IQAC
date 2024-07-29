@@ -12,17 +12,20 @@ function UserDashboard() {
   return (
     <div className="">
       <Header />
+      
       <div className="row m-auto">
-        <div className='col-3'>
+      <div className='col-3'>
           <UserSidebar />
         </div>
-        <div className='col'>
-          <Routes>
+        <div className='col-'>
+      
+         <Routes>
             <Route path="/register" element={<Register />} />
             <Route path="/eventreport" element={<EventReport />} />
             <Route path="/reportspending" element={<reports Pending />} />
             <Route path="/collaborators" element={<Collaborators />} />
           </Routes>
+         
         </div>
       </div>
     </div>

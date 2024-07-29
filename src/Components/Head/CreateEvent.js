@@ -42,7 +42,7 @@ function EventReport() {
         <div className="col-3">
           <HeadSidebar />
         </div>
-        <div className="col">
+        <div className="col  mt-5 pt-5">
           <div className="event-report">
             <div className="text-center fw-bolder fs-5 mt-3">
               Event Report Form

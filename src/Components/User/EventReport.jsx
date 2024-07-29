@@ -38,11 +38,12 @@ function EventReport() {
   return (
     <div>
       <Header />
-      <div className="row m-auto">
+      
+      <div className="row m-auto mt-5">
         <div className="col-3">
           <UserSidebar />
         </div>
-        <div className="col">
+        <div className="col mt-5 pt-5">
           <div className="event-report">
             <div className="text-center fw-bolder fs-5 mt-3">
               Event Report Form

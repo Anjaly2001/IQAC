@@ -15,6 +15,7 @@ function HeadDashboard() {
     
     <div className="head-dashboard">
       <Header />
+  
       <div className="head-main">
         <HeadSidebar />
         <div className="head-content">

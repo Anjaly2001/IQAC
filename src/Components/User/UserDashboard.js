@@ -19,7 +19,7 @@ function UserDashboard() {
         <div className='col'>
           <Routes>
             <Route path="/register" element={<Register />} />
-            <Route path="/event-report" element={<EventReport />} />
+            <Route path="/eventreport" element={<EventReport />} />
             <Route path="/collaborators" element={<Collaborators />} />
           </Routes>
         </div>

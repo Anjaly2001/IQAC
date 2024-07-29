@@ -5,7 +5,7 @@ import Department from './Departments';
 import Collaborator from './Collaborator';
 import Settings from './Settings';
 import Approved from './ApprovedReport';
-import Pending from './Pending';
+import Pending from './PendingReport';
 import CreateEvent from './CreateEvent';
 import './Head.css';
 import Header from '../Common/Header';

@@ -10,6 +10,9 @@ const AdminSidebar = () => {
                     <Link to="/departments">Departments</Link>
                 </li>
                 <li className="list-group-item">
+                    <Link to="/registeruser">Register User</Link>
+                </li>
+                <li className="list-group-item">
                     <Link to="/users">User</Link>
                 </li>
                 <li className="list-group-item">

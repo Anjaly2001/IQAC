@@ -53,11 +53,13 @@ function Collaborators() {
               <div className="d-flex mb-3">
                 <label className="me-2">
                   Name:
-                  <select value={name} onChange={handleNameChange} className="form-select">
-                    <option value="">Select Name</option>
-                    <option value="name1">Name 1</option>
-                    <option value="name2">Name 2</option>
-                  </select>
+                  <input 
+                    type="text" 
+                    value={name} 
+                    onChange={handleNameChange} 
+                    className="form-control" 
+                    placeholder="Enter Name"
+                  />
                 </label>
                 <label className="me-2">
                   Department:

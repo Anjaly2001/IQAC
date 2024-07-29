@@ -8,6 +8,7 @@ import Approved from './Approved';
 import Pending from './Pending';
 import { Routes, Route } from 'react-router-dom';
 import './Admin.css';
+import RegisterUser from './RegisterUser';
 
 
 const AdminDashboard = () => {
@@ -19,6 +20,7 @@ const AdminDashboard = () => {
                 <div className="admin-content">
                     <Routes>
                         <Route path="/departments" element={<Departments />} />
+                        <Route path="/registeruser" element={<RegisterUser />} />  
                         <Route path="/users" element={<Users />} />
                         <Route path="/settings" element={<Settings />} />
                         <Route path="/approved" element={<Approved />} />

@@ -11,7 +11,7 @@ const UserSidebar = () => {
                     <Link to="/register">Create Event</Link>
                 </li>
                 <li className="list-group-item">
-                    <Link to="">List Events</Link>
+                    <Link to="/eventreport">Event Report</Link>
                 </li>
             </ul>
             <div className="footer mt-auto p-3 text-white text-break fst-italic text-center">

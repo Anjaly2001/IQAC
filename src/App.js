@@ -15,8 +15,9 @@ import Department from './Components/Head/Departments';
 import Collaborator from './Components/Head/Collaborator';
 import CreateEvent from './Components/Head/CreateEvent';
 import Settings from './Components/Head/Settings'; 
-import Pendings from './Components/Head/Pending';
+import PendingReport from './Components/Head/PendingReport';
 import ApprovedReport from './Components/Head/ApprovedReport';
+import RegisterUser from './Components/Admin/RegisterUser';
 
 const App = () => {
     return (
@@ -24,6 +25,7 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<Login />} />
                 <Route path="/admin-dashboard" element={<AdminDashboard />} />
+                <Route path="/registeruser" element={<RegisterUser />} />
                 <Route path="/approved" element={<Approved />} />
                 <Route path="/collaborators" element={<Collaborators />} />
                 <Route path="/pending" element={<Pending />} />
@@ -31,13 +33,13 @@ const App = () => {
                 <Route path="/user-dashboard" element={<UserDashboard />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/collaborators" element={<Collaborators />} />
-                <Route path="/event-report" element={<EventReport />} />
+                <Route path="/eventreport" element={<EventReport />} />
                 <Route path="/departments" element={< Departments/>} />
 
                 <Route path="/head-dashboard" element={<HeadDashboard />} />
                 <Route path="/users" element={< Users/>} />
                 <Route path="/approvedreport" element={< ApprovedReport/>} />
-                <Route path="/pending" element={< Pendings/>} />
+                <Route path="/pendingreport" element={< PendingReport/>} />
                 <Route path="/department" element={<Department/>} />
                 <Route path="/collaborator" element={<Collaborator />} /> 
                 <Route path="/createevent" element={<CreateEvent />} />

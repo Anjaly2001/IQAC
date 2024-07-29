@@ -19,7 +19,7 @@ function HeadSidebar() {
           <Link to="/approvedreport">Approved Reports</Link>
         </li>
         <li className="list-group-item">
-          <Link to="/pending">Pending</Link>
+          <Link to="/pendingreport">Pending Reports</Link>
         </li>
         <li className="list-group-item">
           <Link to="/createevent">Create Event</Link>

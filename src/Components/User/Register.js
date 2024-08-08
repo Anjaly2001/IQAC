@@ -18,20 +18,21 @@ function Register() {
   };
 
   return (
-    <div className="">
+    <div className="container-fluid">
       <Header />
-      <div className="row m-auto">
+      <div className="row">
         <div className="col-3">
           <UserSidebar />
         </div>
         <div className="col mt-5 pt-5">
-          <div className="register">
-            <div className="text-center fw-bolder fs-5 mt-3">
+          <div className="container">
+            <div className="text-center fw-bolder fs-5 mt-5">
               Event Registration Form
+              <hr />
             </div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className=''>
               <div className="mb-3">
-                <label htmlFor="department" className="form-label">Department:</label>
+                <label htmlFor="department" className="form-label">Department</label>
                 <select
                   id="department"
                   className="form-select"
@@ -45,7 +46,7 @@ function Register() {
                 </select>
               </div>
               <div className="mb-3">
-                <label htmlFor="eventType" className="form-label">Event Type:</label>
+                <label htmlFor="eventType" className="form-label">Event Name / Title</label>
                 <input
                   type="text"
                   className="form-control"
@@ -54,28 +55,38 @@ function Register() {
                   onChange={(e) => setEventType(e.target.value)}
                 />
               </div>
-              <div className="mb-3">
-                <label htmlFor="startDate" className="form-label">Start Date:</label>
-                <input
-                  type="date"
-                  className="form-control"
-                  id="startDate"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                />
+              <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+              </div>
+              <div className='row m-quto'>
+                <div className='col-6'>
+                  <div className="mb-3">
+                    <label htmlFor="startDate" className="form-label">Start Date:</label>
+                    <input
+                      type="date"
+                      className="form-control"
+                      id="startDate"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className='col-6'>
+                  <div className="mb-3">
+                    <label htmlFor="endDate" className="form-label">End Date:</label>
+                    <input
+                      type="date"
+                      className="form-control"
+                      id="endDate"
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                    />
+                  </div>
+                </div>
               </div>
               <div className="mb-3">
-                <label htmlFor="endDate" className="form-label">End Date:</label>
-                <input
-                  type="date"
-                  className="form-control"
-                  id="endDate"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="venue" className="form-label">Venue:</label>
+                <label htmlFor="venue" className="form-label">Venue</label>
                 <input
                   type="text"
                   className="form-control"
@@ -85,7 +96,7 @@ function Register() {
                 />
               </div>
               <div className="mb-3">
-                <label htmlFor="academicYear" className="form-label">Academic Year:</label>
+                <label htmlFor="academicYear" className="form-label">Academic Year</label>
                 <select
                   id="academicYear"
                   className="form-select"

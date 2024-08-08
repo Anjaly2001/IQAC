@@ -2,6 +2,7 @@ import React from 'react';
 import './Admin.css';
 import Header from '../Common/Header';
 import AdminSidebar from './AdminSidebar';
+import Dashboard from './Dashboard';
 
 function Approved() {
   const departments = ['Department 1', 'Department 2', 'Department 3'];

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import './UserDashboard'
-import './User.css';
+import Header from '../../Header';
+import AdminDashboard from '../Admin/AdminDashboard';
 
 
 function Collaborators() {

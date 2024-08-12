@@ -1,0 +1,19 @@
+
+# Ignore db.sqlite3
+db.sqlite3
+# *.sqlite3
+# /db.sqlite3
+*.log
+
+# Ignore all SQLite database files
+*.sqlite3
+
+# venv
+env
+venv
+
+/authentication/pycache
+/authentication/migrations
+
+/department_and_events/pycache
+/department_and_events/migrations

@@ -114,8 +114,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             username=validated_data['username'],
             # emp_id = validated_data['emp_id'],
-            is_superuser=validated_data['is_superuser'],
-            is_staff=validated_data['is_staff'],
+            # is_superuser=validated_data['is_superuser'],
+            # is_staff=validated_data['is_staff'],
             role=validated_data['role']
         )
         user.save()

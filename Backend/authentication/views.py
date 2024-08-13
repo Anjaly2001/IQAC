@@ -317,3 +317,5 @@ def department_register(request):
     else:
         # Handling for GET or other methods if needed
         return Response({"error": "Method not allowed."}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    
+    

@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import AdminDashboard from '../Admin/AdminDashboard';
 
-const CreateCampus = ({ onAddCampus }) => {
+const CreateCampus = () => {
     const [campusName, setCampusName] = useState('');
     const [logo, setLogo] = useState(null);
     const [logoName, setLogoName] = useState('Upload logo');
+    const [campuses, setCampuses] = useState([]);
 
     const handleCreateCampus = () => {
         if (campusName && logo) {
             const newCampus = { id: Date.now(), name: campusName, logo: URL.createObjectURL(logo) };
-            onAddCampus(newCampus);
+            setCampuses([...campuses, newCampus]);
             setCampusName('');
             setLogo(null);
             setLogoName('Upload logo');
@@ -66,6 +67,17 @@ const CreateCampus = ({ onAddCampus }) => {
                                     >
                                         Create
                                     </button>
+                                </div>
+                                <div>
+                                    <h5>Campuses List</h5>
+                                    <ul>
+                                        {campuses.map(campus => (
+                                            <li key={campus.id}>
+                                                <img src={campus.logo} alt={campus.name} width={50} height={50} />
+                                                {campus.name}
+                                            </li>
+                                        ))}
+                                    </ul>
                                 </div>
                             </div>
                         </div>

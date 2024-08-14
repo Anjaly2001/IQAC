@@ -5,26 +5,35 @@ import { Button } from 'primereact/button';
 import AdminDashboard from '../Admin/AdminDashboard';
 
 const CreateDepartment = ({ onAddDepartment }) => {
-    const [departmentName, setDepartmentName] = useState('');
-    const [description, setDescription] = useState('');
-    const [type, setType] = useState('');
-    const [location, setLocation] = useState('');
-    const [customType, setCustomType] = useState('');
-    const [customLocation, setCustomLocation] = useState('');
+    // State variables to store input values
+    const [departmentName, setDepartmentName] = useState(''); // Stores the department name
+    const [description, setDescription] = useState(''); // Stores the department description
+    const [type, setType] = useState(''); // Stores the selected department type
+    const [location, setLocation] = useState(''); // Stores the selected department location
+    const [customType, setCustomType] = useState(''); // Stores the custom type if 'Others' is selected
+    const [customLocation, setCustomLocation] = useState(''); // Stores the custom location if 'Others' is selected
 
+    // Function to handle the creation of a new department
     const handleCreateDepartment = () => {
+        // Determine the final values for type and location, using custom values if 'Others' is selected
         const finalType = type === 'Others' ? customType : type;
         const finalLocation = location === 'Others' ? customLocation : location;
 
+        // Ensure that all required fields are filled
         if (departmentName && description && finalType && finalLocation) {
+            // Create a new department object with a unique ID
             const newDepartment = { 
-                id: Date.now(), 
+                id: Date.now(), // Unique ID based on the current timestamp
                 name: departmentName, 
                 description, 
                 type: finalType, 
                 location: finalLocation 
             };
+
+            // Call the parent component's function to add the new department
             onAddDepartment(newDepartment);
+
+            // Reset the form fields after department creation
             setDepartmentName('');
             setDescription('');
             setType('');
@@ -37,14 +46,19 @@ const CreateDepartment = ({ onAddDepartment }) => {
     return (
         <div className="container-fluid">
             <div className="row">
+                {/* Sidebar component for the Admin Dashboard */}
                 <div className="col-md-2 p-0">
                     <AdminDashboard />
                 </div>
+                
+                {/* Main content area for creating a new department */}
                 <div className="col-md-10 mt-5 pt-5">
                     <div className="container mt-3" style={{ maxWidth: '800px' }}>
                         <div className="text-center fw-bold fs-5 mb-4">
                             Create Department
                         </div>
+                        
+                        {/* Form fields for department details */}
                         <div className="d-flex flex-column align-items-center mb-4">
                             <div className="p-field w-100 mb-3">
                                 <label htmlFor="departmentName">Department Name</label>
@@ -56,6 +70,7 @@ const CreateDepartment = ({ onAddDepartment }) => {
                                     className="w-100"
                                 />
                             </div>
+                            
                             <div className="p-field w-100 mb-3">
                                 <label htmlFor="description">Description</label>
                                 <Editor
@@ -67,6 +82,7 @@ const CreateDepartment = ({ onAddDepartment }) => {
                                     className="w-100"
                                 />
                             </div>
+
                             <div className="p-field w-100 mb-3">
                                 <label htmlFor="type">Type</label>
                                 <select
@@ -85,6 +101,7 @@ const CreateDepartment = ({ onAddDepartment }) => {
                                 </select>
                             </div>
 
+                            {/* Display input for custom type if 'Others' is selected */}
                             {type === 'Others' && (
                                 <div className="p-field w-100 mb-3">
                                     <label htmlFor="customType">Enter Custom Type</label>
@@ -97,7 +114,7 @@ const CreateDepartment = ({ onAddDepartment }) => {
                                     />
                                 </div>
                             )}
-                            
+
                             <div className="p-field w-100 mb-3">
                                 <label htmlFor="location">Location</label>
                                 <select
@@ -117,6 +134,7 @@ const CreateDepartment = ({ onAddDepartment }) => {
                                 </select>
                             </div>
 
+                            {/* Display input for custom location if 'Others' is selected */}
                             {location === 'Others' && (
                                 <div className="p-field w-100 mb-3">
                                     <label htmlFor="customLocation">Enter Custom Location</label>
@@ -130,6 +148,7 @@ const CreateDepartment = ({ onAddDepartment }) => {
                                 </div>
                             )}
 
+                            {/* Button to trigger department creation */}
                             <div className="p-field w-100">
                                 <Button label="Create Department" icon="pi pi-check" onClick={handleCreateDepartment} />
                             </div>

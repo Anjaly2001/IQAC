@@ -244,8 +244,13 @@ function RegisterEvent() {
                         onChange={(e) => handleCollaboratorChange(index, 'campus', e.target.value)}
                       >
                         <option value="">Select Campus</option>
-                        <option value="Christ University Bangalore">Christ University Bangalore Central Campus</option>
-                        <option value="Christ University Lavasa">Christ University Pune Lavasa Off Campus</option>
+                        <option value="Christ University Bangalore Central Campus">Christ University Bangalore Central Campus</option>
+                        <option value="Christ University Bangalore Bannerghatta Road Campus">Christ University Bangalore Bannerghatta Road Campus</option>
+                        <option value="Christ University Bangalore Kengeri Campus">Christ University Bangalore Kengeri Campus</option>
+                        <option value="Christ University Bangalore Yeshwanthpur Campus">Christ University Bangalore Yeshwanthpur Campus</option>
+                        <option value="Christ University Delhi NCR Off Campus">Christ University Delhi NCR Off Campus</option>
+                        <option value="Christ University Pune Lavasa Off Campus">Christ University Pune Lavasa Off Campus</option>
+                        <option value="Others">Others</option>
                       </select>
                     </div>
                     <div className="col">
@@ -255,9 +260,20 @@ function RegisterEvent() {
                         onChange={(e) => handleCollaboratorChange(index, 'department', e.target.value)}
                       >
                         <option value="">Select Department</option>
-                        <option value="Data Science">Data Science</option>
-                        <option value="MBA">MBA</option>
-                        <option value="Language">Language</option>
+                        <option value="">MSc (Data Science)</option>
+                        <option value="">BSc (Data Science/Honours/Honours with Research)</option>
+                        <option value="">BSc (Economics and Analytics/Honours/Honours with Research)</option>
+                        <option value="">Bachelor of Computer Applications (BCA/Honours/Honours with research)</option>
+                        <option value="">LLM (Corporate & Commercial Law)</option>
+                        <option value="">LLM (Constitutional & Administrative Law)</option>
+                        <option value="">BBA LLB (Honours)</option>
+                        <option value="">BA LLB (Honours)</option>
+                        <option value="">MSc (Global Finance & Analytics)</option>
+                        <option value="">BCom (Financial Analytics/Honours/Honours with Research)</option>
+                        <option value="">BBA (Business Analytics/Honours/Honours with Research)</option>
+                        <option value="">BBA (Honours/Honours with Research)</option>
+                        <option value="">MA (English with Digital Humanities)</option>
+                        <option value="">Others</option>
                       </select>
                     </div>
                     <div className="col">

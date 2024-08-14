@@ -76,7 +76,7 @@ function AddReport() {
         <div className="col-9 mt-1 pt-2">
           <div className="container" style={{ maxWidth: '800px' }}>
             <div className="text-center fw-bolder fs-5 mt-5">
-              Event Report Form 
+              Event Report Form
               <hr />
             </div>
             <form onSubmit={handleSubmit}>
@@ -92,9 +92,20 @@ function AddReport() {
                     onChange={handleChange}
                   >
                     <option value="">Select Department</option>
-                    <option value="department1">Data Science</option>
-                    <option value="department2">MBA</option>
-                    <option value="department3">Language</option>
+                    <option value="">MSc (Data Science)</option>
+                    <option value="">BSc (Data Science/Honours/Honours with Research)</option>
+                    <option value="">BSc (Economics and Analytics/Honours/Honours with Research)</option>
+                    <option value="">Bachelor of Computer Applications (BCA/Honours/Honours with research)</option>
+                    <option value="">LLM (Corporate & Commercial Law)</option>
+                    <option value="">LLM (Constitutional & Administrative Law)</option>
+                    <option value="">BBA LLB (Honours)</option>
+                    <option value="">BA LLB (Honours)</option>
+                    <option value="">MSc (Global Finance & Analytics)</option>
+                    <option value="">BCom (Financial Analytics/Honours/Honours with Research)</option>
+                    <option value="">BBA (Business Analytics/Honours/Honours with Research)</option>
+                    <option value="">BBA (Honours/Honours with Research)</option>
+                    <option value="">MA (English with Digital Humanities)</option>
+                    <option value="">Others</option>
                   </select>
                 </div>
               </div>
@@ -119,10 +130,13 @@ function AddReport() {
                   onChange={handleChange}
                 >
                   <option value="">Select Campus</option>
-                  <option value="Christ University Lavasa">Christ University Lavasa</option>
-                  <option value="Christ University Bangalore">Christ University Bangalore</option>
-                  <option value="Christ University Delhi">Christ University Delhi</option>
-                  <option value="Christ University Kengeri Campus">Christ University Kengeri Campus</option>
+                  <option value="">Christ University Bangalore Central Campus</option>
+                  <option value="">Christ University Bangalore Bannerghatta Road Campus</option>
+                  <option value="">Christ University Bangalore Kengeri Campus</option>
+                  <option value="">Christ University Bangalore Yeshwanthpur Campus</option>
+                  <option value="">Christ University Delhi NCR Off Campus</option>
+                  <option value="">Christ University Pune Lavasa Off Campus</option>
+                  <option value="">Others</option>
                 </select>
               </div>
               <div className="mb-3">
@@ -242,10 +256,13 @@ function AddReport() {
                         onChange={(e) => handleCollaboratorChange(index, 'campus', e.target.value)}
                       >
                         <option value="">Select Campus</option>
-                        <option value="Christ University Lavasa">Christ University Lavasa</option>
-                        <option value="Christ University Bangalore">Christ University Bangalore</option>
-                        <option value="Christ University Delhi">Christ University Delhi</option>
-                        <option value="Christ University Kengeri Campus">Christ University Kengeri Campus</option>
+                        <option value="">Christ University Bangalore Central Campus</option>
+                        <option value="">Christ University Bangalore Bannerghatta Road Campus</option>
+                        <option value="">Christ University Bangalore Kengeri Campus</option>
+                        <option value="">Christ University Bangalore Yeshwanthpur Campus</option>
+                        <option value="">Christ University Delhi NCR Off Campus</option>
+                        <option value="">Christ University Pune Lavasa Off Campus</option>
+                        <option value="">Others</option>
                       </select>
                     </div>
                     <div className="col">
@@ -256,9 +273,20 @@ function AddReport() {
                         onChange={(e) => handleCollaboratorChange(index, 'department', e.target.value)}
                       >
                         <option value="">Select Department</option>
-                        <option value="department1">Data Science</option>
-                        <option value="department2">MBA</option>
-                        <option value="department3">Language</option>
+                        <option value="">MSc (Data Science)</option>
+                        <option value="">BSc (Data Science/Honours/Honours with Research)</option>
+                        <option value="">BSc (Economics and Analytics/Honours/Honours with Research)</option>
+                        <option value="">Bachelor of Computer Applications (BCA/Honours/Honours with research)</option>
+                        <option value="">LLM (Corporate & Commercial Law)</option>
+                        <option value="">LLM (Constitutional & Administrative Law)</option>
+                        <option value="">BBA LLB (Honours)</option>
+                        <option value="">BA LLB (Honours)</option>
+                        <option value="">MSc (Global Finance & Analytics)</option>
+                        <option value="">BCom (Financial Analytics/Honours/Honours with Research)</option>
+                        <option value="">BBA (Business Analytics/Honours/Honours with Research)</option>
+                        <option value="">BBA (Honours/Honours with Research)</option>
+                        <option value="">MA (English with Digital Humanities)</option>
+                        <option value="">Others</option>
                       </select>
                     </div>
                     <div className="col">
@@ -287,19 +315,6 @@ function AddReport() {
                 />
               </div>
 
-              {/* Report Fields */}
-              {/* <div className="mb-3">
-                <label className="form-label">Title:</label>
-                <input type="text" className="form-control" name="title" value={form.title} onChange={handleChange} />
-              </div> */}
-              {/* <div className="mb-3"> */}
-                {/* <label className="form-label">Event Date:</label>
-                <input type="date" className="form-control" name="eventDate" value={form.eventDate} onChange={handleChange} />
-              </div>
-              <div className="mb-3">
-                <label className="form-label">Event Time:</label>
-                <input type="time" className="form-control" name="eventTime" value={form.eventTime} onChange={handleChange} />
-              </div> */}
               <div className="mb-3">
                 <label className="form-label">Blog Link:</label>
                 <input type="text" className="form-control" name="blogLink" value={form.blogLink} onChange={handleChange} />

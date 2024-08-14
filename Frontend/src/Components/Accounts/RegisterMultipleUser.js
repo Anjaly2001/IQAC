@@ -9,6 +9,8 @@ const RegisterMultipleUser = () => {
     const [file, setFile] = useState(null);
     const [selectedDepartment, setSelectedDepartment] = useState('');
     const [selectedCampus, setSelectedCampus] = useState('');
+    const [customDepartment, setCustomDepartment] = useState('');
+    const [customCampus, setCustomCampus] = useState('');
 
     const navigate = useNavigate();
 
@@ -18,21 +20,21 @@ const RegisterMultipleUser = () => {
     }, []);
 
     const fetchDepartments = async () => {
-        // Replace with real data fetching
         const mockDepartments = [
-            { id: 1, name: 'HOD' },
-            { id: 2, name: 'Coordinator' },
-            { id: 3, name: 'Faculty' },
+            { id: 1, name: 'MA (English with Digital Humanities)' },
+            { id: 2, name: 'BBA (Business Analytics/Honours/Honours with Research)' },
+            // ...more departments
+            { id: 16, name: 'Others' },
         ];
         setDepartments(mockDepartments);
     };
 
     const fetchCampuses = async () => {
-        // Replace with real data fetching
         const mockCampuses = [
-            { id: 1, name: 'Central Campus' },
-            { id: 2, name: 'Lavasa Campus' },
-            { id: 3, name: 'Bannerghatta Road Campus' },
+            { id: 1, name: 'Christ University Bangalore Central Campus' },
+            { id: 2, name: 'Christ University Bangalore Bannerghatta Road Campus' },
+            // ...more campuses
+            { id: 7, name: 'Others' },
         ];
         setCampuses(mockCampuses);
     };
@@ -47,15 +49,13 @@ const RegisterMultipleUser = () => {
             reader.onload = (e) => {
                 const text = e.target.result;
                 // Handle file parsing and user addition here
-                // const newUsers = parseCSV(text);
-                // setUsers([...users, ...newUsers]);
             };
             reader.readAsText(file);
         }
     };
 
     const handleViewUsers = () => {
-        navigate('/listuser'); // This will navigate to the ListUser page
+        navigate('/listuser');
     };
 
     return (
@@ -64,7 +64,7 @@ const RegisterMultipleUser = () => {
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-md-2 p-0">
-                        {/* Sidebar or other components can go here */}
+                        {/* Placeholder for Sidebar or other components */}
                     </div>
                     <div className="col-md-10 mt-1 pt-5">
                         <div className="container mt-3">
@@ -89,6 +89,15 @@ const RegisterMultipleUser = () => {
                                                     </option>
                                                 ))}
                                             </select>
+                                            {selectedDepartment === 'Others' && (
+                                                <input
+                                                    type="text"
+                                                    className="form-control mt-2"
+                                                    placeholder="Enter Department"
+                                                    value={customDepartment}
+                                                    onChange={(e) => setCustomDepartment(e.target.value)}
+                                                />
+                                            )}
                                         </div>
                                     </div>
                                     <div className="col-md-6">
@@ -107,6 +116,15 @@ const RegisterMultipleUser = () => {
                                                     </option>
                                                 ))}
                                             </select>
+                                            {selectedCampus === 'Others' && (
+                                                <input
+                                                    type="text"
+                                                    className="form-control mt-2"
+                                                    placeholder="Enter Campus"
+                                                    value={customCampus}
+                                                    onChange={(e) => setCustomCampus(e.target.value)}
+                                                />
+                                            )}
                                         </div>
                                     </div>
                                 </div>

@@ -112,5 +112,3 @@ const Login = () => {
 export default Login;
 
 
-// Blue Color
-// <div class="color-picker" data-mdb-color-picker-init></div>

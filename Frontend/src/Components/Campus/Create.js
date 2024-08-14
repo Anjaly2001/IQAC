@@ -69,7 +69,7 @@ const CreateCampus = () => {
                                     </button>
                                 </div>
                                 <div>
-                                    <h5>Campuses List</h5>
+                                    
                                     <ul>
                                         {campuses.map(campus => (
                                             <li key={campus.id}>

@@ -87,7 +87,7 @@ const CreateDepartment = ({ onAddDepartment }) => {
 
                             {type === 'Others' && (
                                 <div className="p-field w-100 mb-3">
-                                    <label htmlFor="customType">Enter Custom Type</label>
+                                    <label htmlFor="customType">Enter Type</label>
                                     <InputText
                                         id="customType"
                                         value={customType}
@@ -119,7 +119,7 @@ const CreateDepartment = ({ onAddDepartment }) => {
 
                             {location === 'Others' && (
                                 <div className="p-field w-100 mb-3">
-                                    <label htmlFor="customLocation">Enter Custom Location</label>
+                                    <label htmlFor="customLocation">Enter  Location</label>
                                     <InputText
                                         id="customLocation"
                                         value={customLocation}

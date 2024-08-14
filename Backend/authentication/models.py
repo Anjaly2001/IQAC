@@ -20,22 +20,6 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.email
     
-class Department(models.Model):
-    TYPE_CHOICES = [
-        ('department', 'Department'),
-        ('club', 'Club'),
-        ('center', 'Center'),
-        ('office', 'Office'),
-        ('cell', 'Cell'),
-        ('others', 'Others'),
-    ]
-    name = models.CharField(unique=True,max_length=250)
-    type = models.CharField(max_length=20, choices=TYPE_CHOICES, default='others')
-    is_active = models.BooleanField(default=True)
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
-
-
 class Location(models.Model):
     # CAMPUS = [
     #     ('Banglore Central Campus', 'banglore central campus'),
@@ -50,6 +34,24 @@ class Location(models.Model):
     logo = models.ImageField(null = True)
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(CustomUser,on_delete=models.CASCADE, related_name = 'created_by')
+    
+class Department(models.Model):
+    TYPE_CHOICES = [
+        ('Department', 'department'),
+        ('Club', 'club'),
+        ('Center', 'Center'),
+        ('Ofice', 'office'),
+        ('Cell', 'cell'),
+        ('Others', 'others'),
+    ]
+    name = models.CharField(unique=True,max_length=250)
+    type = models.CharField(max_length=20, choices=TYPE_CHOICES, default='others')
+    description = models.CharField(max_length=250,null = True)
+    location = models.ForeignKey(Location,on_delete=models.CASCADE, related_name = 'loc', null = True)
+    is_active = models.BooleanField(default=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+
 
     
 class User_profile(models.Model):

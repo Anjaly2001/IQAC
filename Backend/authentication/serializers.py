@@ -102,6 +102,7 @@ class DepartmentSerializer(serializers.ModelSerializer):
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
-        fields = ['campus', 'logo', 'created_by']
+        fields = '__all__'
+        # ['id','campus', 'logo', 'created_by']
         # read_only_fields = ['created_by']  # Prevent direct modification
 

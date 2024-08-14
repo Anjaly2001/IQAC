@@ -228,6 +228,7 @@ def department_register(request):
         if not request.user.is_superuser and not request.user.is_staff:
             return Response({"error": "Only admin can create departments"})
         serializer = DepartmentSerializer(data=request.data)
+        print(request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -265,6 +266,6 @@ def campus_register(request):
 @permission_classes([IsAuthenticated])
 def campus_list(request):
     if request.method == 'GET':
-        obj = Location.objects.all()
+        obj = Location.objects.all().order_by('-created_at')
         serializer = LocationSerializer(obj, many=True)
         return Response(serializer.data)

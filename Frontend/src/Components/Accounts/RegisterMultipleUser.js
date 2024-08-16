@@ -1,41 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminDashboard from '../Admin/AdminDashboard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const RegisterMultipleUser = () => {
-    const [departments, setDepartments] = useState([]);
-    const [campuses, setCampuses] = useState([]);
     const [file, setFile] = useState(null);
-    const [selectedDepartment, setSelectedDepartment] = useState('');
-    const [selectedCampus, setSelectedCampus] = useState('');
-
     const navigate = useNavigate();
-
-    useEffect(() => {
-        fetchDepartments();
-        fetchCampuses();
-    }, []);
-
-    const fetchDepartments = async () => {
-        // Replace with real data fetching
-        const mockDepartments = [
-            { id: 1, name: 'HOD' },
-            { id: 2, name: 'Coordinator' },
-            { id: 3, name: 'Faculty' },
-        ];
-        setDepartments(mockDepartments);
-    };
-
-    const fetchCampuses = async () => {
-        // Replace with real data fetching
-        const mockCampuses = [
-            { id: 1, name: 'Central Campus' },
-            { id: 2, name: 'Lavasa Campus' },
-            { id: 3, name: 'Bannerghatta Road Campus' },
-        ];
-        setCampuses(mockCampuses);
-    };
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
@@ -69,47 +39,9 @@ const RegisterMultipleUser = () => {
                     <div className="col-md-10 mt-1 pt-5">
                         <div className="container mt-3">
                             <div className="text-center fw-bold fs-5 mb-4">
-                                Register Multiple Users
+                                Register Multiple Users    (Under Development)
                             </div>
                             <div className="register">
-                                <div className="row mb-3">
-                                    <div className="col-md-6">
-                                        <div className="form-group">
-                                            <label htmlFor="department">Select Department</label>
-                                            <select
-                                                className="form-select"
-                                                id="department"
-                                                value={selectedDepartment}
-                                                onChange={(e) => setSelectedDepartment(e.target.value)}
-                                            >
-                                                <option value="">Select Department</option>
-                                                {departments.map(department => (
-                                                    <option key={department.id} value={department.name}>
-                                                        {department.name}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div className="col-md-6">
-                                        <div className="form-group">
-                                            <label htmlFor="campus">Select Campus</label>
-                                            <select
-                                                className="form-select"
-                                                id="campus"
-                                                value={selectedCampus}
-                                                onChange={(e) => setSelectedCampus(e.target.value)}
-                                            >
-                                                <option value="">Select Campus</option>
-                                                {campuses.map(campus => (
-                                                    <option key={campus.id} value={campus.name}>
-                                                        {campus.name}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div className="form-group mb-4">
                                     <label htmlFor="csvFile">Upload CSV File</label>
                                     <input

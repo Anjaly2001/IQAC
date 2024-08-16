@@ -104,19 +104,12 @@ const RegisterSingleUser = () => {
                                                 onChange={(e) => setUserDepartment(e.target.value)}
                                             >
                                                 <option value="">Select Department</option>
-                                                <option value="">MSc (Data Science)</option>
-                                                <option value="">BSc (Data Science/Honours/Honours with Research)</option>
-                                                <option value="">BSc (Economics and Analytics/Honours/Honours with Research)</option>
-                                                <option value="">Bachelor of Computer Applications (BCA/Honours/Honours with research)</option>
-                                                <option value="">LLM (Corporate & Commercial Law)</option>
-                                                <option value="">LLM (Constitutional & Administrative Law)</option>
-                                                <option value="">BBA LLB (Honours)</option>
-                                                <option value="">BA LLB (Honours)</option>
-                                                <option value="">MSc (Global Finance & Analytics)</option>
-                                                <option value="">BCom (Financial Analytics/Honours/Honours with Research)</option>
-                                                <option value="">BBA (Business Analytics/Honours/Honours with Research)</option>
-                                                <option value="">BBA (Honours/Honours with Research)</option>
-                                                <option value="">MA (English with Digital Humanities)</option>
+                                                <option value="">Data Science</option>
+                                                <option value="">Law</option>
+                                                <option value="">BBA</option>
+                                                <option value="">MBA</option>
+                                                <option value="">Commerce</option>
+                                                <option value="">Language</option>
                                                 <option value="">Others</option>
                                                 {/* Add options here */}
                                             </select>

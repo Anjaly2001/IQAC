@@ -19,6 +19,8 @@ import AddReport from '../Event/AddReport';
 import ListUser from '../Accounts/ListUser';
 import Map from '../Accounts/Map';
 import TagManager from '../Tag/TagManager';
+import CreateTag from '../Tag/CreateTag';
+import ListTag from '../Tag/ListTag';
 
 
 
@@ -52,7 +54,10 @@ const AdminDashboard = () => {
                     <Route path="/addreport" element={<AddReport />} />
 
                     <Route path="/tagmanager" element={<TagManager />} />
-                   
+                    <Route path="/createtag" element={<CreateTag />} />
+                    <Route path="/listtag" element={<ListTag />} />
+
+
                 </Routes>
             </div>
         </div>

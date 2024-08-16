@@ -17,8 +17,8 @@ const ListUser = () => {
     const fetchUsers = async () => {
         // Mock data, replace with real data fetching
         const mockUsers = [
-            { id: 1, name: 'Thomas', empId: '20101', email: 'thomas@example.com', department: 'HOD', campus: 'Central Campus', status: true },
-            { id: 2, name: 'Shine', empId: '20306', email: 'shine@example.com', department: 'Coordinator', campus: 'Lavasa Campus', status: false },
+            { id: 1, name: 'Thomas', empId: '20101', email: 'thomas@example.com', department: 'Data Science', campus: 'Christ University Pune', status: true },
+            { id: 2, name: 'Shine', empId: '20306', email: 'shine@example.com', department: 'BBA', campus: 'Christ University Pune', status: false },
         ];
         setUsers(mockUsers);
     };

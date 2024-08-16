@@ -69,7 +69,7 @@ const ListEvents = () => {
         <div className="col-md-10 mt-5 pt-5">
           <div className="container mt-3">
             <div className="d-flex justify-content-center mb-4">
-              <h4 className="fw-bold text-center">Event Status</h4>
+              <h4 className="fw-bold text-center">Event List</h4>
             </div>
             <div className="d-flex justify-content-end mb-4">
               <div className="input-group" style={{ width: '300px' }}>

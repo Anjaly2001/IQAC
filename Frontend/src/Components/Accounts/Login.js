@@ -10,6 +10,7 @@ const Login = () => {
     const [otpSent, setOtpSent] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
+  
 
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
@@ -34,23 +35,42 @@ const Login = () => {
     const handleVerifyOtp = async (e) => {
         e.preventDefault();
         setError('');
-
+    
+    
         try {
             const response = await axios.post('http://localhost:8000/api/authentication/verify_otp', { email, otp });
-            const { role } = response.data; // Assuming the role is returned from the backend
+            const { access_token, refresh_token } = response.data.data;
+            const { role } = response.data;
+    
+            // Store tokens and role in localStorage
+            localStorage.setItem('access_token', access_token);
+            localStorage.setItem('refresh_token', refresh_token);
+            localStorage.setItem('user_role', role);
+           
+            // console.log(access_token)
+            // console.log(refresh_token)
+            // console.log()
 
-            if (role === 'Admin') {
+            console.log('Role:', role);
+            console.log('Navigating to:', role === 'admin' ? '/admin-dashboard' : role === 'staffs' ? '/user-dashboard' : 'Invalid role');
+    
+            if (role === 'admin') {
                 navigate('/admin-dashboard');
-            } else if (role === 'User') {
+            } else if (role === 'staffs') {
                 navigate('/user-dashboard');
             } else {
                 setError('Invalid role');
             }
         } catch (error) {
-            setError('Invalid OTP. Please try again.');
+            if (error.response && error.response.data.error === 'OTP expired.') {
+                setError('Your OTP has expired. Please request a new OTP.');
+                setOtpSent(false);  // Allow user to resend OTP
+            } else {
+                setError('Invalid OTP. Please try again.');
+            }
         }
     };
-
+    
     return (
         <>
             <Header />

@@ -19,6 +19,8 @@ import AddReport from './Components/Event/AddReport';
 import ListUser from './Components/Accounts/ListUser';
 import Map from './Components/Accounts/Map';
 import TagManager from './Components/Tag/TagManager';
+import CreateTag from './Components/Tag/CreateTag';
+import ListTag from './Components/Tag/ListTag';
 
 
 
@@ -55,6 +57,10 @@ const App = () => {
                 <Route path="/users" element={<Users />}/>
                 
                 <Route path="/tagmanager" element={<TagManager />}/>
+                <Route path="/createtag" element={<CreateTag />} />
+                <Route path="/listtag" element={<ListTag />} />
+
+
                 </Routes>
                      </>
                 } />

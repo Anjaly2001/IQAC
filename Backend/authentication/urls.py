@@ -1,9 +1,8 @@
 from django.urls import path
-from .views import register, login_with_email, verify_otp,department_register, multiple_user_registration,user_token_refresh
+from .views import register, login_with_email, verify_otp,department_register, multiple_user_registration,user_token_refresh, campus_register, campus_list, department_list
 
 
 urlpatterns = [
-    # path('login', user_login, name='login'),
     path('login_with_email',login_with_email,name = 'login_with_email'),
     path('verify_otp', verify_otp, name = 'verify_otp'),
     path('refresh', user_token_refresh, name='refresh'),
@@ -14,4 +13,8 @@ urlpatterns = [
 
 
     path('department_register/',department_register,name = 'department_register'),
+    path('department_list/',department_list, name = 'department_list'),
+
+    path('campus_register/',campus_register, name = 'campus_register'),
+    path('campus_list/',campus_list, name = 'campus_list'),
 ]

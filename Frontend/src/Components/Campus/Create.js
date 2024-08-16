@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Axios from 'axios';
 import AdminDashboard from '../Admin/AdminDashboard';
 
 const CreateCampus = () => {
@@ -7,13 +8,38 @@ const CreateCampus = () => {
     const [logoName, setLogoName] = useState('Upload logo');
     const [campuses, setCampuses] = useState([]);
 
-    const handleCreateCampus = () => {
+    const token = localStorage.getItem('access_token'); // Assuming token is stored in local storage
+    
+    const handleCreateCampus = async () => {
         if (campusName && logo) {
-            const newCampus = { id: Date.now(), name: campusName, logo: URL.createObjectURL(logo) };
-            setCampuses([...campuses, newCampus]);
-            setCampusName('');
-            setLogo(null);
-            setLogoName('Upload logo');
+            const formData = new FormData();
+            formData.append('campus', campusName); // Backend expects "campus"
+            formData.append('logo', logo); // Correctly append the file
+
+            try {
+                const response = await Axios.post('http://127.0.0.1:8000/api/authentication/campus_register/', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': `Bearer ${token}` // Send the token for authentication
+                    }
+                });
+
+                console.log(response.data)
+
+                const newCampus = response.data;
+
+                
+                setCampuses([...campuses, newCampus]);
+                setCampusName('');
+                setLogo(null);
+                setLogoName('Upload logo');
+            } catch (error) {
+                if (error.response) {
+                    console.error('Error response data:', error.response.data);
+                } else {
+                    console.error('Error:', error.message);
+                }
+            }
         }
     };
 
@@ -22,7 +48,6 @@ const CreateCampus = () => {
         setLogo(file);
         setLogoName(file ? file.name : 'Upload logo');
     };
-
     return (
         <div>
             <div className="container-fluid">

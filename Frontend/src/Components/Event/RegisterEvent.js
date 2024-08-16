@@ -77,34 +77,17 @@ function RegisterEvent() {
                     onChange={(e) => setDepartment(e.target.value)}
                   >
                     <option value="">Select Department</option>
-                    {/* Add other department options */}
-                    <option value="">MSc (Data Science)</option>
-                    <option value="">BSc (Data Science/Honours/Honours with Research)</option>
-                    <option value="">BSc (Economics and Analytics/Honours/Honours with Research)</option>
-                    <option value="">Bachelor of Computer Applications (BCA/Honours/Honours with research)</option>
-                    <option value="">LLM (Corporate & Commercial Law)</option>
-                    <option value="">LLM (Constitutional & Administrative Law)</option>
-                    <option value="">BBA LLB (Honours)</option>
-                    <option value="">BA LLB (Honours)</option>
-                    <option value="">MSc (Global Finance & Analytics)</option>
-                    <option value="">BCom (Financial Analytics/Honours/Honours with Research)</option>
-                    <option value="">BBA (Business Analytics/Honours/Honours with Research)</option>
-                    <option value="">BBA (Honours/Honours with Research)</option>
-                    <option value="">MA (English with Digital Humanities)</option>
-                    <option value="">Others</option>
+                                                <option value="">Data Science</option>
+                                                <option value="">Law</option>
+                                                <option value="">BBA</option>
+                                                <option value="">MBA</option>
+                                                <option value="">Commerce</option>
+                                                <option value="">Language</option>
+                                                <option value="">Others</option>
                   </select>
                 </div>
               </div>
-              <div className="mb-3">
-                <label htmlFor="description" className="form-label">Description</label>
-                <Editor
-                  id="description"
-                  value={description}
-                  onTextChange={(e) => setDescription(e.htmlValue)}
-                  style={{ height: '150px' }}
-                  placeholder="Enter description here..."
-                />
-              </div>
+
               <div className="mb-3">
                 <label htmlFor="campus" className="form-label">Campus</label>
                 <select
@@ -124,6 +107,7 @@ function RegisterEvent() {
                   <option value="Others">Others</option>
                 </select>
               </div>
+
               <div className="mb-3">
                 <label htmlFor="eventTitle" className="form-label">Event Title</label>
                 <InputText
@@ -134,6 +118,59 @@ function RegisterEvent() {
                   className="w-100"
                 />
               </div>
+
+              <div className="mb-3">
+                <label className="form-label">Collaborators</label>
+                {collaborators.map((collaborator, index) => (
+                  <div key={index} className="row mb-2">
+                    <div className="col">
+                      <select
+                        className="form-select"
+                        value={collaborator.campus}
+                        onChange={(e) => handleCollaboratorChange(index, 'campus', e.target.value)}
+                      >
+                        <option value="">Select Campus</option>
+                        <option value="Christ University Bangalore">Christ University Bangalore Central Campus</option>
+                        <option value="Christ University Lavasa">Christ University Pune Lavasa Off Campus</option>
+                      </select>
+                    </div>
+                    <div className="col">
+                      <select
+                        className="form-select"
+                        value={collaborator.department}
+                        onChange={(e) => handleCollaboratorChange(index, 'department', e.target.value)}
+                      >
+                        <option value="">Select Department</option>
+                        <option value="Data Science">Data Science</option>
+                        <option value="MBA">MBA</option>
+                        <option value="Language">Language</option>
+                      </select>
+                    </div>
+                    <div className="col">
+                      <InputText
+                        type="text"
+                        value={collaborator.name}
+                        onChange={(e) => handleCollaboratorChange(index, 'name', e.target.value)}
+                        placeholder="Name"
+                      />
+                    </div>
+                  </div>
+                ))}
+                <Button label="Add Collaborator" icon="pi pi-plus" onClick={addCollaborator} />
+              </div>
+
+              <div className="mb-3">
+                <label htmlFor="description" className="form-label">Description</label>
+                <Editor
+                  id="description"
+                  value={description}
+                  onTextChange={(e) => setDescription(e.htmlValue)}
+                  style={{ height: '150px' }}
+                  placeholder="Enter description here..."
+                />
+              </div>
+             
+             
               <div className="mb-3">
                 <label htmlFor="numberOfActivities" className="form-label">Number of Activities</label>
                 <InputText
@@ -233,45 +270,7 @@ function RegisterEvent() {
                   onChange={(e) => setProposal(e.target.files[0])}
                 />
               </div>
-              <div className="mb-3">
-                <label className="form-label">Collaborators</label>
-                {collaborators.map((collaborator, index) => (
-                  <div key={index} className="row mb-2">
-                    <div className="col">
-                      <select
-                        className="form-select"
-                        value={collaborator.campus}
-                        onChange={(e) => handleCollaboratorChange(index, 'campus', e.target.value)}
-                      >
-                        <option value="">Select Campus</option>
-                        <option value="Christ University Bangalore">Christ University Bangalore Central Campus</option>
-                        <option value="Christ University Lavasa">Christ University Pune Lavasa Off Campus</option>
-                      </select>
-                    </div>
-                    <div className="col">
-                      <select
-                        className="form-select"
-                        value={collaborator.department}
-                        onChange={(e) => handleCollaboratorChange(index, 'department', e.target.value)}
-                      >
-                        <option value="">Select Department</option>
-                        <option value="Data Science">Data Science</option>
-                        <option value="MBA">MBA</option>
-                        <option value="Language">Language</option>
-                      </select>
-                    </div>
-                    <div className="col">
-                      <InputText
-                        type="text"
-                        value={collaborator.name}
-                        onChange={(e) => handleCollaboratorChange(index, 'name', e.target.value)}
-                        placeholder="Name"
-                      />
-                    </div>
-                  </div>
-                ))}
-                <Button label="Add Collaborator" icon="pi pi-plus" onClick={addCollaborator} />
-              </div>
+              
               <div className="mb-3">
                 <label htmlFor="tag" className="form-label">Tag</label>
                 <InputText

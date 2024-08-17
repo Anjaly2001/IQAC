@@ -28,10 +28,12 @@ import ListTag from '../Tag/ListTag';
 
 const AdminDashboard = () => {
     return (
-        <div className="admin-dashboard">
-            {/* <Header /> */}
+
+        <div className="admin-dashboard  mt-5">
+           
             <Sidebar />
             <div style={{ marginLeft: '250px', padding: '20px' }}>
+            
                 <Routes>
                     
                     <Route path="/createdepartments" element={<CreateDepartments />} />

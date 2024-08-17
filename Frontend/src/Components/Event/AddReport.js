@@ -98,6 +98,7 @@ function AddReport() {
                   </select>
                 </div>
               </div>
+              
               <div className="mb-3">
                 <label htmlFor="description" className="form-label">Description</label>
                 <textarea
@@ -109,6 +110,7 @@ function AddReport() {
                   onChange={handleChange}
                 ></textarea>
               </div>
+
               <div className="mb-3">
                 <label htmlFor="campus" className="form-label">Campus</label>
                 <select

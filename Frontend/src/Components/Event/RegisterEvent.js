@@ -109,17 +109,6 @@ function RegisterEvent() {
               </div>
 
               <div className="mb-3">
-                <label htmlFor="eventTitle" className="form-label">Event Title</label>
-                <InputText
-                  id="eventTitle"
-                  value={eventTitle}
-                  onChange={(e) => setEventTitle(e.target.value)}
-                  placeholder="Enter event title"
-                  className="w-100"
-                />
-              </div>
-
-              <div className="mb-3">
                 <label className="form-label">Collaborators</label>
                 {collaborators.map((collaborator, index) => (
                   <div key={index} className="row mb-2">
@@ -157,6 +146,17 @@ function RegisterEvent() {
                   </div>
                 ))}
                 <Button label="Add Collaborator" icon="pi pi-plus" onClick={addCollaborator} />
+              </div>
+
+              <div className="mb-3">
+                <label htmlFor="eventTitle" className="form-label">Event Title</label>
+                <InputText
+                  id="eventTitle"
+                  value={eventTitle}
+                  onChange={(e) => setEventTitle(e.target.value)}
+                  placeholder="Enter event title"
+                  className="w-100"
+                />
               </div>
 
               <div className="mb-3">
@@ -260,16 +260,7 @@ function RegisterEvent() {
                   className="w-100"
                 />
               </div>
-              <div className="mb-3">
-                <label htmlFor="proposal" className="form-label">Proposal (PDF)</label>
-                <input
-                  type="file"
-                  className="form-control"
-                  id="proposal"
-                  accept="application/pdf"
-                  onChange={(e) => setProposal(e.target.files[0])}
-                />
-              </div>
+              
               
               <div className="mb-3">
                 <label htmlFor="tag" className="form-label">Tag</label>
@@ -279,6 +270,16 @@ function RegisterEvent() {
                   onChange={(e) => setTag(e.target.value)}
                   placeholder="Enter tag"
                   className="w-100"
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="proposal" className="form-label">Proposal (PDF)</label>
+                <input
+                  type="file"
+                  className="form-control"
+                  id="proposal"
+                  accept="application/pdf"
+                  onChange={(e) => setProposal(e.target.files[0])}
                 />
               </div>
               <div className="mb-3">

@@ -28,7 +28,7 @@ const DepartmentList = () => {
 
     const fetchUsers = async () => {
         const mockUsers = [
-            { id: 1, Dept_name: 'Data Science', Description: 'School of Office', Type: 'Department', Location: 'Christ University Banglore Central Campus', status: true },
+            { id: 1, Dept_name: 'Data Science', Description: 'Department', Type: 'Department', Location: 'Christ University Banglore Central Campus', status: true },
             { id: 2, Dept_name: 'Swo', Description: 'Student Welfare Office', Type: 'Center', Location: 'Christ University Lavasa Campus', status: false },
         ];
         setUsers(mockUsers);

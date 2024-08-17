@@ -34,11 +34,11 @@ const RegisterSingleUser = () => {
                     <div className="col-md-10 mt-1 pt-5">
                         <div className="container mt-3">
                             <div className="text-center fw-bold fs-5 mb-4">Register Single User</div>
-                            <div className="register">
+                            <div className="register mt-5">
                                 <div className="user-actions mb-4">
                                     <div className="row mb-3">
                                         <div className="col-md-6">
-                                            <label htmlFor="userName">Name</label>
+                                            <label htmlFor="userName ">Name</label>
                                             <input
                                                 type="text"
                                                 className="form-control"

@@ -44,13 +44,14 @@ function Sidebar() {
   const isActive = (path) => location.pathname === path; // Check if the current path matches the link path
 
   return (
-    <div className="sidebar">
-      <Nav className="flex-column">
+    <div className="sidebar text-left ">
+      <Nav className="flex-column p-2">
         <Nav.Item>
           <Nav.Link
             as={Link}
-            to="/admin-dashboard"
+            to="/dashboard"
             className={`text-light fw-bold ${isActive('/admin-dashboard') ? 'active' : ''}`} // Apply active class
+            
           >
             <FontAwesomeIcon icon={faHome} className="me-2" />
             Dashboard
@@ -237,7 +238,7 @@ function Sidebar() {
             onClick={() => toggleSection('eventStatus')}
           >
             <FontAwesomeIcon icon={faCalendar} className="me-2" />
-            Event Status
+            Event 
           </Nav.Link>
           {openSections.eventStatus && (
             <Nav className="flex-column ms-3">
@@ -254,23 +255,24 @@ function Sidebar() {
               <Nav.Item>
                 <Nav.Link
                   as={Link}
-                  to="/addreport"
-                  className={`text-light ${isActive('/addreport') ? 'active' : ''}`}
+                  to="/listevents"
+                  className={`text-light ${isActive('/listevents') ? 'active' : ''}`}
                 >
                   <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
-                  Create EMT Report
+                  Events List
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item>
                 <Nav.Link
                   as={Link}
-                  to="/listevents"
-                  className={`text-light ${isActive('/listevents') ? 'active' : ''}`}
+                  to="/addreport"
+                  className={`text-light ${isActive('/addreport') ? 'active' : ''}`}
                 >
                   <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
-                  Event List
+                  Create  Report
                 </Nav.Link>
               </Nav.Item>
+              
             </Nav>
           )}
         </Nav.Item>

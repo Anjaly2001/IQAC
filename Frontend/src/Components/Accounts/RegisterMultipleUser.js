@@ -39,9 +39,18 @@ const RegisterMultipleUser = () => {
                     <div className="col-md-10 mt-1 pt-5">
                         <div className="container mt-3">
                             <div className="text-center fw-bold fs-5 mb-4">
-                                Register Multiple Users    (Under Development)
+                                Register Multiple Users (Under Development)
                             </div>
                             <div className="register">
+                                
+                                {/* Add "Download CSV Format" link here */}
+                                <div className="d-flex justify-content-end mb-2">
+                                    {/* Replace `#` with the actual link to download the CSV format */}
+                                    <a href="#" className="text-primary">
+                                        Download CSV Format
+                                    </a>
+                                </div>
+                                
                                 <div className="form-group mb-4">
                                     <label htmlFor="csvFile">Upload CSV File</label>
                                     <input

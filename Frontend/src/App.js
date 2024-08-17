@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './Components/Accounts/Login';
 import AdminDashboard from './Components/Admin/AdminDashboard';
+import Dashboard from './Components/Admin/Dashboard'
 import Sidebar from './Sidebar';
 import Createdepartments from './Components/Department/CreateDepartments';
 import ListDepartment from './Components/Department/ListDepartment';
@@ -41,6 +42,8 @@ const App = () => {
                 <Route path="/registerMultipleUser" element={<RegisterMultipleUser />}/>
                 <Route path="/listUser" element={<ListUser />}/>
                 <Route path="/map" element={<Map />}/>
+                <Route path="/dashboard" element={<Dashboard />}/>
+
 
 
               

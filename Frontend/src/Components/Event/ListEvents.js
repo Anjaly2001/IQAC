@@ -97,7 +97,7 @@ const ListEvents = () => {
                 <Column field="title" header="Event Title" filter filterPlaceholder="Search by title" style={{ minWidth: '12rem' }} />
                 <Column field="collaborators" header="Collaborators" filter filterPlaceholder="Search by collaborators" style={{ minWidth: '12rem' }} />
                 <Column field="status" header="Status" filter filterPlaceholder="Search by status" style={{ minWidth: '12rem' }} />
-                <Column header="Actions" body={actionBodyTemplate} style={{ minWidth: '12rem' }} />
+                <Column header="Actions (Under development ) " body={actionBodyTemplate} style={{ minWidth: '12rem' }} />
               </DataTable>
             </div>
           </div>

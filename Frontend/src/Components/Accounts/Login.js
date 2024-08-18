@@ -6,6 +6,7 @@ import Header from '../../Header';
 import { InputOtp } from 'primereact/inputotp';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { login, verify_otp } from '../../axios/api';
 
 
 const Login = () => {
@@ -28,7 +29,8 @@ const Login = () => {
         setError('');
 
         try {
-            await axios.post('http://localhost:8000/api/authentication/login_with_email', { email });
+            const data = { email };
+            const response = await login(data);
             setOtpSent(true);
             toast.success('OTP sent to your email!'); // Display success toast
         } catch (error) {
@@ -41,9 +43,10 @@ const Login = () => {
         setError('');
 
         try {
-            const response = await axios.post('http://localhost:8000/api/authentication/verify_otp', { email, otp });
-            const { access_token, refresh_token } = response.data.data;
-            const { role } = response.data;
+           
+            const response =await verify_otp({ email, otp });
+            const { access_token, refresh_token } = response.data;
+            const { role } = response;
 
             localStorage.setItem('access_token', access_token);
             localStorage.setItem('refresh_token', refresh_token);

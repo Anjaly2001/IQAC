@@ -4,6 +4,7 @@ import Axios from 'axios';
 import AdminDashboard from '../Admin/AdminDashboard';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { campus_register } from '../../axios/api';
 
 const CreateCampus = () => {
     const [campusName, setCampusName] = useState('');
@@ -20,18 +21,13 @@ const CreateCampus = () => {
             formData.append('logo', logo); // Correctly append the file
 
             try {
-                const response = await Axios.post('http://127.0.0.1:8000/api/authentication/campus_register/', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                        'Authorization': `Bearer ${token}` // Send the token for authentication
-                    }
-                });
+                const response = await campus_register(formData)
 
-                if (response.data && response.data.exist) {
+                if (response && response.exist) {
                     // console.log("Already exist");
                     toast.error('Campus name already exists!');
                 }else {
-                    const newCampus = response.data;
+                    const newCampus = response;
                     setCampuses([...campuses, newCampus]);
                     setCampusName('');
                     setLogo(null);
@@ -41,7 +37,7 @@ const CreateCampus = () => {
             } 
             catch (error) {
                 if (error.response) {
-                    console.error('Error response data:', error.response.data);
+                    console.error('Error response data:', error.response);
                     toast.error('Failed to create campus. Please try again.');
                 } else {
                     console.error('Error:', error.message);

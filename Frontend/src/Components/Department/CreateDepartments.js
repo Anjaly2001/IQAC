@@ -41,6 +41,7 @@ import AdminDashboard from '../Admin/AdminDashboard';
 import Axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { department_register,campus_list } from '../../axios/api';
 
 const CreateDepartment = ({ onAddDepartment }) => {
     const [departmentName, setDepartmentName] = useState('');
@@ -58,16 +59,9 @@ const CreateDepartment = ({ onAddDepartment }) => {
         const fetchLocations = async () => {
             try {
                 const token = localStorage.getItem('access_token'); // Retrieve the token from local storage
-
-                const response = await Axios.get('http://127.0.0.1:8000/api/authentication/campus_list/', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
-
-                console.log('Fetched locations:', response.data);  // Log the response data to verify it
-                setLocations(response.data);  // Update the locations state with the fetched data
+                const response = await campus_list();
+                console.log('Fetched locations:', response);  // Log the response data to verify it
+                setLocations(response);  // Update the locations state with the fetched data
             } catch (error) {
                 console.error('Failed to fetch locations:', error);
                 // Handle the error appropriately
@@ -90,20 +84,23 @@ const CreateDepartment = ({ onAddDepartment }) => {
             };
     
             try {
-                const token = localStorage.getItem('access_token'); // Retrieve token from local storage
+                // const token = localStorage.getItem('access_token'); // Retrieve token from local storage
     
-                console.log('Posting department data:', newDepartment); // Log data being sent
+                // console.log('Posting department data:', newDepartment); // Log data being sent
+                
+
+                const response = await department_register(newDepartment);
     
-                const response = await Axios.post(
-                    'http://127.0.0.1:8000/api/authentication/department_register/',
-                    newDepartment,
-                    {
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                        }
-                    }
-                );
+                // const response = await Axios.post(
+                //     'http://127.0.0.1:8000/api/authentication/department_register/',
+                //     newDepartment,
+                //     {
+                //         headers: {
+                //             'Authorization': `Bearer ${token}`,
+                //             'Content-Type': 'application/json'
+                //         }
+                //     }
+                // );
     
                 console.log('Created department response:', response.data); // Debugging line
                 

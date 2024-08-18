@@ -5,20 +5,21 @@ import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
 import { FaSearch, FaEdit, FaTrash } from 'react-icons/fa';
 import { Tag } from 'primereact/tag';
-import { TriStateCheckbox } from 'primereact/tristatecheckbox';
 import AdminDashboard from '../Admin/AdminDashboard';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Axios from 'axios';
+import { IconField } from 'primereact/iconfield';
+import { InputIcon } from 'primereact/inputicon';
 
 const DepartmentList = () => {
     const navigate = useNavigate();
     const [users, setUsers] = useState([]);
     const [filters, setFilters] = useState({
         global: { value: null, matchMode: 'contains' },
-        Dept_name: { value: null, matchMode: 'contains' },
-        Description: { value: null, matchMode: 'contains' },
-        Type: { value: null, matchMode: 'contains' },
-        Location: { value: null, matchMode: 'contains' },
-        status: { value: null, matchMode: 'equals' }
+        name: { value: null, matchMode: 'contains' },
+        description: { value: null, matchMode: 'contains' },
+        type: { value: null, matchMode: 'contains' },
+        location: { value: null, matchMode: 'contains' }
     });
     const [globalFilterValue, setGlobalFilterValue] = useState('');
 
@@ -27,13 +28,19 @@ const DepartmentList = () => {
     }, []);
 
     const fetchUsers = async () => {
-        const mockUsers = [
-            { id: 1, Dept_name: 'Data Science', Description: 'Department', Type: 'Department', Location: 'Christ University Banglore Central Campus', status: true },
-            { id: 2, Dept_name: 'Swo', Description: 'Student Welfare Office', Type: 'Center', Location: 'Christ University Lavasa Campus', status: false },
-        ];
-        setUsers(mockUsers);
+        const token = localStorage.getItem('access_token');
+        try {
+            // const token = localStorage.getItem('access_token');
+            const response = await Axios.get('http://127.0.0.1:8000/api/authentication/department_list/', {
+                headers: {
+                    'Authorization': `Bearer ${token}` // Send the token for authentication
+                }
+            });
+            setUsers(response.data);
+        } catch (error) {
+            console.error('Error fetching departments:', error);
+        }
     };
-
     const startEditing = (user) => {
         navigate(`/update-user/${user.id}`);
     };
@@ -72,6 +79,7 @@ const DepartmentList = () => {
     );
 
     const onGlobalFilterChange = (e) => {
+        console.log("hello");
         const value = e.target.value;
         let _filters = { ...filters };
         _filters['global'].value = value;
@@ -80,31 +88,28 @@ const DepartmentList = () => {
     };
 
     const renderHeader = () => (
-        <div className="d-flex justify-content-end">
-            <div className="input-group">
-                <span className="input-group-text bg-white border-end-0">
-                    <FaSearch />
-                </span>
-                <InputText
-                    type="search"
-                    placeholder="Search users"
-                    value={globalFilterValue}
-                    onChange={onGlobalFilterChange}
-                    className="form-control border-start-0"
-                />
-            </div>
+        <div className="flex justify-content-end">
+            <IconField iconPosition="left">
+                <InputIcon className="pi pi-search" />
+                <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Keyword Search" />
+            </IconField>
         </div>
     );
 
     const header = renderHeader();
 
+    const customBodyTemplate = (rowData) => {
+        return <div
+            dangerouslySetInnerHTML={{ __html: rowData.description }}
+        />;
+    };
+
     return (
         <div>
-            <AdminDashboard />
             <div className="container-fluid mt-1">
                 <div className="row">
                     <div className="col-md-2 p-0">
-                        {/* Sidebar or other components can go here */}
+                        <AdminDashboard />
                     </div>
                     <div className="col-md-10 mt-1 pt-5">
                         <div className="container mt-3">
@@ -115,19 +120,18 @@ const DepartmentList = () => {
                                     paginator
                                     rows={10}
                                     dataKey="id"
-                                    emptyMessage="No users found."
-                                    globalFilterFields={['Dept_name', 'Description', 'Type', 'Location']}
+                                    emptyMessage="No department found."
+                                    globalFilterFields={['name', 'description', 'type', 'location']}
                                     filters={filters}
                                     filterDisplay="row"
                                     header={header}
+                                    responsiveLayout="scroll"
                                 >
-                                    <Column field="Dept_name" header="Dept Name" filter filterPlaceholder="Search by department name" filterMatchMode="contains" />
-                                    <Column field="Description" header="Description" filter filterPlaceholder="Search by description" filterMatchMode="contains" />
-                                    <Column field="Type" header="Type" filter filterPlaceholder="Search by type" filterMatchMode="contains" />
-                                    <Column field="Location" header="Location" filter filterPlaceholder="Search by location" filterMatchMode="contains" />
-                                    <Column field="status" header="Status" body={statusBodyTemplate} filter filterElement={(options) => (
-                                        <TriStateCheckbox value={options.value} onChange={(e) => options.filterApplyCallback(e.value)} />
-                                    )} />
+                                    <Column field="name" header="Dept Name" filter filterPlaceholder="Search by department name" filterMatchMode="contains" />
+                                    <Column field="description" filters={filters} header="Description" filter filterPlaceholder="Search by description" filterMatchMode="contains" body={customBodyTemplate} />
+                                    <Column field="type" header="Type" filter filterPlaceholder="Search by type" filterMatchMode="contains" />
+                                    <Column field="location" header="Location" filter filterPlaceholder="Search by location" filterMatchMode="contains" />
+                                    <Column field="status" header="Status" body={statusBodyTemplate} />
                                     <Column header="Actions" body={actionBodyTemplate} />
                                 </DataTable>
                             </div>

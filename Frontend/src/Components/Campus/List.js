@@ -62,6 +62,7 @@ import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
+import homeURL from '../../axios/homeurl';
 
 const ListCampus = () => {
     const [campuses, setCampuses] = useState([]);
@@ -82,7 +83,7 @@ const ListCampus = () => {
 
                 // Map the data to match the expected structure in the frontend
                 const campusData = response.data.map(campus => ({
-                    id: campus.created_by, // You can use campus ID if available
+                    id: campus.id, // You can use campus ID if available
                     name: campus.campus, // Map "campus" to "name"
                     logo: `${process.env.REACT_APP_BACKEND_URL}${campus.logo}`, // Construct the full URL for the logo
                 }));
@@ -118,7 +119,9 @@ const ListCampus = () => {
     };
 
     const logoBodyTemplate = (rowData) => {
-        return <img src={rowData.logo} alt={`${rowData.name} logo`} style={{ width: '100px', height: 'auto' }} />;
+        let logo = rowData.logo;
+        logo = logo.replace("undefined",homeURL);
+        return <img src={`${logo}`} alt={`${rowData.name} logo`} style={{ width: '100px', height: 'auto' }} />;
     };
 
     const header = renderHeader();

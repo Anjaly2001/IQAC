@@ -1,8 +1,46 @@
-import React, { useState } from 'react';
+// import React, { useState } from 'react';
+// import { InputText } from 'primereact/inputtext';
+// import { Editor } from 'primereact/editor';
+// import { Button } from 'primereact/button';
+// import AdminDashboard from '../Admin/AdminDashboard';
+
+// const CreateDepartment = ({ onAddDepartment }) => {
+//     const [departmentName, setDepartmentName] = useState('');
+//     const [description, setDescription] = useState('');
+//     const [type, setType] = useState('');
+//     const [location, setLocation] = useState('');
+//     const [customType, setCustomType] = useState('');
+//     const [customLocation, setCustomLocation] = useState('');
+
+//     const handleCreateDepartment = () => {
+//         const finalType = type === 'Others' ? customType : type;
+//         const finalLocation = location === 'Others' ? customLocation : location;
+
+//         if (departmentName && description && finalType && finalLocation) {
+//             const newDepartment = { 
+//                 id: Date.now(), 
+//                 name: departmentName, 
+//                 description, 
+//                 type: finalType, 
+//                 location: finalLocation 
+//             };
+//             onAddDepartment(newDepartment);
+//             setDepartmentName('');
+//             setDescription('');
+//             setType('');
+//             setLocation('');
+//             setCustomType('');
+//             setCustomLocation('');
+//         }
+//     };
+import React, { useState, useEffect } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Editor } from 'primereact/editor';
 import { Button } from 'primereact/button';
 import AdminDashboard from '../Admin/AdminDashboard';
+import Axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CreateDepartment = ({ onAddDepartment }) => {
     const [departmentName, setDepartmentName] = useState('');
@@ -11,31 +49,91 @@ const CreateDepartment = ({ onAddDepartment }) => {
     const [location, setLocation] = useState('');
     const [customType, setCustomType] = useState('');
     const [customLocation, setCustomLocation] = useState('');
+    const [locations, setLocations] = useState([]);  // State to hold the list of locations
+    const [message, setMessage] = useState('');  // State for success or error message
+    const [messageType, setMessageType] = useState('');
 
-    const handleCreateDepartment = () => {
+    // Fetch locations from the backend when the component mounts
+    useEffect(() => {
+        const fetchLocations = async () => {
+            try {
+                const token = localStorage.getItem('access_token'); // Retrieve the token from local storage
+
+                const response = await Axios.get('http://127.0.0.1:8000/api/authentication/campus_list/', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                console.log('Fetched locations:', response.data);  // Log the response data to verify it
+                setLocations(response.data);  // Update the locations state with the fetched data
+            } catch (error) {
+                console.error('Failed to fetch locations:', error);
+                // Handle the error appropriately
+            }
+        };
+
+        fetchLocations();
+    }, []);  // Empty dependency array means this useEffect runs once when the component mounts
+   
+    const handleCreateDepartment = async () => {
         const finalType = type === 'Others' ? customType : type;
         const finalLocation = location === 'Others' ? customLocation : location;
-
+    
         if (departmentName && description && finalType && finalLocation) {
-            const newDepartment = { 
-                id: Date.now(), 
-                name: departmentName, 
-                description, 
-                type: finalType, 
-                location: finalLocation 
+            const newDepartment = {
+                name: departmentName,
+                type: finalType,
+                location: finalLocation,
+                description  // Ensure description is included
             };
-            onAddDepartment(newDepartment);
-            setDepartmentName('');
-            setDescription('');
-            setType('');
-            setLocation('');
-            setCustomType('');
-            setCustomLocation('');
+    
+            try {
+                const token = localStorage.getItem('access_token'); // Retrieve token from local storage
+    
+                console.log('Posting department data:', newDepartment); // Log data being sent
+    
+                const response = await Axios.post(
+                    'http://127.0.0.1:8000/api/authentication/department_register/',
+                    newDepartment,
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                );
+    
+                console.log('Created department response:', response.data); // Debugging line
+                
+    
+              
+                toast.success('Department created successfully!');
+
+                // Set success message and message type
+                setMessage('Department created successfully!');
+                setMessageType('success');
+
+    
+                // Clear form fields after successful submission
+                setDepartmentName('');
+                setDescription('');
+                setType('');
+                setLocation('');
+                setCustomType('');
+                setCustomLocation('');
+            } catch (error) {
+                console.error('Failed to create department:', error);
+                // Handle the error appropriately
+            }
         }
     };
+    
 
     return (
         <div className="container-fluid">
+        <ToastContainer />  
             <div className="row">
                 <div className="col-md-2 p-0">
                     <AdminDashboard />
@@ -92,7 +190,7 @@ const CreateDepartment = ({ onAddDepartment }) => {
                                         id="customType"
                                         value={customType}
                                         onChange={(e) => setCustomType(e.target.value)}
-                                        placeholder="Enter custom type"
+                                        placeholder="Enter type"
                                         className="w-100"
                                     />
                                 </div>
@@ -107,24 +205,27 @@ const CreateDepartment = ({ onAddDepartment }) => {
                                     onChange={(e) => setLocation(e.target.value)}
                                 >
                                     <option value="">Choose Location</option>
-                                    <option value="Christ University Bangalore Central Campus">Christ University Bangalore Central Campus</option>
-                                    <option value="Christ University Bangalore Bannerghatta Road Campus">Christ University Bangalore Bannerghatta Road Campus</option>
-                                    <option value="Christ University Bangalore Kengeri Campus">Christ University Bangalore Kengeri Campus</option>
-                                    <option value="Christ University Bangalore Yeshwanthpur Campus">Christ University Bangalore Yeshwanthpur Campus</option>
-                                    <option value="Christ University Delhi NCR Off Campus">Christ University Delhi NCR Off Campus</option>
-                                    <option value="Christ University Pune Lavasa Off Campus">Christ University Pune Lavasa Off Campus</option>
+                                    {locations.length > 0 ? (
+                                        locations.map(loc => (
+                                            <option key={loc.id} value={loc.id}>
+                                                {loc.campus}
+                                            </option>
+                                        ))
+                                    ) : (
+                                        <option value="">No locations available</option>
+                                    )}
                                     <option value="Others">Others</option>
                                 </select>
                             </div>
 
                             {location === 'Others' && (
                                 <div className="p-field w-100 mb-3">
-                                    <label htmlFor="customLocation">Enter Custom Location</label>
+                                    <label htmlFor="customLocation">Enter Location</label>
                                     <InputText
                                         id="customLocation"
                                         value={customLocation}
                                         onChange={(e) => setCustomLocation(e.target.value)}
-                                        placeholder="Enter custom location"
+                                        placeholder="Enter location"
                                         className="w-100"
                                     />
                                 </div>

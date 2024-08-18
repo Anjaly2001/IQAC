@@ -7,6 +7,7 @@ import { InputOtp } from 'primereact/inputotp';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+
 const Login = () => {
     const [email, setEmail] = useState('');
     const [otp, setOtp] = useState('');
@@ -109,6 +110,7 @@ const Login = () => {
                                     value={otp}
                                     onChange={(e) => handleOtpChange(e.value)}
                                     numInputs={6}
+                                    length={6}
                                     inputClassName="form-control otp-input"
                                     separator={<span>-</span>}
                                     autoFocus

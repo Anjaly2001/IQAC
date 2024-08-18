@@ -1,6 +1,9 @@
+
 import React, { useState } from 'react';
 import Axios from 'axios';
 import AdminDashboard from '../Admin/AdminDashboard';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CreateCampus = () => {
     const [campusName, setCampusName] = useState('');
@@ -24,24 +27,52 @@ const CreateCampus = () => {
                     }
                 });
 
-                console.log(response.data)
-
-                const newCampus = response.data;
-
-                
-                setCampuses([...campuses, newCampus]);
-                setCampusName('');
-                setLogo(null);
-                setLogoName('Upload logo');
-            } catch (error) {
+                if (response.data && response.data.exist) {
+                    // console.log("Already exist");
+                    toast.error('Campus name already exists!');
+                }else {
+                    const newCampus = response.data;
+                    setCampuses([...campuses, newCampus]);
+                    setCampusName('');
+                    setLogo(null);
+                    setLogoName('Upload logo');
+                    toast.success('Campus created successfully!');
+                }
+            } 
+            catch (error) {
                 if (error.response) {
                     console.error('Error response data:', error.response.data);
+                    toast.error('Failed to create campus. Please try again.');
                 } else {
                     console.error('Error:', error.message);
+                    toast.error('An error occurred. Please try again.');
                 }
             }
+        } else {
+            toast.error('Please fill in all fields.');
         }
     };
+            //     console.log(response.data)
+            //     // toast.success('OTP sent to your email!'); 
+
+            //     const newCampus = response.data;
+
+                
+            //     setCampuses([...campuses, newCampus]);
+            //     setCampusName('');
+            //     setLogo([]);
+            //     setLogoName('Upload logo');
+            // } 
+    //         catch (error) {
+    //             if (error.response) {
+    //                 console.error('Error response data:', error.response.data);
+    //             }
+    //             else {
+    //                 console.error('Error:', error.message);
+    //             }
+    //         }
+    //     }
+    // };
 
     const handleLogoChange = (e) => {
         const file = e.target.files[0];
@@ -50,6 +81,7 @@ const CreateCampus = () => {
     };
     return (
         <div>
+        <ToastContainer />
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-md-2 p-0">
@@ -95,14 +127,14 @@ const CreateCampus = () => {
                                 </div>
                                 <div>
                                     
-                                    <ul>
+                                    {/* <ul>
                                         {campuses.map(campus => (
                                             <li key={campus.id}>
                                                 <img src={campus.logo} alt={campus.name} width={50} height={50} />
                                                 {campus.name}
                                             </li>
                                         ))}
-                                    </ul>
+                                    </ul> */}
                                 </div>
                             </div>
                         </div>

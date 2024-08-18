@@ -21,15 +21,6 @@ class CustomUser(AbstractUser):
         return self.email
     
 class Location(models.Model):
-    # CAMPUS = [
-    #     ('Banglore Central Campus', 'banglore central campus'),
-    #     ('Banglore Bannerghatta Campus', 'banglore bannerghatta campus'),
-    #     ('Banglore Kangeri Campus', 'banglore kangeri campus'),
-    #     ('Banglore Yeshwanthpur Campus', 'banglore yeshwanthpur campus'),
-    #     ('Delhi NCR Campus', 'delhi ncr campus'),
-    #     ('Pune Lavasa Campus', 'pune lavasa campus'),
-    #     ('Others', 'others'),
-    # ]
     campus = models.CharField(max_length=200)
     logo = models.ImageField(null = True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -51,9 +42,6 @@ class Department(models.Model):
     is_active = models.BooleanField(default=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
-
-
-
 
     
 class User_profile(models.Model):

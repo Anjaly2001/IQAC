@@ -169,7 +169,7 @@ function Sidebar() {
                   Users List
                 </Nav.Link>
               </Nav.Item>
-              <Nav.Item>
+              {/* <Nav.Item>
                 <Nav.Link
                   as={Link}
                   to="/map"
@@ -178,7 +178,7 @@ function Sidebar() {
                   <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
                   Map User / Users
                 </Nav.Link>
-              </Nav.Item>
+              </Nav.Item> */}
             </Nav>
           )}
         </Nav.Item>
@@ -262,7 +262,7 @@ function Sidebar() {
                   Events List
                 </Nav.Link>
               </Nav.Item>
-              <Nav.Item>
+              {/* <Nav.Item>
                 <Nav.Link
                   as={Link}
                   to="/addreport"
@@ -271,7 +271,7 @@ function Sidebar() {
                   <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
                   Create  Report
                 </Nav.Link>
-              </Nav.Item>
+              </Nav.Item> */}
               
             </Nav>
           )}

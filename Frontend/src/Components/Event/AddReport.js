@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import AdminDashboard from '../Admin/AdminDashboard';
+import { Editor } from 'primereact/editor';
 
 function AddReport() {
+  const [description, setDescription] = useState('');
   const [form, setForm] = useState({
     department: '',
     eventType: '',
@@ -76,7 +78,7 @@ function AddReport() {
         <div className="col-9 mt-1 pt-2">
           <div className="container" style={{ maxWidth: '800px' }}>
             <div className="text-center fw-bolder fs-5 mt-5">
-              Event Report Form 
+              Event Report Form
               <hr />
             </div>
             <form onSubmit={handleSubmit}>
@@ -98,17 +100,16 @@ function AddReport() {
                   </select>
                 </div>
               </div>
-              
+
               <div className="mb-3">
                 <label htmlFor="description" className="form-label">Description</label>
-                <textarea
-                  className="form-control"
+                <Editor
                   id="description"
-                  name="description"
-                  rows="3"
-                  value={form.description}
-                  onChange={handleChange}
-                ></textarea>
+                  value={description}
+                  onTextChange={(e) => setDescription(e.htmlValue)}
+                  style={{ height: '150px' }}
+                  placeholder="Enter description here..."
+                />
               </div>
 
               <div className="mb-3">
@@ -232,6 +233,7 @@ function AddReport() {
                   onChange={handleChange}
                 />
               </div>
+
               <div className="mb-3">
                 <label className="form-label">Collaborators</label>
                 {form.collaborators.map((collaborator, index) => (
@@ -264,19 +266,24 @@ function AddReport() {
                       </select>
                     </div>
                     <div className="col">
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Collaborator Name"
+                      <select
+                        className="form-select"
                         name={`collaboratorName${index}`}
                         value={collaborator.name}
                         onChange={(e) => handleCollaboratorChange(index, 'name', e.target.value)}
-                      />
+                      >
+                        <option value="">Select Collaborator Name</option>
+                        <option value="Collaborator1">Collaborator 1</option>
+                        <option value="Collaborator2">Collaborator 2</option>
+                        <option value="Collaborator3">Collaborator 3</option>
+                        {/* <!-- Add more collaborator options here --> */}
+                      </select>
                     </div>
                   </div>
                 ))}
                 <button type="button" className="btn btn-secondary" onClick={addCollaborator}>Add Collaborator</button>
               </div>
+              
               <div className="mb-3">
                 <label htmlFor="tag" className="form-label">Tags</label>
                 <input
@@ -289,19 +296,7 @@ function AddReport() {
                 />
               </div>
 
-              {/* Report Fields */}
-              {/* <div className="mb-3">
-                <label className="form-label">Title:</label>
-                <input type="text" className="form-control" name="title" value={form.title} onChange={handleChange} />
-              </div> */}
-              {/* <div className="mb-3"> */}
-                {/* <label className="form-label">Event Date:</label>
-                <input type="date" className="form-control" name="eventDate" value={form.eventDate} onChange={handleChange} />
-              </div>
-              <div className="mb-3">
-                <label className="form-label">Event Time:</label>
-                <input type="time" className="form-control" name="eventTime" value={form.eventTime} onChange={handleChange} />
-              </div> */}
+
               <div className="mb-3">
                 <label className="form-label">Blog Link:</label>
                 <input type="text" className="form-control" name="blogLink" value={form.blogLink} onChange={handleChange} />

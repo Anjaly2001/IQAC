@@ -22,6 +22,8 @@ function RegisterEvent() {
   const [collaborators, setCollaborators] = useState([{ name: '', department: '', campus: '' }]);
   const [tag, setTag] = useState('');
 
+  const collaboratorNames = ["John Doe", "Jane Smith", "Michael Johnson", "Emily Davis"]; // Example names for dropdown
+
   const handleCollaboratorChange = (index, field, value) => {
     const updatedCollaborators = [...collaborators];
     updatedCollaborators[index][field] = value;
@@ -77,13 +79,13 @@ function RegisterEvent() {
                     onChange={(e) => setDepartment(e.target.value)}
                   >
                     <option value="">Select Department</option>
-                                                <option value="">Data Science</option>
-                                                <option value="">Law</option>
-                                                <option value="">BBA</option>
-                                                <option value="">MBA</option>
-                                                <option value="">Commerce</option>
-                                                <option value="">Language</option>
-                                                <option value="">Others</option>
+                    <option value="Data Science">Data Science</option>
+                    <option value="Law">Law</option>
+                    <option value="BBA">BBA</option>
+                    <option value="MBA">MBA</option>
+                    <option value="Commerce">Commerce</option>
+                    <option value="Language">Language</option>
+                    <option value="Others">Others</option>
                   </select>
                 </div>
               </div>
@@ -97,7 +99,6 @@ function RegisterEvent() {
                   onChange={(e) => setCampus(e.target.value)}
                 >
                   <option value="">Select Campus</option>
-                  {/* Add other campus options */}
                   <option value="Christ University Bangalore Central Campus">Christ University Bangalore Central Campus</option>
                   <option value="Christ University Bangalore Bannerghatta Road Campus">Christ University Bangalore Bannerghatta Road Campus</option>
                   <option value="Christ University Bangalore Kengeri Campus">Christ University Bangalore Kengeri Campus</option>
@@ -136,12 +137,16 @@ function RegisterEvent() {
                       </select>
                     </div>
                     <div className="col">
-                      <InputText
-                        type="text"
+                      <select
+                        className="form-select"
                         value={collaborator.name}
                         onChange={(e) => handleCollaboratorChange(index, 'name', e.target.value)}
-                        placeholder="Name"
-                      />
+                      >
+                        <option value="">Select Name</option>
+                        {collaboratorNames.map((name, idx) => (
+                          <option key={idx} value={name}>{name}</option>
+                        ))}
+                      </select>
                     </div>
                   </div>
                 ))}
@@ -169,8 +174,7 @@ function RegisterEvent() {
                   placeholder="Enter description here..."
                 />
               </div>
-             
-             
+
               <div className="mb-3">
                 <label htmlFor="numberOfActivities" className="form-label">Number of Activities</label>
                 <InputText
@@ -182,6 +186,7 @@ function RegisterEvent() {
                   className="w-100"
                 />
               </div>
+
               <div className="mb-3 row">
                 <div className="col">
                   <label htmlFor="startDate" className="form-label">Start Date</label>
@@ -204,6 +209,7 @@ function RegisterEvent() {
                   />
                 </div>
               </div>
+
               <div className="mb-3 row">
                 <div className="col">
                   <label htmlFor="startTime" className="form-label">Start Time</label>

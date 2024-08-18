@@ -96,7 +96,7 @@ const RegisterSingleUser = () => {
                                     </div>
                                     <div className="row mb-3">
                                         <div className="col-md-6">
-                                            <label htmlFor="userDepartment">Department</label>
+                                            <label htmlFor="userDepartment">Parent Department</label>
                                             <select
                                                 className="form-select"
                                                 id="userDepartment"

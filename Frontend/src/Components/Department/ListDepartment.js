@@ -10,6 +10,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Axios from 'axios';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
+import { department_list} from '../../axios/api';
 
 const DepartmentList = () => {
     const navigate = useNavigate();
@@ -31,12 +32,9 @@ const DepartmentList = () => {
         const token = localStorage.getItem('access_token');
         try {
             // const token = localStorage.getItem('access_token');
-            const response = await Axios.get('http://127.0.0.1:8000/api/authentication/department_list/', {
-                headers: {
-                    'Authorization': `Bearer ${token}` // Send the token for authentication
-                }
-            });
-            setUsers(response.data);
+            const response = await department_list()
+            console.log(response)
+            setUsers(response);
         } catch (error) {
             console.error('Error fetching departments:', error);
         }

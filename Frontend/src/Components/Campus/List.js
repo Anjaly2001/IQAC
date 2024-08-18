@@ -1,6 +1,5 @@
 
 import React, { useState, useEffect } from 'react';
-import Axios from 'axios';
 import AdminDashboard from '../Admin/AdminDashboard';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -8,6 +7,7 @@ import { InputText } from 'primereact/inputtext';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
 import homeURL from '../../axios/homeurl';
+import { campus_list } from '../../axios/api';
 
 const ListCampus = () => {
     const [campuses, setCampuses] = useState([]);
@@ -20,17 +20,13 @@ const ListCampus = () => {
         const fetchCampuses = async () => {
             const token = localStorage.getItem('access_token'); // Assuming token is stored in local storage
             try {
-                const response = await Axios.get('http://127.0.0.1:8000/api/authentication/campus_list/', {
-                    headers: {
-                        'Authorization': `Bearer ${token}` // Send the token for authentication
-                    }
-                });
+                const response = await campus_list()
 
                 // Map the data to match the expected structure in the frontend
-                const campusData = response.data.map(campus => ({
+                const campusData = response.map(campus => ({
                     id: campus.id, // You can use campus ID if available
                     name: campus.campus, // Map "campus" to "name"
-                    logo: `${process.env.REACT_APP_BACKEND_URL}${campus.logo}`, // Construct the full URL for the logo
+                    logo: `${homeURL}${campus.logo}`, // Construct the full URL for the logo
                 }));
 
                 setCampuses(campusData);

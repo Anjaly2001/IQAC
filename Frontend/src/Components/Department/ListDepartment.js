@@ -10,11 +10,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Axios from 'axios';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
-import { department_list} from '../../axios/api';
+import { department_list,department_delete} from '../../axios/api';
 
 const DepartmentList = () => {
     const navigate = useNavigate();
     const [users, setUsers] = useState([]);
+    const [departments, setDepartments] = useState([]);
     const [filters, setFilters] = useState({
         global: { value: null, matchMode: 'contains' },
         name: { value: null, matchMode: 'contains' },
@@ -43,9 +44,19 @@ const DepartmentList = () => {
         navigate(`/update-user/${user.id}`);
     };
 
-    const handleDeleteUser = (id) => {
-        setUsers(users.filter(user => user.id !== id));
+   
+
+    const handleDeleteDepartment = async (id) => {
+        const token = localStorage.getItem('access_token');
+        try {
+            const response = await department_delete({id});
+            setDepartments(departments.filter(department => department.id !== id));
+            setDepartments(response)
+        } catch (error) {
+            console.error('Error deleting department:', error);
+        }
     };
+    
 
     const toggleStatus = (user) => {
         setUsers(users.map(u =>
@@ -62,7 +73,7 @@ const DepartmentList = () => {
             />
             <FaTrash
                 className="text-danger cursor-pointer"
-                onClick={() => handleDeleteUser(rowData.id)}
+                onClick={() => handleDeleteDepartment(rowData.id)}
                 title="Delete"
             />
         </div>

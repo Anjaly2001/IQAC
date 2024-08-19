@@ -69,3 +69,15 @@ export const department_list = async (form) => {
     toast.error('Failed to create department. Please try again.');
   }
 };
+
+export const department_delete = async (form) => {
+  try {
+    const res = await axiosInstance.delete('department_and_events/department_delete/<int:id>/', form);
+    return res.data;
+  }
+  catch (error) {
+    console.log(error);
+    toast.error('Failed to create department. Please try again.');
+  }
+};
+

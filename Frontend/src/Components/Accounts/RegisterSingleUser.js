@@ -88,10 +88,8 @@ const RegisterSingleUser = () => {
                                                 <option value="Christ University Delhi NCR Off Campus">Christ University Delhi NCR Off Campus</option>
                                                 <option value="Christ University Pune Lavasa Off Campus">Christ University Pune Lavasa Off Campus</option>
                                                 <option value="Others">Others</option>
-
                                                 {/* Add options here */}
                                             </select>
-
                                         </div>
                                     </div>
                                     <div className="row mb-3">
@@ -115,9 +113,6 @@ const RegisterSingleUser = () => {
                                             </select>
                                         </div>
                                     </div>
-
-
-
                                     <div className="form-check mb-3">
                                         <input
                                             type="checkbox"

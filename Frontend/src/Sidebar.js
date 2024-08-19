@@ -3,8 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { Nav } from 'react-bootstrap';
 import './Sidebar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUsers, faIdBadge, faUniversity, faCalendar, faCog, faHandPointRight, faHome } from '@fortawesome/free-solid-svg-icons';
-//import { facogs } from 'react-icons/fa';
+import { faUsers, faCalendar, faCog, faHandPointRight, faHome,faGears } from '@fortawesome/free-solid-svg-icons';
+
 
 
 
@@ -141,7 +141,7 @@ function Sidebar() {
                   className="text-light fw-bold"
                   onClick={() => toggleSection('campus')}
                 >
-                  <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
+                  <FontAwesomeIcon icon={faGears} className="me-2" />
                   Campus
                 </Nav.Link>
                 {openSections.campus && (
@@ -175,7 +175,7 @@ function Sidebar() {
                   className="text-light fw-bold"
                   onClick={() => toggleSection('department')}
                 >
-                  <FontAwesomeIcon icon={faIdBadge} className="me-2" />
+                  <FontAwesomeIcon icon={faGears} className="me-2" />
                   Department
                 </Nav.Link>
                 {openSections.department && (
@@ -209,7 +209,7 @@ function Sidebar() {
                   className={`text-light ${isActive('/createTag') || isActive('/listTag') ? 'active' : ''}`}
                   onClick={() => toggleSection('tagManager')}
                 >
-                  <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
+                  <FontAwesomeIcon icon={faGears} className="me-2" />
                   Tag Manager
                 </Nav.Link>
 

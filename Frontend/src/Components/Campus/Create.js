@@ -80,10 +80,10 @@ const CreateCampus = () => {
         <ToastContainer />
             <div className="container-fluid">
                 <div className="row">
-                    <div className="col-md-2 p-0">
+                    <div className="col-md-4 p-0">
                         <AdminDashboard />
                     </div>
-                    <div className="col-md-10 mt-5 pt-5">
+                    <div className="col-md-6 mt-5 pt-5">
                         <div className="container mt-3">
                             <div className="text-center fw-bold fs-5 mb-4">
                                 Create Campus

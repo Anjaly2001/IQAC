@@ -22,7 +22,16 @@ def department_register(request):
     if request.method == 'POST':
         if not request.user.is_superuser and not request.user.is_staff:
             return Response({"error": "Only admin can create departments"})
-        serializer = DepartmentSerializer(data=request.data)
+        data = request.data.copy()
+        # if data.get('location') == 'Others':
+        #     new_location_name = data.get('new_location')
+        #     new_location = Location.objects.create(campus=new_location_name, created_by=request.user)
+        #     data['location'] = new_location.id 
+        #     # Create a new location
+        #     loc_serializer = LocationSerializer(data= new_location)
+        #     if loc_serializer.is_valid():
+        #         loc_serializer.save()
+        serializer = DepartmentSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

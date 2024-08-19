@@ -33,7 +33,7 @@ const RegisterSingleUser = () => {
                     </div>
                     <div className="col-md-8  mt-1 pt-5">
                         <div className="container mt-3">
-                            <div className="text-center fw-bold fs-5 mb-4">Register Single User</div>
+                            <div className="text-center fw-bold fs-5 mb-4">Register User</div>
                             <div className="register mt-5">
                                 <div className="user-actions mb-4">
                                     <div className="row mb-3">
@@ -72,6 +72,7 @@ const RegisterSingleUser = () => {
                                                 onChange={(e) => setUserEmail(e.target.value)}
                                             />
                                         </div>
+                                        
                                         <div className="col-md-6">
                                             <label htmlFor="userCampus">Campus</label>
                                             <select

@@ -126,11 +126,11 @@ const ListUser = () => {
                                     header={header}
                                     responsiveLayout="scroll"
                                 >
-                                    <Column field="name" header="User Name" filter filterPlaceholder="Search by User name" filterMatchMode="contains" />
-                                    <Column field="emp_id" filters={filters} header="Emp ID" filter filterPlaceholder="Search by description" filterMatchMode="contains" body={customBodyTemplate} />
-                                    <Column field="email" header="Email" filter filterPlaceholder="Search by email" filterMatchMode="contains" />
-                                    <Column field="campus" header="Campus" filter filterPlaceholder="Search by campus" filterMatchMode="contains" />
-                                    <Column field="department" header="Departmemt" filter filterPlaceholder="Search by Department" filterMatchMode="contains" />
+                                    <Column field="name" header="User Name" filter filterPlaceholder="Search name" filterMatchMode="contains" />
+                                    <Column field="emp_id" filters={filters} header="Emp ID" filter filterPlaceholder="Search ID" filterMatchMode="contains" body={customBodyTemplate} />
+                                    <Column field="email" header="Email" filter filterPlaceholder="Search email" filterMatchMode="contains" />
+                                    <Column field="campus" header="Campus" filter filterPlaceholder="Search campus" filterMatchMode="contains" />
+                                    <Column field="department" header="Departmemt" filter filterPlaceholder="Search Department" filterMatchMode="contains" />
                                     <Column field="status" header="Status" body={statusBodyTemplate} />
                                     <Column header="Actions" body={actionBodyTemplate} />
                                 </DataTable>

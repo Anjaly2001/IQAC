@@ -89,3 +89,13 @@ export const department_active = async (department_id) => {
     toast.error('Failed to delete department. Please try again.');
   }
 };
+
+// export const department_update = async (department_id) => {
+//   try {
+//     const res = await axiosInstance.post(`department_and_events/department_update/${department_id}/`);
+//     return res.data;
+//   } catch (error) {
+//     console.log(error);
+//     toast.error('Failed to delete department. Please try again.');
+//   }
+// };

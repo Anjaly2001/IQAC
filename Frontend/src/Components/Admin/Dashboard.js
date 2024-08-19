@@ -12,7 +12,7 @@ function Dashboard() {
         <div className="col-md-2 p-0 mt-5">
           <AdminDashboard />
         </div>
-        
+
         {/* First Column: Three Separate Boxes */}
         <div className="col-md-2 mt-7 d-flex flex-column">
           <div className="bg-light p-3 mb-3 text-center border flex-fill">
@@ -32,12 +32,12 @@ function Dashboard() {
         {/* Main Content */}
         <div className="col-md-8 mt-5 d-flex flex-column">
           <div className="container-fluid flex-fill">
-            <h1 className="text-center mb-4">Dashboard</h1>
+            <h1 className="text-center mb-4"></h1>
             <div className="row h-100">
               {/* Second Column: Square Cards */}
               <div className="col-md-6 d-flex flex-column">
                 <div className="bg-light p-4 mb-4 flex-fill">
-                  <div className="card h-100">
+                  <div className="card h-50">
                     <div className="card-body text-center d-flex align-items-center justify-content-center">
                       <BarChart /> {/* Embed the BarChart component inside Card 1 */}
                     </div>

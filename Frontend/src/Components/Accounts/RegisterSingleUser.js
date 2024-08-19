@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import AdminDashboard from '../Admin/AdminDashboard';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Link } from 'react-router-dom'; // Ensure you have react-router-dom installed
 
 const RegisterSingleUser = () => {
     const [userName, setUserName] = useState('');
     const [userEmpId, setUserEmpId] = useState('');
     const [userEmail, setUserEmail] = useState('');
+    const [userPhoneNumber, setUserPhoneNumber] = useState('');
     const [userDepartment, setUserDepartment] = useState('');
     const [userCampus, setUserCampus] = useState('');
-    const [userStatus, setUserStatus] = useState(true);
 
     const createUser = () => {
         if (userName && userEmpId && userEmail && userDepartment && userCampus) {
@@ -17,9 +16,9 @@ const RegisterSingleUser = () => {
             setUserName('');
             setUserEmpId('');
             setUserEmail('');
+            setUserPhoneNumber('');
             setUserDepartment('');
             setUserCampus('');
-            setUserStatus(true);
         }
     };
 
@@ -31,14 +30,14 @@ const RegisterSingleUser = () => {
                     <div className="col-md-3 justify-content-center p-0">
                         {/* Sidebar or other components can go here */}
                     </div>
-                    <div className="col-md-8  mt-1 pt-5">
+                    <div className="col-md-8 mt-1 pt-5">
                         <div className="container mt-3">
-                            <div className="text-center fw-bold fs-5 mb-4">Register Single User</div>
+                            <div className="text-center fw-bold fs-5 mb-4">Register User</div>
                             <div className="register mt-5">
                                 <div className="user-actions mb-4">
                                     <div className="row mb-3">
                                         <div className="col-md-6">
-                                            <label htmlFor="userName ">Name</label>
+                                            <label htmlFor="userName">Name</label>
                                             <input
                                                 type="text"
                                                 className="form-control"
@@ -73,6 +72,19 @@ const RegisterSingleUser = () => {
                                             />
                                         </div>
                                         <div className="col-md-6">
+                                            <label htmlFor="userPhoneNumber">Phone Number</label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                id="userPhoneNumber"
+                                                placeholder="Phone Number"
+                                                value={userPhoneNumber}
+                                                onChange={(e) => setUserPhoneNumber(e.target.value)}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="row mb-3">
+                                        <div className="col-md-6">
                                             <label htmlFor="userCampus">Campus</label>
                                             <select
                                                 className="form-select"
@@ -88,11 +100,8 @@ const RegisterSingleUser = () => {
                                                 <option value="Christ University Delhi NCR Off Campus">Christ University Delhi NCR Off Campus</option>
                                                 <option value="Christ University Pune Lavasa Off Campus">Christ University Pune Lavasa Off Campus</option>
                                                 <option value="Others">Others</option>
-                                                {/* Add options here */}
                                             </select>
                                         </div>
-                                    </div>
-                                    <div className="row mb-3">
                                         <div className="col-md-6">
                                             <label htmlFor="userDepartment">Parent Department</label>
                                             <select
@@ -102,26 +111,15 @@ const RegisterSingleUser = () => {
                                                 onChange={(e) => setUserDepartment(e.target.value)}
                                             >
                                                 <option value="">Select Department</option>
-                                                <option value="">Data Science</option>
-                                                <option value="">Law</option>
-                                                <option value="">BBA</option>
-                                                <option value="">MBA</option>
-                                                <option value="">Commerce</option>
-                                                <option value="">Language</option>
-                                                <option value="">Others</option>
-                                                {/* Add options here */}
+                                                <option value="Data Science">Data Science</option>
+                                                <option value="Law">Law</option>
+                                                <option value="BBA">BBA</option>
+                                                <option value="MBA">MBA</option>
+                                                <option value="Commerce">Commerce</option>
+                                                <option value="Language">Language</option>
+                                                <option value="Others">Others</option>
                                             </select>
                                         </div>
-                                    </div>
-                                    <div className="form-check mb-3">
-                                        <input
-                                            type="checkbox"
-                                            className="form-check-input"
-                                            id="userStatus"
-                                            checked={userStatus}
-                                            onChange={(e) => setUserStatus(e.target.checked)}
-                                        />
-                                        <label className="form-check-label" htmlFor="userStatus">Active</label>
                                     </div>
                                     <button
                                         className="btn btn-primary mb-3"
@@ -129,7 +127,6 @@ const RegisterSingleUser = () => {
                                     >
                                         Create User
                                     </button>
-                                    <Link to="/listuser" className="btn btn-secondary mb-3 ms-1">View User List</Link>
                                 </div>
                             </div>
                         </div>

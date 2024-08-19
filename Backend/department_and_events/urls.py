@@ -1,3 +1,21 @@
+from django.urls import path
+from .views import department_register,campus_register, campus_list, department_list, department_activation,department_update,department_delete
+
+
+urlpatterns = [
+    path('department_register/',department_register,name = 'department_register'),
+    path('department_list/',department_list, name = 'department_list'),
+    path('department_activation/<int:id>/', department_activation, name=' department_activation'),
+    path('department_update/<int:id>/',department_update,name = 'department_update'),
+    path('department_delete/<str:id>/',department_delete, name= 'department_delete'),
+
+    path('campus_register/',campus_register, name = 'campus_register'),
+    path('campus_list/',campus_list, name = 'campus_list'),
+]
+
+
+
+
 # from django.contrib import admin
 # from django.urls import path
 # from .views import department_list, department_register,department_update,department_delete, department_head_create, department_head_list, department_head_update, department_head_delete, user_department_map_create, event_register, activity_create, activity_update, activity_delete, event_report_create, event_report_update, event_report_delete, brochure_delete, brochure_update, brochure_upload, approve_by_department,event_report_list, check_status,check_status_id, reject_by_department, approve_by_IQAC,reject_by_IQAC, list_active_departments, department_activation, list_inactive_departments, list_active_user_department_map

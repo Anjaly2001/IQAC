@@ -38,7 +38,7 @@ const CreateCampus = () => {
             catch (error) {
                 if (error.response) {
                     console.error('Error response data:', error.response);
-                    toast.error('Failed to create campus. Please try again.');
+                    // toast.error('Failed to create campus. Please try again.');
                 } else {
                     console.error('Error:', error.message);
                     toast.error('An error occurred. Please try again.');

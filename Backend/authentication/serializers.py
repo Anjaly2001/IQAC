@@ -94,15 +94,7 @@ class ReadCSVSerializer(serializers.Serializer):
     file = serializers.FileField()
 
 
-class DepartmentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Department
-        fields = '__all__'
 
-class LocationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Location
-        fields = '__all__'
         # ['id','campus', 'logo', 'created_by']
         # read_only_fields = ['created_by']  # Prevent direct modification
 

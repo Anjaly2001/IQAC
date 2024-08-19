@@ -70,14 +70,22 @@ export const department_list = async (form) => {
   }
 };
 
-export const department_delete = async (form) => {
+export const department_delete = async (department_id) => {
   try {
-    const res = await axiosInstance.delete('department_and_events/department_delete/<int:id>/', form);
+    const res = await axiosInstance.delete(`department_and_events/department_delete/${department_id}/`);
     return res.data;
-  }
-  catch (error) {
+  } catch (error) {
     console.log(error);
-    toast.error('Failed to create department. Please try again.');
+    toast.error('Failed to delete department. Please try again.');
   }
 };
 
+export const department_active = async (department_id) => {
+  try {
+    const res = await axiosInstance.post(`department_and_events/department_activation/${department_id}/`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    toast.error('Failed to delete department. Please try again.');
+  }
+};

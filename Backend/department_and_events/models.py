@@ -1,8 +1,35 @@
-# import os
+import os
+from django.db import models
+from django.utils.text import slugify
 
-# from django.db import models
-# from django.contrib.auth.models import User
-# from django.utils.text import slugify
+# from authentication.models import CustomUser
+from django.conf import settings
+
+class Location(models.Model):
+    campus = models.CharField(max_length=200)
+    logo = models.ImageField(null = True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    # created_by = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='created_by')
+    created_by =models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE, related_name = 'created_by')
+
+
+class Department(models.Model):
+    TYPE_CHOICES = [
+        ('Department', 'department'),
+        ('Club', 'club'),
+        ('Center', 'center'),
+        ('Office', 'office'),
+        ('Cell', 'cell'),
+        ('Others', 'others'),
+    ]
+    name = models.CharField(unique=True,max_length=250)
+    type = models.CharField(max_length=20, choices=TYPE_CHOICES, default='others')
+    description = models.CharField(max_length=250, null=True)
+    location = models.ForeignKey(Location,on_delete=models.CASCADE, related_name = 'loc',null= True)
+    is_active = models.BooleanField(default=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+
 
 
 # # Create your models here.

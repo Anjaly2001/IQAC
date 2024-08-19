@@ -1,6 +1,22 @@
-# from .models import Department, Department_head, User_department_map, Event, Activity, EventReport, \
-#     ReportStatus, Brochure
-# from rest_framework import serializers
+from .models import Department, Location
+from rest_framework import serializers
+
+
+
+class DepartmentSerializer(serializers.ModelSerializer):
+    location = serializers.CharField(source='location.campus', read_only=True)
+
+    class Meta:
+        model = Department
+        fields =['id', 'name', 'type', 'description', 'is_active', 'created_on', 'updated_at', 'location']
+
+    def get_location(self, obj):
+        return obj.location.name  
+
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location
+        fields = '__all__'
 
 # class DepartmentSerializer(serializers.ModelSerializer):
 #     class Meta:

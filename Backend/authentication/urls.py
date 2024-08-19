@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import register, login_with_email, verify_otp,department_register, multiple_user_registration,user_token_refresh, campus_register, campus_list, department_list
+from .views import register, login_with_email, verify_otp, multiple_user_registration,user_token_refresh
 
 
 urlpatterns = [
@@ -11,10 +11,4 @@ urlpatterns = [
 
     path('multiple_user_registration/',multiple_user_registration, name = 'multiple_user_registration'),
 
-
-    path('department_register/',department_register,name = 'department_register'),
-    path('department_list/',department_list, name = 'department_list'),
-
-    path('campus_register/',campus_register, name = 'campus_register'),
-    path('campus_list/',campus_list, name = 'campus_list'),
 ]

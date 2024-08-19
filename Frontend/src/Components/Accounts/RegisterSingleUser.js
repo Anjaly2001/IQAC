@@ -28,10 +28,10 @@ const RegisterSingleUser = () => {
             <AdminDashboard />
             <div className="container-fluid mt-1">
                 <div className="row">
-                    <div className="col-md-2 p-0">
+                    <div className="col-md-3 justify-content-center p-0">
                         {/* Sidebar or other components can go here */}
                     </div>
-                    <div className="col-md-10 mt-1 pt-5">
+                    <div className="col-md-8  mt-1 pt-5">
                         <div className="container mt-3">
                             <div className="text-center fw-bold fs-5 mb-4">Register Single User</div>
                             <div className="register mt-5">

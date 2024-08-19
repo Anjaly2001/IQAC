@@ -1,38 +1,4 @@
-// import React, { useState } from 'react';
-// import { InputText } from 'primereact/inputtext';
-// import { Editor } from 'primereact/editor';
-// import { Button } from 'primereact/button';
-// import AdminDashboard from '../Admin/AdminDashboard';
 
-// const CreateDepartment = ({ onAddDepartment }) => {
-//     const [departmentName, setDepartmentName] = useState('');
-//     const [description, setDescription] = useState('');
-//     const [type, setType] = useState('');
-//     const [location, setLocation] = useState('');
-//     const [customType, setCustomType] = useState('');
-//     const [customLocation, setCustomLocation] = useState('');
-
-//     const handleCreateDepartment = () => {
-//         const finalType = type === 'Others' ? customType : type;
-//         const finalLocation = location === 'Others' ? customLocation : location;
-
-//         if (departmentName && description && finalType && finalLocation) {
-//             const newDepartment = { 
-//                 id: Date.now(), 
-//                 name: departmentName, 
-//                 description, 
-//                 type: finalType, 
-//                 location: finalLocation 
-//             };
-//             onAddDepartment(newDepartment);
-//             setDepartmentName('');
-//             setDescription('');
-//             setType('');
-//             setLocation('');
-//             setCustomType('');
-//             setCustomLocation('');
-//         }
-//     };
 import React, { useState, useEffect } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Editor } from 'primereact/editor';
@@ -240,3 +206,42 @@ const CreateDepartment = ({ onAddDepartment }) => {
 };
 
 export default CreateDepartment;
+
+
+
+
+// import React, { useState } from 'react';
+// import { InputText } from 'primereact/inputtext';
+// import { Editor } from 'primereact/editor';
+// import { Button } from 'primereact/button';
+// import AdminDashboard from '../Admin/AdminDashboard';
+
+// const CreateDepartment = ({ onAddDepartment }) => {
+//     const [departmentName, setDepartmentName] = useState('');
+//     const [description, setDescription] = useState('');
+//     const [type, setType] = useState('');
+//     const [location, setLocation] = useState('');
+//     const [customType, setCustomType] = useState('');
+//     const [customLocation, setCustomLocation] = useState('');
+
+//     const handleCreateDepartment = () => {
+//         const finalType = type === 'Others' ? customType : type;
+//         const finalLocation = location === 'Others' ? customLocation : location;
+
+//         if (departmentName && description && finalType && finalLocation) {
+//             const newDepartment = { 
+//                 id: Date.now(), 
+//                 name: departmentName, 
+//                 description, 
+//                 type: finalType, 
+//                 location: finalLocation 
+//             };
+//             onAddDepartment(newDepartment);
+//             setDepartmentName('');
+//             setDescription('');
+//             setType('');
+//             setLocation('');
+//             setCustomType('');
+//             setCustomLocation('');
+//         }
+//     };

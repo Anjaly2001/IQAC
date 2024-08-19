@@ -1,73 +1,114 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
+import { FaSearch, FaEdit, FaTrash } from 'react-icons/fa';
+import { Tag } from 'primereact/tag';
 import AdminDashboard from '../Admin/AdminDashboard';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '@fortawesome/fontawesome-free/css/all.min.css'; // Import Font Awesome
+//import Axios from 'axios';
+import { IconField } from 'primereact/iconfield';
+import { InputIcon } from 'primereact/inputicon';
+import { department_list} from '../../axios/api';  // user list
 
 const ListUser = () => {
+    const navigate = useNavigate();
     const [users, setUsers] = useState([]);
-    const [globalFilterValue, setGlobalFilterValue] = useState("");
+    const [filters, setFilters] = useState({
+        global: { value: null, matchMode: 'contains' },
+        name: { value: null, matchMode: 'contains' },
+        emp_id: { value: null, matchMode: 'contains' },
+        email: { value: null, matchMode: 'contains' },
+        campus: { value: null, matchMode: 'contains' },
+        department: { value: null, matchMode: 'contains' }
+    });
+    const [globalFilterValue, setGlobalFilterValue] = useState('');
 
     useEffect(() => {
         fetchUsers();
     }, []);
 
     const fetchUsers = async () => {
-        // Mock data, replace with real data fetching
-        const mockUsers = [
-            { id: 1, name: 'Thomas', empId: '20101', email: 'thomas@example.com', department: 'Data Science', campus: 'Christ University Pune', status: true },
-            { id: 2, name: 'Shine', empId: '20306', email: 'shine@example.com', department: 'BBA', campus: 'Christ University Pune', status: false },
-        ];
-        setUsers(mockUsers);
+        const token = localStorage.getItem('access_token');
+        try {
+            // const token = localStorage.getItem('access_token');
+            const response = await department_list()      //  make it as user_list
+            console.log(response)
+            setUsers(response);
+        } catch (error) {
+            console.error('Error fetching User:', error);
+        }
+    };
+    const startEditing = (user) => {
+        navigate(`/update-user/${user.id}`);
     };
 
-    const statusBodyTemplate = (rowData) => {
-        return (
-            <span className={rowData.status ? 'badge bg-success' : 'badge bg-secondary'}>
-                {rowData.status ? 'Active' : 'Inactive'}
-            </span>
-        );
+    const handleDeleteUser = (id) => {
+        setUsers(users.filter(user => user.id !== id));
     };
 
-    const actionBodyTemplate = (rowData) => {
-        return (
-            <>
-                <button className="btn btn-primary me-2 btn-sm">
-                    <i className="fas fa-edit"></i> {/* Edit Icon */}
-                </button>
-                <button className="btn btn-danger btn-sm">
-                    <i className="fas fa-trash-alt"></i> {/* Delete Icon */}
-                </button>
-            </>
-        );
+    const toggleStatus = (user) => {
+        setUsers(users.map(u =>
+            u.id === user.id ? { ...u, status: !u.status } : u
+        ));
     };
 
-    const renderHeader = () => {
-        return (
-            <div className="d-flex justify-content-end">
-                <span className="p-input-icon-left">
-                    <i className="pi pi-search  " />
-                    <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Keyword Search" />
-                </span>
-            </div>
-        );
-    };
+    const actionBodyTemplate = (rowData) => (
+        <div>
+            <FaEdit
+                className="text-warning me-3 cursor-pointer"
+                onClick={() => startEditing(rowData)}
+                title="Edit"
+            />
+            <FaTrash
+                className="text-danger cursor-pointer"
+                onClick={() => handleDeleteUser(rowData.id)}
+                title="Delete"
+            />
+        </div>
+    );
+
+    const statusBodyTemplate = (rowData) => (
+        <Tag
+            value={rowData.status ? 'Active' : 'Inactive'}
+            severity={rowData.status ? 'success' : 'danger'}
+            onClick={() => toggleStatus(rowData)}
+        />
+    );
 
     const onGlobalFilterChange = (e) => {
-        setGlobalFilterValue(e.target.value);
+        console.log("hello");
+        const value = e.target.value;
+        let _filters = { ...filters };
+        _filters['global'].value = value;
+        setFilters(_filters);
+        setGlobalFilterValue(value);
     };
+
+    const renderHeader = () => (
+        <div className="flex justify-content-end">
+            <IconField iconPosition="left">
+                <InputIcon className="pi pi-search" />
+                <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Keyword Search" />
+            </IconField>
+        </div>
+    );
 
     const header = renderHeader();
 
+    const customBodyTemplate = (rowData) => {
+        return <div
+            dangerouslySetInnerHTML={{ __html: rowData.description }}
+        />;
+    };
+
     return (
         <div>
-            <AdminDashboard />
             <div className="container-fluid mt-1">
                 <div className="row">
                     <div className="col-md-2 p-0">
-                        {/* Sidebar or other components can go here */}
+                        <AdminDashboard />
                     </div>
                     <div className="col-md-10 mt-1 pt-5">
                         <div className="container mt-3">
@@ -78,18 +119,20 @@ const ListUser = () => {
                                     paginator
                                     rows={10}
                                     dataKey="id"
-                                    emptyMessage="No users found."
-                                    className="user-data-table"
-                                    globalFilter={globalFilterValue} // Apply global filter
-                                    header={header} // Add custom header with search bar
+                                    emptyMessage="No User found."
+                                    globalFilterFields={['name', 'emp id', 'email', 'campus','department']}
+                                    filters={filters}
+                                    filterDisplay="row"
+                                    header={header}
+                                    responsiveLayout="scroll"
                                 >
-                                    <Column field="name" header="Name" filter filterPlaceholder="Search by name" />
-                                    <Column field="empId" header="Emp ID" filter filterPlaceholder="Search by Emp ID" />
-                                    <Column field="email" header="Email" filter filterPlaceholder="Search by email" />
-                                    <Column field="department" header="Department" filter filterPlaceholder="Search by department" />
-                                    <Column field="campus" header="Campus" filter filterPlaceholder="Search by campus" />
-                                    <Column field="status" header="Status" body={statusBodyTemplate} filter filterPlaceholder="Search by status" />
-                                    <Column header="Actions" body={actionBodyTemplate} exportable={false} />
+                                    <Column field="name" header="User Name" filter filterPlaceholder="Search by User name" filterMatchMode="contains" />
+                                    <Column field="emp_id" filters={filters} header="Emp ID" filter filterPlaceholder="Search by description" filterMatchMode="contains" body={customBodyTemplate} />
+                                    <Column field="email" header="Email" filter filterPlaceholder="Search by email" filterMatchMode="contains" />
+                                    <Column field="campus" header="Campus" filter filterPlaceholder="Search by campus" filterMatchMode="contains" />
+                                    <Column field="department" header="Departmemt" filter filterPlaceholder="Search by Department" filterMatchMode="contains" />
+                                    <Column field="status" header="Status" body={statusBodyTemplate} />
+                                    <Column header="Actions" body={actionBodyTemplate} />
                                 </DataTable>
                             </div>
                         </div>

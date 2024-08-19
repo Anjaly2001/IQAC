@@ -1,7 +1,4 @@
 import React, { useState } from "react";
-import { InputText } from "primereact/inputtext";
-import { Editor } from "primereact/editor";
-import { Button } from "primereact/button";
 import AdminDashboard from "../Admin/AdminDashboard";
 
 export default function ListTag() {

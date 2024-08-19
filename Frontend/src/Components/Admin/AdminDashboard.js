@@ -2,14 +2,12 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Sidebar from '../../Sidebar';
 import CreateDepartments from '../Department/CreateDepartments'
-import Users from './Users';
 import RegisterSingleUser from '../Accounts/RegisterSingleUser';
 import RegisterMultipleUser from '../Accounts/RegisterMultipleUser';
 import CreateCampus from '../Campus/Create'
 import ListCampus from '../Campus/List';
 import Departments from '../Department/CreateDepartments';
 import ListDepartment from '../Department/ListDepartment';
-import UpdateDepartment from '../Department/UpdateDepartment';
 import RegisterEvent from '../Event/RegisterEvent';
 import ListEvents from '../Event/ListEvents';
 import AddReport from '../Event/AddReport';
@@ -28,7 +26,6 @@ function AdminDashboard(){
                 <Routes>
                     <Route path="/createdepartments/*" element={<CreateDepartments />} />
                     <Route path="/listdepartment/*" element={<ListDepartment />} />
-                    <Route path="/updatedepartment" element={<UpdateDepartment />} />
                     <Route path="/registerSingleuser" element={<RegisterSingleUser />} />
                     <Route path="/registerMultipleUser" element={<RegisterMultipleUser />} />
                     <Route path="/listUser" element={<ListUser />} />

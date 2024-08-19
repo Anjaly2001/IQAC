@@ -6,8 +6,6 @@ import Dashboard from './Components/Admin/Dashboard'
 import Sidebar from './Sidebar';
 import Createdepartments from './Components/Department/CreateDepartments';
 import ListDepartment from './Components/Department/ListDepartment';
-import UpdateDepartment from './Components/Department/UpdateDepartment';
-import Users from './Components/Admin/Users';
 import RegisterSingleUser from './Components/Accounts/RegisterSingleUser';
 import RegisterMultipleUser from './Components/Accounts/RegisterMultipleUser';
 import CreateCampus from './Components/Campus/Create';
@@ -42,7 +40,6 @@ const App = () => {
                             <Route path="/createCampus/*" element={<CreateCampus />} />
                             <Route path="/createdepartments/*" element={<Createdepartments />} />
                             <Route path="/listdepartment/*" element={<ListDepartment />} />
-                            <Route path="/updatedepartment" element={<UpdateDepartment />} />
                             <Route path="/registerEvent" element={<RegisterEvent />} />
                             <Route path="/listevents" element={<ListEvents />} />
                             <Route path="/addreport" element={<AddReport />} />

@@ -1,14 +1,14 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-import uuid
 from django.conf import settings
+from department_and_events.models import Department,Location
 
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     role =  models.CharField(max_length=20, choices=(
         ('viewers', 'Viewers'),
-        ('university_IQAC', 'University_IQAC'),
-        ('department_IQAC', 'Department_IQAC'),
+        ('departmentHOD', 'DepartmentIQAC'),
+        ('departmentIQAC', 'DepartmentIQAC'),
         ('staffs', 'Staffs'),    
     ), default='admin')
     # emp_id = models.IntegerField(unique=True)
@@ -20,28 +20,6 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.email
     
-class Location(models.Model):
-    campus = models.CharField(max_length=200)
-    logo = models.ImageField(null = True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey(CustomUser,on_delete=models.CASCADE, related_name = 'created_by')
-    
-class Department(models.Model):
-    TYPE_CHOICES = [
-        ('Department', 'department'),
-        ('Club', 'club'),
-        ('Center', 'center'),
-        ('Office', 'office'),
-        ('Cell', 'cell'),
-        ('Others', 'others'),
-    ]
-    name = models.CharField(unique=True,max_length=250)
-    type = models.CharField(max_length=20, choices=TYPE_CHOICES, default='others')
-    description = models.CharField(max_length=250, null=True)
-    location = models.ForeignKey(Location,on_delete=models.CASCADE, related_name = 'loc',null= True)
-    is_active = models.BooleanField(default=True)
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
 
     
 class User_profile(models.Model):

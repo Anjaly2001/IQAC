@@ -23,7 +23,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/authentication/', include('authentication.urls')),
-    # path('api/department_and_events/', include('department_and_events.urls')),
+    path('api/department_and_events/', include('department_and_events.urls')),
 ]
 
 if settings.DEBUG:

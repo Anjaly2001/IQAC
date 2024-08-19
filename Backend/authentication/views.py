@@ -14,7 +14,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .models import Department
-from .serializers import UserRegistrationSerializer, USerProfileSerializer, LoginSerializer, DepartmentSerializer, LocationSerializer
+from .serializers import UserRegistrationSerializer, USerProfileSerializer, LoginSerializer
 import csv
 from django.core.files.storage import default_storage
 from .emails import send_otp_to_email
@@ -218,53 +218,3 @@ def user_list(request):
 
 
 
-
-#_____________DEPARTMENT API_________
-
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def department_register(request):
-    if request.method == 'POST':
-        if not request.user.is_superuser and not request.user.is_staff:
-            return Response({"error": "Only admin can create departments"})
-        serializer = DepartmentSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response({"errors": serializer.errors, "message": "Registration failed."},
-                        status=status.HTTP_400_BAD_REQUEST)
-    else:
-        return Response({"error": "Method not allowed."}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-    
-    
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def department_list(request):
-    if request.method == 'GET':
-        obj = Department.objects.all()
-        serializer = DepartmentSerializer(obj, many=True)
-        return Response(serializer.data)
-    
-#________________CAMPUS API____________
-
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def campus_register(request):
-    if request.method == 'POST':
-        if not request.user.is_superuser and request.user.is_staff:
-            return Response({"error": "Only admin can list departments"})
-        data = request.data.copy()
-        data['created_by'] = request.user.id
-        serializer = LocationSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response({"errors": serializer.errors, "message": "Registration failed."},status=status.HTTP_400_BAD_REQUEST)
-        
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def campus_list(request):
-    if request.method == 'GET':
-        obj = Location.objects.all().order_by('-created_at')
-        serializer = LocationSerializer(obj, many=True)
-        return Response(serializer.data)

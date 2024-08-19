@@ -39,7 +39,7 @@ const RegisterMultipleUser = () => {
                     <div className="col-md-8  mt-1 pt-5">
                         <div className="container mt-3">
                             <div className="text-center fw-bold fs-5 mb-4">
-                                Register Multiple Users (Under Development)
+                                Register Multiple Users
                             </div>
                             <div className="register">
                                 

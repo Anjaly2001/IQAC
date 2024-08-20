@@ -88,6 +88,7 @@ const ListUser = () => {
 
     const renderHeader = () => (
         <div className="flex justify-content-end">
+            <div className="text-left fw-bold fs-5 ">User List</div>
             <IconField iconPosition="left">
                 <InputIcon className="pi pi-search" />
                 <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Keyword Search" />
@@ -112,7 +113,7 @@ const ListUser = () => {
                     </div>
                     <div className="col-md-10 mt-1 pt-5">
                         <div className="container mt-3">
-                            <div className="text-center fw-bold fs-5 mb-4">User List</div>
+                            
                             <div className="table-container">
                                 <DataTable
                                     value={users}

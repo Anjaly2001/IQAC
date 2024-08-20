@@ -130,10 +130,9 @@ function Sidebar() {
             <FontAwesomeIcon icon={faCog} className="me-2" />
             Settings
           </Nav.Link>
-
-
           {openSections.settings && (
             <Nav className="flex-column ms-3">
+              
 
               {/* Campus Section */}
               <Nav.Item>

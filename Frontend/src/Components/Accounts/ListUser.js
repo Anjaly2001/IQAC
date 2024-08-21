@@ -87,15 +87,15 @@ const ListUser = () => {
     };
 
     const renderHeader = () => (
-        <div className="flex justify-content-end">
-            <div className="text-left fw-bold fs-5 ">User List</div>
+        <div className="d-flex justify-content-between align-items-center">
+            <div className="fw-bold fs-5">User List</div>
             <IconField iconPosition="left">
                 <InputIcon className="pi pi-search" />
                 <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Keyword Search" />
             </IconField>
         </div>
     );
-
+    
     const header = renderHeader();
 
     const customBodyTemplate = (rowData) => {

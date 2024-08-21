@@ -10,7 +10,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Axios from 'axios';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
-import { department_list,department_delete, department_active} from '../../axios/api';
+import { department_list, department_delete, department_active } from '../../axios/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -22,8 +22,8 @@ const DepartmentList = () => {
     const [filters, setFilters] = useState({
         global: { value: null, matchMode: 'contains' },
         name: { value: null, matchMode: 'contains' },
-        description: { value: null, matchMode: 'contains' },
-        type: { value: null, matchMode: 'contains' },
+        // description: { value: null, matchMode: 'contains' },
+        // type: { value: null, matchMode: 'contains' },
         location: { value: null, matchMode: 'contains' }
     });
     const [globalFilterValue, setGlobalFilterValue] = useState('');
@@ -52,7 +52,7 @@ const DepartmentList = () => {
         navigate(`/update-user/${user.id}`);
     };
 
-   
+
 
     const handleDeleteDepartment = async (id) => {
         const token = localStorage.getItem('access_token');
@@ -67,7 +67,7 @@ const DepartmentList = () => {
             // toast.success('Department deleted successfully!');
         }
     };
-    
+
 
     const toggleStatus = async (user) => {
         try {
@@ -84,7 +84,7 @@ const DepartmentList = () => {
             console.error('Error toggling department status:', error);
         }
     };
-    
+
     // const toggleStatus = (user) => {
     //     setUsers(users.map(u =>
     //         u.id === user.id ? { ...u, status: !u.status } : u
@@ -113,7 +113,7 @@ const DepartmentList = () => {
             onClick={() => toggleStatus(rowData)}
         />
     );
-    
+
 
     const onGlobalFilterChange = (e) => {
         console.log("hello");
@@ -125,7 +125,8 @@ const DepartmentList = () => {
     };
 
     const renderHeader = () => (
-        <div className="flex justify-content-end">
+        <div className="d-flex justify-content-between align-items-center">
+            <div className="fw-bold fs-5">Department List</div>
             <IconField iconPosition="left">
                 <InputIcon className="pi pi-search" />
                 <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Keyword Search" />
@@ -143,7 +144,7 @@ const DepartmentList = () => {
 
     return (
         <div>
-        <ToastContainer />  
+            <ToastContainer />
             <div className="container-fluid mt-1">
                 <div className="row">
                     <div className="col-md-2 p-0">
@@ -151,7 +152,7 @@ const DepartmentList = () => {
                     </div>
                     <div className="col-md-10 mt-1 pt-5">
                         <div className="container mt-3">
-                            <div className="text-center fw-bold fs-5 mb-4">Department List</div>
+
                             <div className="table-container">
                                 <DataTable
                                     value={users}
@@ -166,8 +167,8 @@ const DepartmentList = () => {
                                     responsiveLayout="scroll"
                                 >
                                     <Column field="name" header="Dept Name" filter filterPlaceholder="Search by department name" filterMatchMode="contains" />
-                                    <Column field="description" filters={filters} header="Description" filter filterPlaceholder="Search by description" filterMatchMode="contains" body={customBodyTemplate} />
-                                    <Column field="type" header="Type" filter filterPlaceholder="Search by type" filterMatchMode="contains" />
+                                    {/* <Column field="description" filters={filters} header="Description" filter filterPlaceholder="Search by description" filterMatchMode="contains" body={customBodyTemplate} />
+                                    <Column field="type" header="Type" filter filterPlaceholder="Search by type" filterMatchMode="contains" /> */}
                                     <Column field="location" header="Location" filter filterPlaceholder="Search by location" filterMatchMode="contains" />
                                     <Column field="status" header="Status" body={statusBodyTemplate} />
                                     <Column header="Actions" body={actionBodyTemplate} />

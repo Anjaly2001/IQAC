@@ -56,7 +56,7 @@ const ListEvents = () => {
         {rowData.status !== 'Approved' && (
           <button className="btn btn-danger me-2" onClick={() => deleteReport(rowData.id)}>Delete</button>
         )}
-        <button className="btn btn-success" onClick={addReport}>Add Report</button>
+        <button className="btn btn-success" onClick={"/addreport"}>Add Report</button>
       </React.Fragment>
     );
   };

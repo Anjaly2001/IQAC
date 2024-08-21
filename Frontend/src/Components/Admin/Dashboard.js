@@ -1,10 +1,18 @@
 import React from 'react';
 import AdminDashboard from './AdminDashboard';
-import BarChart from './BarChart'; // Import the new BarChart component
+import BarChart from './BarChart';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DemoGraph from './DemoGraph';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
 
 function Dashboard() {
+  const events = [
+    { id: 1, name: 'Event 1', department: 'Data Science', location: 'Pune' },
+    { id: 2, name: 'Event 2', department: 'Commerce', location: 'Bangalore' },
+    { id: 3, name: 'Event 3', department: 'BBA', location: 'Delhi' },
+  ];
+
   return (
     <div className="container-fluid">
       <div className="row">
@@ -34,26 +42,40 @@ function Dashboard() {
           <div className="container-fluid flex-fill">
             <h1 className="text-center mb-4"></h1>
             <div className="row h-100">
-              {/* Second Column: Square Cards */}
+              {/* Second Column: Bar Chart */}
               <div className="col-md-6 d-flex flex-column">
                 <div className="bg-light p-4 mb-4 flex-fill">
                   <div className="card h-50">
                     <div className="card-body text-center d-flex align-items-center justify-content-center">
-                      <BarChart /> {/* Embed the BarChart component inside Card 1 */}
+                      <BarChart />
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Third Column */}
-              <div className="col-md-6">
-                <div className="bg-light p-4 mb-3 text-center" style={{ height: '300px' }}>
-                  <DemoGraph /> {/* Embed the graph component */}
-                </div>
-                <div className="bg-light p-4 text-center" style={{ height: '300px' }}>
-                  <p>Reports</p>
+              {/* Third Column: Demo Graph */}
+              <div className="col-md-6 d-flex flex-column">
+                <div className="bg-light p-4 mb-4 flex-fill">
+                  <div className="card h-50">
+                    <div className="card-body text-center d-flex align-items-center justify-content-center">
+                      <DemoGraph />
+                    </div>
+                  </div>
                 </div>
               </div>
+              
+              {/* Event Table Spanning Two Columns */}
+              <div className="col-md-12">
+                <div className="bg-light p-4 text-center mt-4">
+                  <h5>Event Table</h5>
+                  <DataTable value={events} responsiveLayout="scroll">
+                    <Column field="name" header="Event Name" />
+                    <Column field="department" header="Department" />
+                    <Column field="location" header="Location" />
+                  </DataTable>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>

@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Nav } from 'react-bootstrap';
 import './Sidebar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUsers, faCalendar, faCog, faHandPointRight, faHome,faGears } from '@fortawesome/free-solid-svg-icons';
+import { faUsers, faCalendar, faCog, faHandPointRight, faHome, faGears } from '@fortawesome/free-solid-svg-icons';
 
 
 
@@ -21,6 +21,9 @@ function Sidebar() {
       setOpenSections((prevState) => ({ ...prevState, accounts: true }));
     }
     if (path.includes('/createCampus') || path.includes('/listCampus')) {
+      setOpenSections((prevState) => ({ ...prevState, settings: true, campus: true }));
+    }
+    if (path.includes('/academicyear') ) {
       setOpenSections((prevState) => ({ ...prevState, settings: true, campus: true }));
     }
     if (path.includes('/createdepartments') || path.includes('/listdepartment')) {
@@ -49,65 +52,68 @@ function Sidebar() {
   const isActive = (path) => location.pathname === path; // Check if the current path matches the link path
 
   return (
-    <div className="sidebar text-left ">
-      <Nav className="flex-column p-2">
-        <Nav.Item>
-          <Nav.Link
-            as={Link}
-            to="/dashboard"
-            className={`text-light fw-bold ${isActive('/admin-dashboard') ? 'active' : ''}`} // Apply active class
+    <div className="sidebar text-left  fixed">
+      <div className="container-fluid mb-6">
+        <a className="text-white fw-bolder fs-4 text-decoration-none">
+          CHRIST University<br />
+          IQAC | <span className='fw-normal'> EMT</span>
+        </a>
+        <Nav className="flex-column p-1 mt-5">
 
-          >
-            <FontAwesomeIcon icon={faHome} className="me-2" />
-            Dashboard
-          </Nav.Link>
-        </Nav.Item>
+          <Nav.Item>
+            <Nav.Link
+              as={Link}
+              to="/dashboard"
+              className={`text-light fw-bold ${isActive('/admin-dashboard') ? 'active' : ''}`} // Apply active class
 
+            >
+              <FontAwesomeIcon icon={faHome} className="me-2" />
+              Dashboard
+            </Nav.Link>
+          </Nav.Item>
 
-
-
-        {/* Accounts Section */}
-        <Nav.Item>
-          <Nav.Link
-            className="text-light fw-bold"
-            onClick={() => toggleSection('accounts')}
-          >
-            <FontAwesomeIcon icon={faUsers} className="me-2" />
-            Accounts
-          </Nav.Link>
-          {openSections.accounts && (
-            <Nav className="flex-column ms-3">
-              <Nav.Item>
-                <Nav.Link
-                  as={Link}
-                  to="/registerSingleuser"
-                  className={`text-light ${isActive('/registerSingleuser') ? 'active' : ''}`}
-                >
-                  <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
-                  Create User
-                </Nav.Link>
-              </Nav.Item>
-              <Nav.Item>
-                <Nav.Link
-                  as={Link}
-                  to="/registerMultipleUser"
-                  className={`text-light ${isActive('/registerMultipleUser') ? 'active' : ''}`}
-                >
-                  <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
-                  Create Users
-                </Nav.Link>
-              </Nav.Item>
-              <Nav.Item>
-                <Nav.Link
-                  as={Link}
-                  to="/listuser"
-                  className={`text-light ${isActive('/listuser') ? 'active' : ''}`}
-                >
-                  <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
-                  Users List
-                </Nav.Link>
-              </Nav.Item>
-              {/* <Nav.Item>
+          {/* Accounts Section */}
+          <Nav.Item>
+            <Nav.Link
+              className="text-light fw-bold"
+              onClick={() => toggleSection('accounts')}
+            >
+              <FontAwesomeIcon icon={faUsers} className="me-2" />
+              Accounts
+            </Nav.Link>
+            {openSections.accounts && (
+              <Nav className="flex-column ms-3">
+                <Nav.Item>
+                  <Nav.Link
+                    as={Link}
+                    to="/registerSingleuser"
+                    className={`text-light ${isActive('/registerSingleuser') ? 'active' : ''}`}
+                  >
+                    <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
+                    Create User
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link
+                    as={Link}
+                    to="/registerMultipleUser"
+                    className={`text-light ${isActive('/registerMultipleUser') ? 'active' : ''}`}
+                  >
+                    <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
+                    Create Users
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link
+                    as={Link}
+                    to="/listuser"
+                    className={`text-light ${isActive('/listuser') ? 'active' : ''}`}
+                  >
+                    <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
+                    Users List
+                  </Nav.Link>
+                </Nav.Item>
+                {/* <Nav.Item>
                 <Nav.Link
                   as={Link}
                   to="/map"
@@ -117,163 +123,214 @@ function Sidebar() {
                   Map User / Users
                 </Nav.Link>
               </Nav.Item> */}
-            </Nav>
-          )}
-        </Nav.Item>
+              </Nav>
+            )}
+          </Nav.Item>
 
-        {/* Settings Section */}
-        <Nav.Item>
-          <Nav.Link
-            className="text-light fw-bold"
-            onClick={() => toggleSection('settings')}
-          >
-            <FontAwesomeIcon icon={faCog} className="me-2" />
-            Settings
-          </Nav.Link>
+          {/* Settings Section */}
+          <Nav.Item>
+            <Nav.Link
+              className="text-light fw-bold"
+              onClick={() => toggleSection('settings')}
+            >
+              <FontAwesomeIcon icon={faCog} className="me-2" />
+              Settings
+            </Nav.Link>
+            {openSections.settings && (
+              <Nav className="flex-column ms-3">
 
 
-          {openSections.settings && (
-            <Nav className="flex-column ms-3">
+                {/* Campus Section */}
+                <Nav.Item>
+                  <Nav.Link
+                    className="text-light fw-bold"
+                    onClick={() => toggleSection('campus')}
+                  >
+                    <FontAwesomeIcon icon={faGears} className="me-2" />
+                    Campus
+                  </Nav.Link>
+                  {openSections.campus && (
+                    <Nav className="flex-column ms-3">
+                      <Nav.Item>
+                        <Nav.Link
+                          as={Link}
+                          to="/createCampus"
+                          className={`text-light ${isActive('/createCampus') ? 'active' : ''}`}
+                        >
+                          <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
+                          Create Campus
+                        </Nav.Link>
+                      </Nav.Item>
+                      <Nav.Item>
+                        <Nav.Link
+                          as={Link}
+                          to="/listCampus"
+                          className={`text-light ${isActive('/listCampus') ? 'active' : ''}`}
+                        >
+                          <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
+                          Campus List
+                        </Nav.Link>
+                      </Nav.Item>
+                    </Nav>
+                  )}
+                </Nav.Item>
 
-              {/* Campus Section */}
-              <Nav.Item>
-                <Nav.Link
-                  className="text-light fw-bold"
-                  onClick={() => toggleSection('campus')}
-                >
-                  <FontAwesomeIcon icon={faGears} className="me-2" />
-                  Campus
-                </Nav.Link>
-                {openSections.campus && (
-                  <Nav className="flex-column ms-3">
-                    <Nav.Item>
-                      <Nav.Link
-                        as={Link}
-                        to="/createCampus"
-                        className={`text-light ${isActive('/createCampus') ? 'active' : ''}`}
-                      >
-                        <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
-                        Create Campus
-                      </Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                      <Nav.Link
-                        as={Link}
-                        to="/listCampus"
-                        className={`text-light ${isActive('/listCampus') ? 'active' : ''}`}
-                      >
-                        <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
-                        Campus List
-                      </Nav.Link>
-                    </Nav.Item>
-                  </Nav>
-                )}
-              </Nav.Item>
-              {/* Department Section */}
-              <Nav.Item>
-                <Nav.Link
-                  className="text-light fw-bold"
-                  onClick={() => toggleSection('department')}
-                >
-                  <FontAwesomeIcon icon={faGears} className="me-2" />
-                  Department
-                </Nav.Link>
-                {openSections.department && (
-                  <Nav className="flex-column ms-3">
-                    <Nav.Item>
-                      <Nav.Link
-                        as={Link}
-                        to="/createdepartments"
-                        className={`text-light ${isActive('/createdepartments') ? 'active' : ''}`}
-                      >
-                        <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
-                        Create Department
-                      </Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                      <Nav.Link
-                        as={Link}
-                        to="/listdepartment"
-                        className={`text-light ${isActive('/listdepartment') ? 'active' : ''}`}
-                      >
-                        <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
-                        Department List
-                      </Nav.Link>
-                    </Nav.Item>
-                  </Nav>
-                )}
-              </Nav.Item>
+                {/* Academic Year Section */}
+                <Nav.Item>
+                  <Nav.Link
+                    className="text-light fw-bold"
+                    onClick={() => toggleSection('AcademicYear')}
+                  >
+                    <FontAwesomeIcon icon={faGears} className="me-2" />
+                    Academic Year
+                  </Nav.Link>
+                  {openSections.campus && (
+                    <Nav className="flex-column ms-3">
+                      <Nav.Item>
+                        <Nav.Link
+                          as={Link}
+                          to="/academicyear"
+                          className={`text-light ${isActive('/academicyear') ? 'active' : ''}`}
+                        >
+                          <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
+                          Create Academic Year
+                        </Nav.Link>
+                      </Nav.Item>
+                      
+                    </Nav>
+                  )}
+                </Nav.Item>
+                
+               {/* Academic Year Section */}
+               <Nav.Item>
+                  <Nav.Link
+                    className="text-light fw-bold"
+                    onClick={() => toggleSection('Event Type')}
+                  >
+                    <FontAwesomeIcon icon={faGears} className="me-2" />
+                   Event Type
+                  </Nav.Link>
+                  {openSections.campus && (
+                    <Nav className="flex-column ms-3">
+                      <Nav.Item>
+                        <Nav.Link
+                          as={Link}
+                          to="/eventtype"
+                          className={`text-light ${isActive('/eventtype') ? 'active' : ''}`}
+                        >
+                          <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
+                          Create Event Type
+                        </Nav.Link>
+                      </Nav.Item>
+                      
+                    </Nav>
+                  )}
+                </Nav.Item>
+                {/* Department Section */}
+                <Nav.Item>
+                  <Nav.Link
+                    className={`text-light fw-bold ${isActive('/createdepartments') || isActive('/listdepartment') ? 'active' : ''}`}
+                    onClick={() => toggleSection('department')}
+                  >
+                    <FontAwesomeIcon icon={faGears} className="me-2" />
+                    Department
+                  </Nav.Link>
+                  {openSections.department && (
+                    <Nav className="flex-column ms-3">
+                      <Nav.Item>
+                        <Nav.Link
+                          as={Link}
+                          to="/createdepartments"
+                          className={`text-light ${isActive('/createdepartments') ? 'active' : ''}`}
+                        >
+                          <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
+                          Create Department
+                        </Nav.Link>
+                      </Nav.Item>
+                      <Nav.Item>
+                        <Nav.Link
+                          as={Link}
+                          to="/listdepartment"
+                          className={`text-light ${isActive('/listdepartment') ? 'active' : ''}`}
+                        >
+                          <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
+                          Department List
+                        </Nav.Link>
+                      </Nav.Item>
+                    </Nav>
+                  )}
+                </Nav.Item>
 
-              <Nav.Item>
-                <Nav.Link
-                  className={`text-light ${isActive('/createTag') || isActive('/listTag') ? 'active' : ''}`}
-                  onClick={() => toggleSection('tagManager')}
-                >
-                  <FontAwesomeIcon icon={faGears} className="me-2" />
-                  Tag Manager
-                </Nav.Link>
+                <Nav.Item>
+                  <Nav.Link
+                    className={`text-light fw-bold ${isActive('/createTag') || isActive('/listTag') ? 'active' : ''}`}
+                    onClick={() => toggleSection('tagManager')}
+                  >
+                    <FontAwesomeIcon icon={faGears} className="me-2" />
+                    Tag Manager
+                  </Nav.Link>
 
-                {openSections.tagManager && (
-                  <Nav className="flex-column ms-3">
-                    <Nav.Item>
-                      <Nav.Link
-                        as={Link}
-                        to="/createTag"
-                        className={`text-light ${isActive('/createTag') ? 'active' : ''}`}
-                      >
-                        <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
-                        Create Tag
-                      </Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                      <Nav.Link
-                        as={Link}
-                        to="/listTag"
-                        className={`text-light ${isActive('/listTag') ? 'active' : ''}`}
-                      >
-                        <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
-                        Tag List
-                      </Nav.Link>
-                    </Nav.Item>
-                  </Nav>
-                )}
-              </Nav.Item>
-            </Nav>
-          )}
-        </Nav.Item>
+                  {openSections.tagManager && (
+                    <Nav className="flex-column ms-3">
+                      <Nav.Item>
+                        <Nav.Link
+                          as={Link}
+                          to="/createTag"
+                          className={`text-light ${isActive('/createTag') ? 'active' : ''}`}
+                        >
+                          <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
+                          Create Tag
+                        </Nav.Link>
+                      </Nav.Item>
+                      <Nav.Item>
+                        <Nav.Link
+                          as={Link}
+                          to="/listTag"
+                          className={`text-light ${isActive('/listTag') ? 'active' : ''}`}
+                        >
+                          <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
+                          Tag List
+                        </Nav.Link>
+                      </Nav.Item>
+                    </Nav>
+                  )}
+                </Nav.Item>
+              </Nav>
+            )}
+          </Nav.Item>
 
-        {/* Event Status Section */}
-        <Nav.Item>
-          <Nav.Link
-            className="text-light fw-bold"
-            onClick={() => toggleSection('eventStatus')}
-          >
-            <FontAwesomeIcon icon={faCalendar} className="me-2" />
-            Event
-          </Nav.Link>
-          {openSections.eventStatus && (
-            <Nav className="flex-column ms-3">
-              <Nav.Item>
-                <Nav.Link
-                  as={Link}
-                  to="/registerEvent"
-                  className={`text-light ${isActive('/registerEvent') ? 'active' : ''}`}
-                >
-                  <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
-                  Register Event
-                </Nav.Link>
-              </Nav.Item>
-              <Nav.Item>
-                <Nav.Link
-                  as={Link}
-                  to="/listevents"
-                  className={`text-light ${isActive('/listevents') ? 'active' : ''}`}
-                >
-                  <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
-                  Events List
-                </Nav.Link>
-              </Nav.Item>
-              {/* <Nav.Item>
+          {/* Event Status Section */}
+          <Nav.Item>
+            <Nav.Link
+              className="text-light fw-bold"
+              onClick={() => toggleSection('eventStatus')}
+            >
+              <FontAwesomeIcon icon={faCalendar} className="me-2" />
+              Event
+            </Nav.Link>
+            {openSections.eventStatus && (
+              <Nav className="flex-column ms-3">
+                <Nav.Item>
+                  <Nav.Link
+                    as={Link}
+                    to="/registerEvent"
+                    className={`text-light ${isActive('/registerEvent') ? 'active' : ''}`}
+                  >
+                    <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
+                    Register Event
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link
+                    as={Link}
+                    to="/listevents"
+                    className={`text-light ${isActive('/listevents') ? 'active' : ''}`}
+                  >
+                    <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
+                    Events List
+                  </Nav.Link>
+                </Nav.Item>
+                {/* <Nav.Item>
                 <Nav.Link
                   as={Link}
                   to="/addreport"
@@ -284,10 +341,14 @@ function Sidebar() {
                 </Nav.Link>
               </Nav.Item> */}
 
-            </Nav>
-          )}
-        </Nav.Item>
-      </Nav>
+              </Nav>
+            )}
+          </Nav.Item>
+        </Nav>
+      </div>
+      <footer className="text-white text-center size-3 font-italic font-weight-light sticky-bottom">
+        © 2024 Designed and Developed by CHRIST Infotech. All rights reserved.
+      </footer>
     </div>
   );
 }

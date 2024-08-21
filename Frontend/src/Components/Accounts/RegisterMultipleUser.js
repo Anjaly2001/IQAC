@@ -46,7 +46,7 @@ const RegisterMultipleUser = () => {
                                     </a>
                                 </div>
                                 
-                                <div className="form-group mb-4">
+                                <div className="form-group mb-6">
                                     <label htmlFor="csvFile">Upload CSV File</label>
                                     <input
                                         type="file"
@@ -57,7 +57,7 @@ const RegisterMultipleUser = () => {
                                 </div>
                                 
                                 {/* Disclaimer below the file upload */}
-                                <div className="text-muted mb-2">
+                                <div className="text-muted mb-6">
                                     The file should include the following columns: Name, Emp ID, Email, Phone Number, Campus, Department.
                                 </div>
                                 

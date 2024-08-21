@@ -1,7 +1,7 @@
 /* Sidebar.css */
 
 .sidebar {
-    width: 250px;
+    width: 260px;
     height: 100vh;
     position: fixed;
     top: 0;
@@ -40,4 +40,6 @@
   .sidebar .nav .nav-item {
     margin-bottom: 5px;
   }
-  
+  .footer{
+    position: sticky;
+  }

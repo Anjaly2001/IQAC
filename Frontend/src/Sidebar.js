@@ -3,7 +3,9 @@ import { Link, useLocation } from 'react-router-dom';
 import { Nav } from 'react-bootstrap';
 import './Sidebar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUsers, faCalendar, faCog, faHandPointRight, faHome, faGears } from '@fortawesome/free-solid-svg-icons';
+import { faUsers, faCalendar, faCog, faHandPointRight, faHome, faGears, faEye } from '@fortawesome/free-solid-svg-icons';
+// import AcademicYear from './Components/AcademicYear/CreateAcademicYear';
+// import EventType from './Components/Event/EventType';
 
 
 
@@ -24,7 +26,10 @@ function Sidebar() {
       setOpenSections((prevState) => ({ ...prevState, settings: true, campus: true }));
     }
     if (path.includes('/academicyear') ) {
-      setOpenSections((prevState) => ({ ...prevState, settings: true, campus: true }));
+      setOpenSections((prevState) => ({ ...prevState, settings: true, AcademicYear: true }));
+    }
+    if (path.includes('/eventtype') ) {
+      setOpenSections((prevState) => ({ ...prevState, settings: true, EventType: true }));
     }
     if (path.includes('/createdepartments') || path.includes('/listdepartment')) {
       setOpenSections((prevState) => ({ ...prevState, settings: true, department: true }));
@@ -90,7 +95,7 @@ function Sidebar() {
                     className={`text-light ${isActive('/registerSingleuser') ? 'active' : ''}`}
                   >
                     <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
-                    Create User
+                    New User
                   </Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
@@ -100,7 +105,7 @@ function Sidebar() {
                     className={`text-light ${isActive('/registerMultipleUser') ? 'active' : ''}`}
                   >
                     <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
-                    Create Users
+                    New Users
                   </Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
@@ -109,7 +114,7 @@ function Sidebar() {
                     to="/listuser"
                     className={`text-light ${isActive('/listuser') ? 'active' : ''}`}
                   >
-                    <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
+                    <FontAwesomeIcon icon={faEye} className="me-2" />
                     Users List
                   </Nav.Link>
                 </Nav.Item>
@@ -158,7 +163,7 @@ function Sidebar() {
                           className={`text-light ${isActive('/createCampus') ? 'active' : ''}`}
                         >
                           <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
-                          Create Campus
+                          New Campus
                         </Nav.Link>
                       </Nav.Item>
                       <Nav.Item>
@@ -167,7 +172,7 @@ function Sidebar() {
                           to="/listCampus"
                           className={`text-light ${isActive('/listCampus') ? 'active' : ''}`}
                         >
-                          <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
+                          <FontAwesomeIcon icon={faEye} className="me-2" />
                           Campus List
                         </Nav.Link>
                       </Nav.Item>
@@ -184,7 +189,7 @@ function Sidebar() {
                     <FontAwesomeIcon icon={faGears} className="me-2" />
                     Academic Year
                   </Nav.Link>
-                  {openSections.campus && (
+                  {openSections.AcademicYear && (
                     <Nav className="flex-column ms-3">
                       <Nav.Item>
                         <Nav.Link
@@ -193,7 +198,7 @@ function Sidebar() {
                           className={`text-light ${isActive('/academicyear') ? 'active' : ''}`}
                         >
                           <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
-                          Create Academic Year
+                          New Academic Year
                         </Nav.Link>
                       </Nav.Item>
                       
@@ -201,16 +206,16 @@ function Sidebar() {
                   )}
                 </Nav.Item>
                 
-               {/* Academic Year Section */}
+               {/* Event Type Section */}
                <Nav.Item>
                   <Nav.Link
-                    className="text-light fw-bold"
-                    onClick={() => toggleSection('Event Type')}
+                    className={`text-light fw-bold ${isActive('/eventtype') }`}
+                    onClick={() => toggleSection('EventType')}
                   >
                     <FontAwesomeIcon icon={faGears} className="me-2" />
                    Event Type
                   </Nav.Link>
-                  {openSections.campus && (
+                  {openSections.EventType && (
                     <Nav className="flex-column ms-3">
                       <Nav.Item>
                         <Nav.Link
@@ -219,13 +224,14 @@ function Sidebar() {
                           className={`text-light ${isActive('/eventtype') ? 'active' : ''}`}
                         >
                           <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
-                          Create Event Type
+                          New Event Type
                         </Nav.Link>
                       </Nav.Item>
                       
                     </Nav>
                   )}
                 </Nav.Item>
+
                 {/* Department Section */}
                 <Nav.Item>
                   <Nav.Link
@@ -244,7 +250,7 @@ function Sidebar() {
                           className={`text-light ${isActive('/createdepartments') ? 'active' : ''}`}
                         >
                           <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
-                          Create Department
+                          New Department
                         </Nav.Link>
                       </Nav.Item>
                       <Nav.Item>
@@ -253,7 +259,7 @@ function Sidebar() {
                           to="/listdepartment"
                           className={`text-light ${isActive('/listdepartment') ? 'active' : ''}`}
                         >
-                          <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
+                          <FontAwesomeIcon icon={faEye} className="me-2" />
                           Department List
                         </Nav.Link>
                       </Nav.Item>
@@ -279,7 +285,7 @@ function Sidebar() {
                           className={`text-light ${isActive('/createTag') ? 'active' : ''}`}
                         >
                           <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
-                          Create Tag
+                          New Tag
                         </Nav.Link>
                       </Nav.Item>
                       <Nav.Item>
@@ -288,7 +294,7 @@ function Sidebar() {
                           to="/listTag"
                           className={`text-light ${isActive('/listTag') ? 'active' : ''}`}
                         >
-                          <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
+                          <FontAwesomeIcon icon={faEye} className="me-2" />
                           Tag List
                         </Nav.Link>
                       </Nav.Item>
@@ -326,7 +332,7 @@ function Sidebar() {
                     to="/listevents"
                     className={`text-light ${isActive('/listevents') ? 'active' : ''}`}
                   >
-                    <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
+                    <FontAwesomeIcon icon={faEye} className="me-2" />
                     Events List
                   </Nav.Link>
                 </Nav.Item>
@@ -346,10 +352,7 @@ function Sidebar() {
           </Nav.Item>
         </Nav>
       </div>
-      <footer className="text-white text-center size-3 font-italic font-weight-light sticky-bottom">
-        © 2024 Designed and Developed by CHRIST Infotech. All rights reserved.
-      </footer>
-    </div>
+      </div>
   );
 }
 

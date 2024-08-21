@@ -7,6 +7,7 @@ import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import AddReport from './AddReport';
 
 const ListEvents = () => {
   const [pendingReports, setPendingReports] = useState([]);

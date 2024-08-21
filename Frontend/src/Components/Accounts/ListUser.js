@@ -7,10 +7,9 @@ import { FaSearch, FaEdit, FaTrash } from 'react-icons/fa';
 import { Tag } from 'primereact/tag';
 import AdminDashboard from '../Admin/AdminDashboard';
 import 'bootstrap/dist/css/bootstrap.min.css';
-//import Axios from 'axios';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
-import { department_list} from '../../axios/api';  // user list
+// import { department_list } from '../../axios/api';  // user list
 
 const ListUser = () => {
     const navigate = useNavigate();
@@ -30,16 +29,62 @@ const ListUser = () => {
     }, []);
 
     const fetchUsers = async () => {
-        const token = localStorage.getItem('access_token');
-        try {
-            // const token = localStorage.getItem('access_token');
-            const response = await department_list()      //  make it as user_list
-            console.log(response)
-            setUsers(response);
-        } catch (error) {
-            console.error('Error fetching User:', error);
-        }
+        const dummyUsers = [
+            {
+                id: 1,
+                name: 'John Doe',
+                emp_id: 'EMP001',
+                email: 'john.doe@example.com',
+                campus: 'Main Campus',
+                department: 'Engineering',
+                status: true,
+                description: '20111'
+            },
+            {
+                id: 2,
+                name: 'Jane Smith',
+                emp_id: 'EMP002',
+                email: 'jane.smith@example.com',
+                campus: 'Pune Campus',
+                department: 'Human Resources',
+                status: false,
+                description: '24126'
+            },
+            {
+                id: 3,
+                name: 'Alice Johnson',
+                emp_id: 'EMP003',
+                email: 'alice.johnson@example.com',
+                campus: 'Delhi Campus',
+                department: 'Marketing',
+                status: true,
+               description: '2452'
+            },
+            {
+                id: 4,
+                name: 'Bob Brown',
+                emp_id: 'EMP004',
+                email: 'bob.brown@example.com',
+                campus: 'Kengeri Campus',
+                department: 'Finance',
+                status: false,
+               description: '20112'
+            },
+            {
+                id: 5,
+                name: 'Charlie Green',
+                emp_id: 'EMP005',
+                email: 'charlie.green@example.com',
+                campus: 'Pune Campus',
+                department: 'Operations',
+                status: true,
+                description: '20512'
+            },
+        ];
+
+        setUsers(dummyUsers);
     };
+
     const startEditing = (user) => {
         navigate(`/update-user/${user.id}`);
     };
@@ -78,7 +123,6 @@ const ListUser = () => {
     );
 
     const onGlobalFilterChange = (e) => {
-        console.log("hello");
         const value = e.target.value;
         let _filters = { ...filters };
         _filters['global'].value = value;
@@ -113,7 +157,6 @@ const ListUser = () => {
                     </div>
                     <div className="col-md-10 mt-1 pt-5">
                         <div className="container mt-3">
-                            
                             <div className="table-container">
                                 <DataTable
                                     value={users}
@@ -121,17 +164,17 @@ const ListUser = () => {
                                     rows={10}
                                     dataKey="id"
                                     emptyMessage="No User found."
-                                    globalFilterFields={['name', 'emp id', 'email', 'campus','department']}
+                                    globalFilterFields={['name', 'emp_id', 'email', 'campus', 'department']}
                                     filters={filters}
                                     filterDisplay="row"
                                     header={header}
                                     responsiveLayout="scroll"
                                 >
                                     <Column field="name" header="User Name" filter filterPlaceholder="Search name" filterMatchMode="contains" />
-                                    <Column field="emp_id" filters={filters} header="Emp ID" filter filterPlaceholder="Search ID" filterMatchMode="contains" body={customBodyTemplate} />
+                                    <Column field="emp_id" header="Emp ID" filter filterPlaceholder="Search ID" filterMatchMode="contains" body={customBodyTemplate} />
                                     <Column field="email" header="Email" filter filterPlaceholder="Search email" filterMatchMode="contains" />
                                     <Column field="campus" header="Campus" filter filterPlaceholder="Search campus" filterMatchMode="contains" />
-                                    <Column field="department" header="Departmemt" filter filterPlaceholder="Search Department" filterMatchMode="contains" />
+                                    <Column field="department" header="Department" filter filterPlaceholder="Search Department" filterMatchMode="contains" />
                                     <Column field="status" header="Status" body={statusBodyTemplate} />
                                     <Column header="Actions" body={actionBodyTemplate} />
                                 </DataTable>

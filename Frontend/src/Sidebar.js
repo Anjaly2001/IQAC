@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Nav } from 'react-bootstrap';
 import './Sidebar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUsers, faCalendar, faCog, faHandPointRight, faHome, faGears, faEye } from '@fortawesome/free-solid-svg-icons';
+import { faUsers, faCalendar, faCog, faHandPointRight, faHome, faGears, faEye ,faPlus } from '@fortawesome/free-solid-svg-icons';
 // import AcademicYear from './Components/AcademicYear/CreateAcademicYear';
 // import EventType from './Components/Event/EventType';
 
@@ -94,7 +94,7 @@ function Sidebar() {
                     to="/registerSingleuser"
                     className={`text-light ${isActive('/registerSingleuser') ? 'active' : ''}`}
                   >
-                    <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
+                    <FontAwesomeIcon icon={faPlus} className="me-2" />
                     New User
                   </Nav.Link>
                 </Nav.Item>
@@ -104,7 +104,7 @@ function Sidebar() {
                     to="/registerMultipleUser"
                     className={`text-light ${isActive('/registerMultipleUser') ? 'active' : ''}`}
                   >
-                    <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
+                    <FontAwesomeIcon icon={faPlus} className="me-2" />
                     New Users
                   </Nav.Link>
                 </Nav.Item>
@@ -162,7 +162,7 @@ function Sidebar() {
                           to="/createCampus"
                           className={`text-light ${isActive('/createCampus') ? 'active' : ''}`}
                         >
-                          <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
+                          <FontAwesomeIcon icon={faPlus} className="me-2" />
                           New Campus
                         </Nav.Link>
                       </Nav.Item>
@@ -197,7 +197,7 @@ function Sidebar() {
                           to="/academicyear"
                           className={`text-light ${isActive('/academicyear') ? 'active' : ''}`}
                         >
-                          <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
+                          <FontAwesomeIcon icon={faPlus} className="me-2" />
                           New Academic Year
                         </Nav.Link>
                       </Nav.Item>
@@ -223,7 +223,7 @@ function Sidebar() {
                           to="/eventtype"
                           className={`text-light ${isActive('/eventtype') ? 'active' : ''}`}
                         >
-                          <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
+                          <FontAwesomeIcon icon={faPlus} className="me-2" />
                           New Event Type
                         </Nav.Link>
                       </Nav.Item>
@@ -249,7 +249,7 @@ function Sidebar() {
                           to="/createdepartments"
                           className={`text-light ${isActive('/createdepartments') ? 'active' : ''}`}
                         >
-                          <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
+                          <FontAwesomeIcon icon={faPlus} className="me-2" />
                           New Department
                         </Nav.Link>
                       </Nav.Item>
@@ -284,7 +284,7 @@ function Sidebar() {
                           to="/createTag"
                           className={`text-light ${isActive('/createTag') ? 'active' : ''}`}
                         >
-                          <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
+                          <FontAwesomeIcon icon={faPlus} className="me-2" />
                           New Tag
                         </Nav.Link>
                       </Nav.Item>
@@ -322,7 +322,7 @@ function Sidebar() {
                     to="/registerEvent"
                     className={`text-light ${isActive('/registerEvent') ? 'active' : ''}`}
                   >
-                    <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
+                    <FontAwesomeIcon icon={faPlus} className="me-2" />
                     Register Event
                   </Nav.Link>
                 </Nav.Item>

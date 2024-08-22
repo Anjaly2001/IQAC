@@ -330,9 +330,9 @@ function RegisterEvent() {
                 />
               </div>
 
-              <div className="text-center">
-                <Button label="Submit" icon="pi pi-check" type="submit" />
-              </div>
+              <button type="submit" className="btn btn-primary">
+                Submit
+              </button>
             </form>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AdminDashboard from '../Admin/AdminDashboard';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -7,12 +8,13 @@ import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import AddReport from './AddReport';
 
 const ListEvents = () => {
   const [pendingReports, setPendingReports] = useState([]);
   const [filteredReports, setFilteredReports] = useState([]);
   const [globalFilter, setGlobalFilter] = useState('');
+  
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
     fetchPendingReports();
@@ -44,10 +46,6 @@ const ListEvents = () => {
     console.log('Delete report', reportId);
   };
 
-  const addReport = () => {
-    console.log('Add new report');
-  };
-
   const actionBodyTemplate = (rowData) => {
     return (
       <React.Fragment>
@@ -56,7 +54,7 @@ const ListEvents = () => {
         {rowData.status !== 'Approved' && (
           <button className="btn btn-danger me-2" onClick={() => deleteReport(rowData.id)}>Delete</button>
         )}
-        <button className="btn btn-success" onClick={"/addreport"}>Add Report</button>
+        <button className="btn btn-success" onClick={() => navigate('/addreport')}>Add Report</button> {/* Use navigate here */}
       </React.Fragment>
     );
   };
@@ -98,7 +96,7 @@ const ListEvents = () => {
                 <Column field="title" header="Event Title" filter filterPlaceholder="Search by title" style={{ minWidth: '12rem' }} />
                 <Column field="collaborators" header="Collaborators" filter filterPlaceholder="Search by collaborators" style={{ minWidth: '12rem' }} />
                 <Column field="status" header="Status" filter filterPlaceholder="Search by status" style={{ minWidth: '12rem' }} />
-                <Column header="Actions (Under development ) " body={actionBodyTemplate} style={{ minWidth: '12rem' }} />
+                <Column header="Actions (Under development)" body={actionBodyTemplate} style={{ minWidth: '12rem' }} />
               </DataTable>
             </div>
           </div>

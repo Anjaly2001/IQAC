@@ -28,11 +28,13 @@ export const verify_otp = async (form) => {
 export const campus_register = async (form) => {
   try {
     const res = await postMultipartData('department_and_events/campus_register/', form);
+    toast.success('campus created Successfully')
     return res.data;
+    
   }
   catch (error) {
     console.log(error);
-    toast.error('Failed to create campus. Please try again.');
+    toast.error('campus already exist.');
   }
 };
 

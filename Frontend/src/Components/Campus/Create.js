@@ -30,7 +30,7 @@ const CreateCampus = () => {
                     setCampusName('');
                     setLogo(null);
                     setLogoName('');
-                    toast.success('Campus created successfully!');
+                    // toast.success('Campus created successfully!');
                 }
             } catch (error) {
                 if (error.response) {

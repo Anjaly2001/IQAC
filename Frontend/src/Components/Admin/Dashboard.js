@@ -21,21 +21,21 @@ function Dashboard() {
           <AdminDashboard />
         </div>
 
-        {/* First Column: Three Separate Boxes */}
         <div className="col-md-2 mt-7 d-flex flex-column">
           <div className="bg-light p-3 mb-3 text-center border flex-fill">
             <p>Sample Text</p>
-            <p>Count: 1</p>
+            <p>Count: <strong>1</strong></p>
           </div>
           <div className="bg-light p-3 mb-3 text-center border flex-fill">
             <p>Sample Text</p>
-            <p>Count: 2</p>
+            <p>Count: <strong>2</strong></p>
           </div>
           <div className="bg-light p-3 text-center border flex-fill">
             <p>Sample Text</p>
-            <p>Count: 3</p>
+            <p>Count: <strong>3</strong></p>
           </div>
         </div>
+
 
         {/* Main Content */}
         <div className="col-md-8 mt-5 d-flex flex-column">
@@ -63,7 +63,7 @@ function Dashboard() {
                   </div>
                 </div>
               </div>
-              
+
               {/* Event Table Spanning Two Columns */}
               <div className="col-md-12">
                 <div className="bg-light p-4 text-center mt-4">

@@ -39,7 +39,7 @@ instance.interceptors.response.use(
       originalRequest._retry = true;
       try {
         const refreshToken = localStorage.getItem('refresh_token');
-        const response = await axios.post(`${baseURL}authentication/token_refresh/`, {
+        const response = await axios.post(`${baseURL}authentication/refresh`, {
           refresh: refreshToken,
         });
 

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { InputOtp } from 'primereact/inputotp';
@@ -36,9 +35,11 @@ const Login = () => {
         try {
             const data = { email };
             const response = await login(data);
+            console.log(response)
             setOtpSent(true);
             toast.success('OTP sent to your email!'); // Display success toast
         } catch (error) {
+            console.log(error)
             // Handle error if OTP sending fails
             setError('Failed to send OTP. Please try again.');
         }

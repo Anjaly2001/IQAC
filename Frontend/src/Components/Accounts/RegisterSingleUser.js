@@ -1,6 +1,39 @@
+// import React, { useState } from 'react';
+// import AdminDashboard from '../Admin/AdminDashboard';
+// import 'bootstrap/dist/css/bootstrap.min.css';
+
+// const RegisterSingleUser = () => {
+//     // State variables to manage the form input values
+//     const [userName, setUserName] = useState('');
+//     const [userEmpId, setUserEmpId] = useState('');
+//     const [userEmail, setUserEmail] = useState('');
+//     const [userPhoneNumber, setUserPhoneNumber] = useState('');
+//     const [userDepartment, setUserDepartment] = useState('');
+//     const [userCampus, setUserCampus] = useState('');
+
+//     // Function to handle user creation
+//     const createUser = () => {
+//         let department = userDepartment === 'Others' ? customDepartment : userDepartment;
+//         let campus = userCampus === 'Others' ? customCampus : userCampus;
+
+//         if (userName && userEmpId && userEmail && department && campus) {
+//             // Logic to handle the creation of the user
+
+//             // Reset the form fields after user creation
+//             setUserName('');
+//             setUserEmpId('');
+//             setUserEmail('');
+//             setUserPhoneNumber('');
+//             setUserDepartment('');
+//             setUserCampus('');
+//         }
+//     };
 import React, { useState } from 'react';
+import axios from 'axios';  // Import axios
 import AdminDashboard from '../Admin/AdminDashboard';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { toast } from 'react-toastify';  // Import toast for notifications
+import {user_register} from '../../axios/api';
 
 const RegisterSingleUser = () => {
     // State variables to manage the form input values
@@ -10,22 +43,48 @@ const RegisterSingleUser = () => {
     const [userPhoneNumber, setUserPhoneNumber] = useState('');
     const [userDepartment, setUserDepartment] = useState('');
     const [userCampus, setUserCampus] = useState('');
+    const [customDepartment, setCustomDepartment] = useState('');  // For custom department
+    const [customCampus, setCustomCampus] = useState('');  // For custom campus
 
     // Function to handle user creation
-    const createUser = () => {
+    const createUser = async () => {
         let department = userDepartment === 'Others' ? customDepartment : userDepartment;
         let campus = userCampus === 'Others' ? customCampus : userCampus;
 
+        // Ensure all required fields are filled
         if (userName && userEmpId && userEmail && department && campus) {
-            // Logic to handle the creation of the user
+            const newUser = {
+                name: userName,
+                emp_id: userEmpId,
+                email: userEmail,
+                phone_number: userPhoneNumber,
+                department,
+                campus,
+            };
 
-            // Reset the form fields after user creation
-            setUserName('');
-            setUserEmpId('');
-            setUserEmail('');
-            setUserPhoneNumber('');
-            setUserDepartment('');
-            setUserCampus('');
+            try {
+                // Make the API call to register the user
+                const response = await user_register(newUser);
+                console.log('Created department response:', response.data);
+
+
+                toast.success('User created successfully!');
+                
+                // Reset the form fields after successful user creation
+                setUserName('');
+                setUserEmpId('');
+                setUserEmail('');
+                setUserPhoneNumber('');
+                setUserDepartment('');
+                setUserCampus('');
+                setCustomDepartment('');
+                setCustomCampus('');
+            } catch (error) {
+                console.error('Failed to create user:', error);
+                toast.error('Failed to create user.');
+            }
+        } else {
+            toast.error('Please fill in all fields.');
         }
     };
 
@@ -96,18 +155,21 @@ const RegisterSingleUser = () => {
                                         <div className="col-md-6">
                                             <label htmlFor="userCampus">Campus</label>
                                             <select
-                                                className="form-select"
                                                 id="userCampus"
+                                                className="form-select"
                                                 value={userCampus}
                                                 onChange={(e) => setUserCampus(e.target.value)}
                                             >
-                                                <option value="">Select Campus</option>
-                                                <option value="Christ University Bangalore Central Campus">Christ University Bangalore Central Campus</option>
-                                                <option value="Christ University Bangalore Bannerghatta Road Campus">Christ University Bangalore Bannerghatta Road Campus</option>
-                                                <option value="Christ University Bangalore Kengeri Campus">Christ University Bangalore Kengeri Campus</option>
-                                                <option value="Christ University Bangalore Yeshwanthpur Campus">Christ University Bangalore Yeshwanthpur Campus</option>
-                                                <option value="Christ University Delhi NCR Off Campus">Christ University Delhi NCR Off Campus</option>
-                                                <option value="Christ University Pune Lavasa Off Campus">Christ University Pune Lavasa Off Campus</option>
+                                                <option value="">Choose Campus</option>
+                                                {campus.length > 0 ? (
+                                                    campus.map(loc => (
+                                                        <option key={loc.id} value={loc.id}>
+                                                            {loc.campus}
+                                                        </option>
+                                                    ))
+                                                ) : (
+                                                    <option value="">No locations available</option>
+                                                )}
                                                 <option value="Others">Others</option>
                                             </select>
                                         </div>

@@ -7,6 +7,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { department_register, campus_list } from '../../axios/api';
 
+
 const CreateDepartment = ({ onAddDepartment }) => {
     const [departmentName, setDepartmentName] = useState('');
     const [description, setDescription] = useState('');
@@ -20,6 +21,11 @@ const CreateDepartment = ({ onAddDepartment }) => {
 
     useEffect(() => {
         const fetchLocations = async () => {
+            // if (!areFieldsFilled()) {
+            //     toast.error('Please fill in all fields.');
+            //     return;  // Exit early if validation fails
+            // }
+            
             try {
                 const response = await campus_list();
                 console.log('Fetched locations:', response); 
@@ -31,13 +37,42 @@ const CreateDepartment = ({ onAddDepartment }) => {
                 }
             } catch (error) {
                 console.error('Failed to fetch locations:', error);
+                toast.error('Failed to fetch locations.'); 
                 // Handle the error appropriately
             }
+            
+    
         };
-
         fetchLocations();
     }, []); 
-
+    // useEffect(() => {
+    //     const fetchLocations = async () => {
+    //         // Check if all fields are filled before making the API call
+    //         if (!areFieldsFilled()) {
+    //             toast.error('Please fill in all fields.');  // Display error message
+    //             return;  // Exit early if validation fails
+    //         }
+            
+    //         try {
+    //             const response = await campus_list(); // Assuming campus_list() is your API call function
+    //             console.log('Fetched locations:', response); 
+                
+    //             if (response && Array.isArray(response)) {
+    //                 setLocations(response);  // Update the state with the fetched data if it's in an expected format (array)
+    //             } else {
+    //                 console.error('Unexpected response format:', response);
+    //                 // Handle any unexpected response format here
+    //             }
+    //         } catch (error) {
+    //             console.error('Failed to fetch locations:', error);
+    //             toast.error('Failed to fetch locations.'); 
+    //             // Handle the error appropriately, e.g., show a message to the user
+    //         }
+    //     };
+    
+    //     fetchLocations();  // Call the async function to fetch the data when the component mounts
+    // }, []);  // Empty dependency array means this effect runs once when the component mounts
+    
     const handleCreateDepartment = async () => {
         const finalType = type === 'Others' ? customType : type;
         const finalLocation = location === 'Others' ? customLocation : location;
@@ -70,6 +105,9 @@ const CreateDepartment = ({ onAddDepartment }) => {
                 console.error('Failed to create department:', error);
                 // Handle the error appropriately
             }
+        }else {
+            // Display an error message if any required field is missing
+            toast.error('Please fill in all fields.');
         }
     };
 

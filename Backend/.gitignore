@@ -5,6 +5,8 @@ db.sqlite3
 # /db.sqlite3
 *.log
 
+**/__pycache__/
+
 # Ignore all SQLite database files
 *.sqlite3
 

@@ -46,6 +46,8 @@ const RegisterSingleUser = () => {
     const [customDepartment, setCustomDepartment] = useState('');  // For custom department
     const [customCampus, setCustomCampus] = useState('');  // For custom campus
 
+   
+
     // Function to handle user creation
     const createUser = async () => {
         let department = userDepartment === 'Others' ? customDepartment : userDepartment;
@@ -172,6 +174,15 @@ const RegisterSingleUser = () => {
                                                 )}
                                                 <option value="Others">Others</option>
                                             </select>
+                                            {userCampus === 'Others' && (
+                                                <input
+                                                    type="text"
+                                                    className="form-control mt-2"
+                                                    placeholder="Enter Campus"
+                                                    value={customCampus}
+                                                    onChange={(e) => setCustomCampus(e.target.value)}
+                                                />
+                                            )}
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="userDepartment">Parent Department</label>

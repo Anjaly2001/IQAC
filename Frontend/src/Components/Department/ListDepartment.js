@@ -14,6 +14,7 @@ import { department_list, department_delete, department_active } from '../../axi
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+
 const DepartmentList = () => {
     const navigate = useNavigate();
     const [users, setUsers] = useState([]);

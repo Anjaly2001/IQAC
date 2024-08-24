@@ -8,19 +8,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { department_register, campus_list } from '../../axios/api';
 
 const CreateDepartment = ({ onAddDepartment }) => {
-<<<<<<< HEAD
-    // State variables to store input values
-    const [departmentName, setDepartmentName] = useState(''); // Stores the department name
-    const [description, setDescription] = useState(''); // Stores the department description
-    const [type, setType] = useState(''); // Stores the selected department type
-    const [location, setLocation] = useState(''); // Stores the selected department location
-    const [customType, setCustomType] = useState(''); // Stores the custom type if 'Others' is selected
-    const [customLocation, setCustomLocation] = useState(''); // Stores the custom location if 'Others' is selected
-
-    // Function to handle the creation of a new department
-    const handleCreateDepartment = () => {
-        // Determine the final values for type and location, using custom values if 'Others' is selected
-=======
     const [departmentName, setDepartmentName] = useState('');
     const [description, setDescription] = useState('');
     const [type, setType] = useState('');
@@ -52,33 +39,11 @@ const CreateDepartment = ({ onAddDepartment }) => {
     }, []); 
 
     const handleCreateDepartment = async () => {
->>>>>>> cddc8bfd618ffe4e1ee50390b6e8a376c75082cf
         const finalType = type === 'Others' ? customType : type;
         const finalLocation = location === 'Others' ? customLocation : location;
 
         // Ensure that all required fields are filled
         if (departmentName && description && finalType && finalLocation) {
-<<<<<<< HEAD
-            // Create a new department object with a unique ID
-            const newDepartment = { 
-                id: Date.now(), // Unique ID based on the current timestamp
-                name: departmentName, 
-                description, 
-                type: finalType, 
-                location: finalLocation 
-            };
-
-            // Call the parent component's function to add the new department
-            onAddDepartment(newDepartment);
-
-            // Reset the form fields after department creation
-            setDepartmentName('');
-            setDescription('');
-            setType('');
-            setLocation('');
-            setCustomType('');
-            setCustomLocation('');
-=======
             const newDepartment = {
                 name: departmentName,
                 type: finalType,
@@ -105,7 +70,6 @@ const CreateDepartment = ({ onAddDepartment }) => {
                 console.error('Failed to create department:', error);
                 // Handle the error appropriately
             }
->>>>>>> cddc8bfd618ffe4e1ee50390b6e8a376c75082cf
         }
     };
 

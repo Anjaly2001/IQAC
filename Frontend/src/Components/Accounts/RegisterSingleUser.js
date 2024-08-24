@@ -11,10 +11,6 @@ const RegisterSingleUser = () => {
     const [userDepartment, setUserDepartment] = useState('');
     const [userCampus, setUserCampus] = useState('');
 
-    // State variables for custom department and campus
-    const [customDepartment, setCustomDepartment] = useState('');
-    const [customCampus, setCustomCampus] = useState('');
-
     // Function to handle user creation
     const createUser = () => {
         let department = userDepartment === 'Others' ? customDepartment : userDepartment;
@@ -30,8 +26,6 @@ const RegisterSingleUser = () => {
             setUserPhoneNumber('');
             setUserDepartment('');
             setUserCampus('');
-            setCustomDepartment('');
-            setCustomCampus('');
         }
     };
 
@@ -116,15 +110,6 @@ const RegisterSingleUser = () => {
                                                 <option value="Christ University Pune Lavasa Off Campus">Christ University Pune Lavasa Off Campus</option>
                                                 <option value="Others">Others</option>
                                             </select>
-                                            {userCampus === 'Others' && (
-                                                <input
-                                                    type="text"
-                                                    className="form-control mt-2"
-                                                    placeholder="Enter Campus"
-                                                    value={customCampus}
-                                                    onChange={(e) => setCustomCampus(e.target.value)}
-                                                />
-                                            )}
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="userDepartment">Parent Department</label>

@@ -10,12 +10,10 @@ const RegisterSingleUser = () => {
     const [userPhoneNumber, setUserPhoneNumber] = useState('');
     const [userDepartment, setUserDepartment] = useState('');
     const [userCampus, setUserCampus] = useState('');
-<<<<<<< HEAD
-    const [userStatus, setUserStatus] = useState(true);
+
+    // State variables for custom department and campus
     const [customDepartment, setCustomDepartment] = useState('');
     const [customCampus, setCustomCampus] = useState('');
-=======
->>>>>>> cddc8bfd618ffe4e1ee50390b6e8a376c75082cf
 
     // Function to handle user creation
     const createUser = () => {
@@ -32,12 +30,8 @@ const RegisterSingleUser = () => {
             setUserPhoneNumber('');
             setUserDepartment('');
             setUserCampus('');
-<<<<<<< HEAD
-            setUserStatus(true);
             setCustomDepartment('');
             setCustomCampus('');
-=======
->>>>>>> cddc8bfd618ffe4e1ee50390b6e8a376c75082cf
         }
     };
 
@@ -122,7 +116,6 @@ const RegisterSingleUser = () => {
                                                 <option value="Christ University Pune Lavasa Off Campus">Christ University Pune Lavasa Off Campus</option>
                                                 <option value="Others">Others</option>
                                             </select>
-<<<<<<< HEAD
                                             {userCampus === 'Others' && (
                                                 <input
                                                     type="text"
@@ -132,8 +125,6 @@ const RegisterSingleUser = () => {
                                                     onChange={(e) => setCustomCampus(e.target.value)}
                                                 />
                                             )}
-=======
->>>>>>> cddc8bfd618ffe4e1ee50390b6e8a376c75082cf
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="userDepartment">Parent Department</label>
@@ -144,28 +135,12 @@ const RegisterSingleUser = () => {
                                                 onChange={(e) => setUserDepartment(e.target.value)}
                                             >
                                                 <option value="">Select Department</option>
-<<<<<<< HEAD
-                                                <option value="MSc (Data Science)">MSc (Data Science)</option>
-                                                <option value="BSc (Data Science/Honours/Honours with Research)">BSc (Data Science/Honours/Honours with Research)</option>
-                                                <option value="BSc (Economics and Analytics/Honours/Honours with Research)">BSc (Economics and Analytics/Honours/Honours with Research)</option>
-                                                <option value="Bachelor of Computer Applications (BCA/Honours/Honours with research)">Bachelor of Computer Applications (BCA/Honours/Honours with research)</option>
-                                                <option value="LLM (Corporate & Commercial Law)">LLM (Corporate & Commercial Law)</option>
-                                                <option value="LLM (Constitutional & Administrative Law)">LLM (Constitutional & Administrative Law)</option>
-                                                <option value="BBA LLB (Honours)">BBA LLB (Honours)</option>
-                                                <option value="BA LLB (Honours)">BA LLB (Honours)</option>
-                                                <option value="MSc (Global Finance & Analytics)">MSc (Global Finance & Analytics)</option>
-                                                <option value="BCom (Financial Analytics/Honours/Honours with Research)">BCom (Financial Analytics/Honours/Honours with Research)</option>
-                                                <option value="BBA (Business Analytics/Honours/Honours with Research)">BBA (Business Analytics/Honours/Honours with Research)</option>
-                                                <option value="BBA (Honours/Honours with Research)">BBA (Honours/Honours with Research)</option>
-                                                <option value="MA (English with Digital Humanities)">MA (English with Digital Humanities)</option>
-=======
                                                 <option value="Data Science">Data Science</option>
                                                 <option value="Law">Law</option>
                                                 <option value="BBA">BBA</option>
                                                 <option value="MBA">MBA</option>
                                                 <option value="Commerce">Commerce</option>
                                                 <option value="Language">Language</option>
->>>>>>> cddc8bfd618ffe4e1ee50390b6e8a376c75082cf
                                                 <option value="Others">Others</option>
                                             </select>
                                             {userDepartment === 'Others' && (
@@ -179,19 +154,6 @@ const RegisterSingleUser = () => {
                                             )}
                                         </div>
                                     </div>
-<<<<<<< HEAD
-                                    <div className="form-check mb-3">
-                                        <input
-                                            type="checkbox"
-                                            className="form-check-input"
-                                            id="userStatus"
-                                            checked={userStatus}
-                                            onChange={(e) => setUserStatus(e.target.checked)}
-                                        />
-                                        <label className="form-check-label" htmlFor="userStatus">Active</label>
-                                    </div>
-=======
->>>>>>> cddc8bfd618ffe4e1ee50390b6e8a376c75082cf
                                     <button
                                         className="btn btn-primary mb-3"
                                         onClick={createUser}

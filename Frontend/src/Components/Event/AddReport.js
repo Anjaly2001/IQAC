@@ -115,11 +115,7 @@ function AddReport() {
         <div className="col-7 mt-1 pt-2 d-flex justify-content-center">
           <div className="container" style={{ maxWidth: '800px' }}>
             <div className="text-center fw-bolder fs-5 mt-5">
-<<<<<<< HEAD
-              Event Report Form
-=======
               Event Registration Form
->>>>>>> cddc8bfd618ffe4e1ee50390b6e8a376c75082cf
               <hr />
             </div>
             <form onSubmit={handleSubmit}>
@@ -151,22 +147,6 @@ function AddReport() {
                     onChange={(e) => setDepartment(e.target.value)}
                   >
                     <option value="">Select Department</option>
-<<<<<<< HEAD
-                    <option value="">MSc (Data Science)</option>
-                    <option value="">BSc (Data Science/Honours/Honours with Research)</option>
-                    <option value="">BSc (Economics and Analytics/Honours/Honours with Research)</option>
-                    <option value="">Bachelor of Computer Applications (BCA/Honours/Honours with research)</option>
-                    <option value="">LLM (Corporate & Commercial Law)</option>
-                    <option value="">LLM (Constitutional & Administrative Law)</option>
-                    <option value="">BBA LLB (Honours)</option>
-                    <option value="">BA LLB (Honours)</option>
-                    <option value="">MSc (Global Finance & Analytics)</option>
-                    <option value="">BCom (Financial Analytics/Honours/Honours with Research)</option>
-                    <option value="">BBA (Business Analytics/Honours/Honours with Research)</option>
-                    <option value="">BBA (Honours/Honours with Research)</option>
-                    <option value="">MA (English with Digital Humanities)</option>
-                    <option value="">Others</option>
-=======
                     <option value="Data Science">Data Science</option>
                     <option value="Law">Law</option>
                     <option value="BBA">BBA</option>
@@ -174,42 +154,11 @@ function AddReport() {
                     <option value="Commerce">Commerce</option>
                     <option value="Language">Language</option>
                     <option value="Others">Others</option>
->>>>>>> cddc8bfd618ffe4e1ee50390b6e8a376c75082cf
                   </select>
                 </div>
               </div>
 
               <div className="mb-3">
-<<<<<<< HEAD
-                <label htmlFor="description" className="form-label">Description</label>
-                <textarea
-                  className="form-control"
-                  id="description"
-                  name="description"
-                  rows="3"
-                  value={form.description}
-                  onChange={handleChange}
-                ></textarea>
-              </div>
-              <div className="mb-3">
-                <label htmlFor="campus" className="form-label">Campus</label>
-                <select
-                  id="campus"
-                  className="form-select"
-                  name="campus"
-                  value={form.campus}
-                  onChange={handleChange}
-                >
-                  <option value="">Select Campus</option>
-                  <option value="">Christ University Bangalore Central Campus</option>
-                  <option value="">Christ University Bangalore Bannerghatta Road Campus</option>
-                  <option value="">Christ University Bangalore Kengeri Campus</option>
-                  <option value="">Christ University Bangalore Yeshwanthpur Campus</option>
-                  <option value="">Christ University Delhi NCR Off Campus</option>
-                  <option value="">Christ University Pune Lavasa Off Campus</option>
-                  <option value="">Others</option>
-                </select>
-=======
                 <label className="form-label">Collaborators</label>
                 {form.collaborators.map((collaborator, index) => (
                   <div key={index} className="row mb-2 align-items-center">
@@ -264,7 +213,6 @@ function AddReport() {
                     </div>
                   </div>
                 ))}
->>>>>>> cddc8bfd618ffe4e1ee50390b6e8a376c75082cf
               </div>
 
               <div className="mb-3">
@@ -397,70 +345,7 @@ function AddReport() {
               </div>
 
               <div className="mb-3">
-<<<<<<< HEAD
-                <label className="form-label">Collaborators</label>
-                {form.collaborators.map((collaborator, index) => (
-                  <div key={index} className="row mb-2">
-                    <div className="col">
-                      <select
-                        className="form-select"
-                        name={`collaboratorCampus${index}`}
-                        value={collaborator.campus}
-                        onChange={(e) => handleCollaboratorChange(index, 'campus', e.target.value)}
-                      >
-                        <option value="">Select Campus</option>
-                        <option value="">Christ University Bangalore Central Campus</option>
-                        <option value="">Christ University Bangalore Bannerghatta Road Campus</option>
-                        <option value="">Christ University Bangalore Kengeri Campus</option>
-                        <option value="">Christ University Bangalore Yeshwanthpur Campus</option>
-                        <option value="">Christ University Delhi NCR Off Campus</option>
-                        <option value="">Christ University Pune Lavasa Off Campus</option>
-                        <option value="">Others</option>
-                      </select>
-                    </div>
-                    <div className="col">
-                      <select
-                        className="form-select"
-                        name={`collaboratorDepartment${index}`}
-                        value={collaborator.department}
-                        onChange={(e) => handleCollaboratorChange(index, 'department', e.target.value)}
-                      >
-                        <option value="">Select Department</option>
-                        <option value="">MSc (Data Science)</option>
-                        <option value="">BSc (Data Science/Honours/Honours with Research)</option>
-                        <option value="">BSc (Economics and Analytics/Honours/Honours with Research)</option>
-                        <option value="">Bachelor of Computer Applications (BCA/Honours/Honours with research)</option>
-                        <option value="">LLM (Corporate & Commercial Law)</option>
-                        <option value="">LLM (Constitutional & Administrative Law)</option>
-                        <option value="">BBA LLB (Honours)</option>
-                        <option value="">BA LLB (Honours)</option>
-                        <option value="">MSc (Global Finance & Analytics)</option>
-                        <option value="">BCom (Financial Analytics/Honours/Honours with Research)</option>
-                        <option value="">BBA (Business Analytics/Honours/Honours with Research)</option>
-                        <option value="">BBA (Honours/Honours with Research)</option>
-                        <option value="">MA (English with Digital Humanities)</option>
-                        <option value="">Others</option>
-                      </select>
-                    </div>
-                    <div className="col">
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Collaborator Name"
-                        name={`collaboratorName${index}`}
-                        value={collaborator.name}
-                        onChange={(e) => handleCollaboratorChange(index, 'name', e.target.value)}
-                      />
-                    </div>
-                  </div>
-                ))}
-                <button type="button" className="btn btn-secondary" onClick={addCollaborator}>Add Collaborator</button>
-              </div>
-              <div className="mb-3">
-                <label htmlFor="tag" className="form-label">Tags</label>
-=======
                 <label className="form-label">Tag</label>
->>>>>>> cddc8bfd618ffe4e1ee50390b6e8a376c75082cf
                 <input
                   type="text"
                   className="form-control"
@@ -472,10 +357,7 @@ function AddReport() {
                 />
               </div>
 
-<<<<<<< HEAD
-=======
               {/* Additional Form Fields */}
->>>>>>> cddc8bfd618ffe4e1ee50390b6e8a376c75082cf
               <div className="mb-3">
                 <label className="form-label">Blog Link:</label>
                 <input type="text" className="form-control" name="blogLink" value={form.blogLink} onChange={handleChange} />

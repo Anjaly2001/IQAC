@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import AdminDashboard from '../Admin/AdminDashboard';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faDownload, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
 import 'primereact/resources/themes/lara-light-indigo/theme.css'; // Choose a theme
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
@@ -14,7 +16,7 @@ const ListEvents = () => {
   const [filteredReports, setFilteredReports] = useState([]);
   const [globalFilter, setGlobalFilter] = useState('');
   
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchPendingReports();
@@ -49,12 +51,20 @@ const ListEvents = () => {
   const actionBodyTemplate = (rowData) => {
     return (
       <React.Fragment>
-        <button className="btn btn-primary me-2" onClick={() => viewReport(rowData.id)}>View</button>
-        <button className="btn btn-secondary me-2" onClick={() => downloadReport(rowData.id)}>Download</button>
+        <button className="btn btn-link" onClick={() => viewReport(rowData.id)}>
+          <FontAwesomeIcon icon={faEye} />
+        </button>
+        <button className="btn btn-link" onClick={() => downloadReport(rowData.id)}>
+          <FontAwesomeIcon icon={faDownload} />
+        </button>
         {rowData.status !== 'Approved' && (
-          <button className="btn btn-danger me-2" onClick={() => deleteReport(rowData.id)}>Delete</button>
+          <button className="btn btn-link" onClick={() => deleteReport(rowData.id)}>
+            <FontAwesomeIcon icon={faTrash} />
+          </button>
         )}
-        <button className="btn btn-success" onClick={() => navigate('/addreport')}>Add Report</button> {/* Use navigate here */}
+        <button className="btn btn-link" onClick={() => navigate('/addreport')}>
+          <FontAwesomeIcon icon={faPlus} />
+        </button>
       </React.Fragment>
     );
   };
@@ -93,10 +103,10 @@ const ListEvents = () => {
                 globalFilter={globalFilter}
                 emptyMessage="No events found."
               >
-                <Column field="title" header="Event Title" filter filterPlaceholder="Search by title" style={{ minWidth: '12rem' }} />
-                <Column field="collaborators" header="Collaborators" filter filterPlaceholder="Search by collaborators" style={{ minWidth: '12rem' }} />
-                <Column field="status" header="Status" filter filterPlaceholder="Search by status" style={{ minWidth: '12rem' }} />
-                <Column header="Actions (Under development)" body={actionBodyTemplate} style={{ minWidth: '12rem' }} />
+                <Column field="title" header="Event Title" filter filterPlaceholder="Search title" style={{ minWidth: '12rem' }} />
+                <Column field="collaborators" header="Collaborators" filter filterPlaceholder="Search collaborators" style={{ minWidth: '12rem' }} />
+                <Column field="status" header="Status" filter filterPlaceholder="Search status" style={{ minWidth: '12rem' }} />
+                <Column header="Actions" body={actionBodyTemplate} style={{ minWidth: '12rem' }} />
               </DataTable>
             </div>
           </div>

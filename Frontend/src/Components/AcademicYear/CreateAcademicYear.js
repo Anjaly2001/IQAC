@@ -4,6 +4,7 @@ import AdminDashboard from '../Admin/AdminDashboard';
 const AcademicYear = () => {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
+    const [label, setLabel] = useState(''); // Add a state for the label
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -11,6 +12,7 @@ const AcademicYear = () => {
         // Logic for submitting the data will be handled here
         console.log('Start Date:', startDate);
         console.log('End Date:', endDate);
+        console.log('Label:', label);
 
         // Uncomment and update the following logic when the backend is ready
         /*
@@ -19,7 +21,7 @@ const AcademicYear = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ start_date: startDate, end_date: endDate }),
+          body: JSON.stringify({ start_date: startDate, end_date: endDate, label }),
         })
         .then(response => response.json())
         .then(data => {
@@ -43,7 +45,7 @@ const AcademicYear = () => {
                             <h2>Create Academic Year</h2>
                             <form onSubmit={handleSubmit} className="w-100">
                                 <div className="row mb-4">
-                                    <div className="col-md-5 mt-5">
+                                    <div className="col-md-4 mt-3">
                                         <label htmlFor="startDate">Start Date:</label>
                                         <input
                                             type="date"
@@ -54,7 +56,7 @@ const AcademicYear = () => {
                                             required
                                         />
                                     </div>
-                                    <div className="col-md-5 mt-5">
+                                    <div className="col-md-4 mt-3">
                                         <label htmlFor="endDate">End Date:</label>
                                         <input
                                             type="date"
@@ -65,8 +67,19 @@ const AcademicYear = () => {
                                             required
                                         />
                                     </div>
+                                    <div className="col-md-4 mt-3">
+                                        <label htmlFor="label">Label:</label>
+                                        <input
+                                            type="text"
+                                            id="label"
+                                            className="form-control"
+                                            value={label}
+                                            onChange={(e) => setLabel(e.target.value)}
+                                            required
+                                        />
+                                    </div>
                                 </div>
-                                <div className="justify-content-left">
+                                <div className="d-flex justify-content-start">
                                     <button type="submit" className="btn btn-primary">
                                         Create Academic Year
                                     </button>

@@ -1,7 +1,24 @@
 import React, { useState } from 'react';
 import AdminDashboard from '../Admin/AdminDashboard';
+import { Editor } from 'primereact/editor';
+import { InputText } from 'primereact/inputtext';
 
 function AddReport() {
+  // Defining state variables
+  const [description, setDescription] = useState('');
+  const [campus, setCampus] = useState('');
+  const [department, setDepartment] = useState('');
+  const [eventTitle, setEventTitle] = useState('');
+  const [numberOfActivities, setNumberOfActivities] = useState(1);
+  const [venue, setVenue] = useState('');
+  const [academicYear, setAcademicYear] = useState('');
+  const [eventTypeFocus, setEventTypeFocus] = useState('');
+  const [proposal, setProposal] = useState(null);
+  const [tag, setTag] = useState('');
+  const [collaboratorNames, setCollaboratorNames] = useState(['John Doe', 'Jane Smith']); // Dummy names
+  const [activities, setActivities] = useState([{ title: '', date: '', startTime: '', endTime: '' }]);
+  const [summary, setSummary] = useState('');
+
   const [form, setForm] = useState({
     department: '',
     eventType: '',
@@ -33,6 +50,7 @@ function AddReport() {
     suggestions: null,
   });
 
+  // Handling changes
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (files) {
@@ -55,10 +73,31 @@ function AddReport() {
     });
   };
 
+  const removeCollaborator = (index) => {
+    const updatedCollaborators = form.collaborators.filter((_, i) => i !== index);
+    setForm({ ...form, collaborators: updatedCollaborators });
+  };
+
   const handleOutcomeChange = (index, value) => {
     const newOutcomes = [...form.outcomes];
     newOutcomes[index] = value;
     setForm({ ...form, outcomes: newOutcomes });
+  };
+
+  const handleNumberOfActivitiesChange = (e) => {
+    const value = parseInt(e.target.value, 10);
+    setNumberOfActivities(value);
+    const newActivities = [...activities];
+    while (newActivities.length < value) {
+      newActivities.push({ title: '', date: '', startTime: '', endTime: '' });
+    }
+    setActivities(newActivities);
+  };
+
+  const handleActivitiesChange = (index, field, value) => {
+    const updatedActivities = [...activities];
+    updatedActivities[index][field] = value;
+    setActivities(updatedActivities);
   };
 
   const handleSubmit = (e) => {
@@ -73,25 +112,46 @@ function AddReport() {
         <div className="col-3">
           <AdminDashboard />
         </div>
-        <div className="col-9 mt-1 pt-2">
+        <div className="col-7 mt-1 pt-2 d-flex justify-content-center">
           <div className="container" style={{ maxWidth: '800px' }}>
             <div className="text-center fw-bolder fs-5 mt-5">
+<<<<<<< HEAD
               Event Report Form
+=======
+              Event Registration Form
+>>>>>>> cddc8bfd618ffe4e1ee50390b6e8a376c75082cf
               <hr />
             </div>
             <form onSubmit={handleSubmit}>
-              {/* Event Fields */}
               <div className="mb-3 row">
+                <div className="col">
+                  <label htmlFor="campus" className="form-label">Campus</label>
+                  <select
+                    id="campus"
+                    className="form-select"
+                    value={campus}
+                    onChange={(e) => setCampus(e.target.value)}
+                  >
+                    <option value="">Select Campus</option>
+                    <option value="Christ University Bangalore Central Campus">Christ University Bangalore Central Campus</option>
+                    <option value="Christ University Bangalore Bannerghatta Road Campus">Christ University Bangalore Bannerghatta Road Campus</option>
+                    <option value="Christ University Bangalore Kengeri Campus">Christ University Bangalore Kengeri Campus</option>
+                    <option value="Christ University Bangalore Yeshwanthpur Campus">Christ University Bangalore Yeshwanthpur Campus</option>
+                    <option value="Christ University Delhi NCR Off Campus">Christ University Delhi NCR Off Campus</option>
+                    <option value="Christ University Pune Lavasa Off Campus">Christ University Pune Lavasa Off Campus</option>
+                    <option value="Others">Others</option>
+                  </select>
+                </div>
                 <div className="col">
                   <label htmlFor="department" className="form-label">Department</label>
                   <select
                     id="department"
                     className="form-select"
-                    name="department"
-                    value={form.department}
-                    onChange={handleChange}
+                    value={department}
+                    onChange={(e) => setDepartment(e.target.value)}
                   >
                     <option value="">Select Department</option>
+<<<<<<< HEAD
                     <option value="">MSc (Data Science)</option>
                     <option value="">BSc (Data Science/Honours/Honours with Research)</option>
                     <option value="">BSc (Economics and Analytics/Honours/Honours with Research)</option>
@@ -106,10 +166,21 @@ function AddReport() {
                     <option value="">BBA (Honours/Honours with Research)</option>
                     <option value="">MA (English with Digital Humanities)</option>
                     <option value="">Others</option>
+=======
+                    <option value="Data Science">Data Science</option>
+                    <option value="Law">Law</option>
+                    <option value="BBA">BBA</option>
+                    <option value="MBA">MBA</option>
+                    <option value="Commerce">Commerce</option>
+                    <option value="Language">Language</option>
+                    <option value="Others">Others</option>
+>>>>>>> cddc8bfd618ffe4e1ee50390b6e8a376c75082cf
                   </select>
                 </div>
               </div>
+
               <div className="mb-3">
+<<<<<<< HEAD
                 <label htmlFor="description" className="form-label">Description</label>
                 <textarea
                   className="form-control"
@@ -138,7 +209,64 @@ function AddReport() {
                   <option value="">Christ University Pune Lavasa Off Campus</option>
                   <option value="">Others</option>
                 </select>
+=======
+                <label className="form-label">Collaborators</label>
+                {form.collaborators.map((collaborator, index) => (
+                  <div key={index} className="row mb-2 align-items-center">
+                    <div className="col">
+                      <select
+                        className="form-select"
+                        value={collaborator.campus}
+                        onChange={(e) => handleCollaboratorChange(index, 'campus', e.target.value)}
+                      >
+                        <option value="">Select Campus</option>
+                        <option value="Christ University Bangalore">Christ University Bangalore Central Campus</option>
+                        <option value="Christ University Lavasa">Christ University Pune Lavasa Off Campus</option>
+                      </select>
+                    </div>
+                    <div className="col">
+                      <select
+                        className="form-select"
+                        value={collaborator.department}
+                        onChange={(e) => handleCollaboratorChange(index, 'department', e.target.value)}
+                      >
+                        <option value="">Select Department</option>
+                        <option value="Data Science">Data Science</option>
+                        <option value="MBA">MBA</option>
+                        <option value="Language">Language</option>
+                      </select>
+                    </div>
+                    <div className="col">
+                      <select
+                        className="form-select"
+                        value={collaborator.name}
+                        onChange={(e) => handleCollaboratorChange(index, 'name', e.target.value)}
+                      >
+                        <option value="">Select Name</option>
+                        {collaboratorNames.map((name, idx) => (
+                          <option key={idx} value={name}>{name}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="col-auto">
+                      <i
+                        className="bi bi-plus-circle"
+                        style={{ cursor: 'pointer', marginRight: '10px' }}
+                        onClick={addCollaborator}
+                      ></i>
+                      {form.collaborators.length > 1 && (
+                        <i
+                          className="bi bi-trash"
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => removeCollaborator(index)}
+                        ></i>
+                      )}
+                    </div>
+                  </div>
+                ))}
+>>>>>>> cddc8bfd618ffe4e1ee50390b6e8a376c75082cf
               </div>
+
               <div className="mb-3">
                 <label htmlFor="eventTitle" className="form-label">Event Title</label>
                 <input
@@ -146,56 +274,73 @@ function AddReport() {
                   className="form-control"
                   id="eventTitle"
                   name="eventTitle"
-                  value={form.eventTitle}
-                  onChange={handleChange}
+                  value={eventTitle}
+                  onChange={(e) => setEventTitle(e.target.value)}
+                  placeholder="Enter the event title"
+                  required
                 />
               </div>
+
               <div className="mb-3">
-                <label htmlFor="numberOfActivities" className="form-label">Number of Activities (optional)</label>
+                <label className="form-label">Description</label>
+                <Editor
+                  value={description}
+                  onTextChange={(e) => setDescription(e.htmlValue)}
+                  style={{ height: '320px' }}
+                />
+              </div>
+
+              <div className="mb-3">
+                <label className="form-label">Number of Activities</label>
                 <input
                   type="number"
                   className="form-control"
-                  id="numberOfActivities"
-                  name="numberOfActivities"
-                  value={form.numberOfActivities}
-                  onChange={handleChange}
+                  value={numberOfActivities}
+                  onChange={handleNumberOfActivitiesChange}
+                  min="1"
+                  required
                 />
               </div>
-              <div className="mb-3 row">
-                <div className="col">
-                  <label htmlFor="startDate" className="form-label">Start Date</label>
+
+              {activities.map((activity, index) => (
+                <div key={index} className="mb-3">
+                  <label className="form-label">Activity {index + 1}</label>
+                  <input
+                    type="text"
+                    className="form-control mb-2"
+                    placeholder="Activity Title"
+                    value={activity.title}
+                    onChange={(e) => handleActivitiesChange(index, 'title', e.target.value)}
+                  />
                   <input
                     type="date"
-                    className="form-control"
-                    id="startDate"
-                    name="startDate"
-                    value={form.startDate}
-                    onChange={handleChange}
+                    className="form-control mb-2"
+                    value={activity.date}
+                    onChange={(e) => handleActivitiesChange(index, 'date', e.target.value)}
                   />
+                  <div className="row">
+                    <div className="col">
+                      <input
+                        type="time"
+                        className="form-control"
+                        placeholder="Start Time"
+                        value={activity.startTime}
+                        onChange={(e) => handleActivitiesChange(index, 'startTime', e.target.value)}
+                      />
+                    </div>
+                    <div className="col">
+                      <input
+                        type="time"
+                        className="form-control"
+                        placeholder="End Time"
+                        value={activity.endTime}
+                        onChange={(e) => handleActivitiesChange(index, 'endTime', e.target.value)}
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div className="col">
-                  <label htmlFor="endDate" className="form-label">End Date</label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    id="endDate"
-                    name="endDate"
-                    value={form.endDate}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-              <div className="mb-3">
-                <label htmlFor="time" className="form-label">Time</label>
-                <input
-                  type="time"
-                  className="form-control"
-                  id="time"
-                  name="time"
-                  value={form.time}
-                  onChange={handleChange}
-                />
-              </div>
+              ))}
+
               <div className="mb-3">
                 <label htmlFor="venue" className="form-label">Venue</label>
                 <input
@@ -203,48 +348,56 @@ function AddReport() {
                   className="form-control"
                   id="venue"
                   name="venue"
-                  value={form.venue}
-                  onChange={handleChange}
+                  value={venue}
+                  onChange={(e) => setVenue(e.target.value)}
+                  placeholder="Enter the venue"
+                  required
                 />
               </div>
+
               <div className="mb-3">
                 <label htmlFor="academicYear" className="form-label">Academic Year</label>
-                <select
+                <input
+                  type="text"
+                  className="form-control"
                   id="academicYear"
-                  className="form-select"
                   name="academicYear"
-                  value={form.academicYear}
-                  onChange={handleChange}
-                >
-                  <option value="">Select Year</option>
-                  {Array.from({ length: 27 }, (_, i) => 2024 + i).map((year) => (
-                    <option key={year} value={`${year}-${year + 1}`}>{year}-{year + 1}</option>
-                  ))}
-                </select>
+                  value={academicYear}
+                  onChange={(e) => setAcademicYear(e.target.value)}
+                  placeholder="Enter the academic year"
+                  required
+                />
               </div>
+
               <div className="mb-3">
-                <label htmlFor="eventTypeFocus" className="form-label">Event Type</label>
+                <label htmlFor="eventTypeFocus" className="form-label">Event Type Focus</label>
                 <input
                   type="text"
                   className="form-control"
                   id="eventTypeFocus"
                   name="eventTypeFocus"
-                  value={form.eventTypeFocus}
-                  onChange={handleChange}
+                  value={eventTypeFocus}
+                  onChange={(e) => setEventTypeFocus(e.target.value)}
+                  placeholder="Enter the event type focus"
+                  required
                 />
               </div>
+
               <div className="mb-3">
-                <label htmlFor="proposal" className="form-label">Proposal (PDF)</label>
+                <label className="form-label">Proposal</label>
                 <input
                   type="file"
                   className="form-control"
                   id="proposal"
                   name="proposal"
-                  accept="application/pdf"
-                  onChange={handleChange}
+                  onChange={(e) => handleChange(e)}
+                  accept=".pdf,.doc,.docx"
+                  required
                 />
               </div>
+
               <div className="mb-3">
+<<<<<<< HEAD
                 <label className="form-label">Collaborators</label>
                 {form.collaborators.map((collaborator, index) => (
                   <div key={index} className="row mb-2">
@@ -305,20 +458,29 @@ function AddReport() {
               </div>
               <div className="mb-3">
                 <label htmlFor="tag" className="form-label">Tags</label>
+=======
+                <label className="form-label">Tag</label>
+>>>>>>> cddc8bfd618ffe4e1ee50390b6e8a376c75082cf
                 <input
                   type="text"
                   className="form-control"
                   id="tag"
                   name="tag"
-                  value={form.tag}
-                  onChange={handleChange}
+                  value={tag}
+                  onChange={(e) => setTag(e.target.value)}
+                  placeholder="Enter a tag"
                 />
               </div>
 
+<<<<<<< HEAD
+=======
+              {/* Additional Form Fields */}
+>>>>>>> cddc8bfd618ffe4e1ee50390b6e8a376c75082cf
               <div className="mb-3">
                 <label className="form-label">Blog Link:</label>
                 <input type="text" className="form-control" name="blogLink" value={form.blogLink} onChange={handleChange} />
               </div>
+
               <h3 className="text-center mt-4 mb-3">PARTICIPANTS INFORMATION</h3>
               <div className="mb-3">
                 <label className="form-label">Target Audience:</label>
@@ -344,10 +506,21 @@ function AddReport() {
                 <label className="form-label">No of Attendees/ Participants:</label>
                 <input type="number" className="form-control" name="attendees" value={form.attendees} onChange={handleChange} />
               </div>
-              <h3 className="text-center mt-4 mb-3">SUMMARY OF THE OVERALL EVENT</h3>
+
+
               <div className="mb-3">
-                <textarea className="form-control" name="summary" value={form.summary} onChange={handleChange} minLength="500" />
+                <label className="form-label">SUMMARY OF THE OVERALL EVENT</label>
+                <Editor
+                  value={summary}
+                  onTextChange={(e) => setSummary(e.htmlValue)}
+                  style={{ height: '320px' }}
+                />
               </div>
+
+
+
+             
+
               <h3 className="text-center mt-4 mb-3">OUTCOMES OF THE EVENT</h3>
               {form.outcomes.map((outcome, index) => (
                 <div key={index} className="mb-3">
@@ -361,15 +534,16 @@ function AddReport() {
                   />
                 </div>
               ))}
+
               <h3 className="text-center mt-4 mb-3">SUGGESTIONS FOR IMPROVEMENT • FEEDBACK FROM IQAC</h3>
               <div className="mb-3">
                 <label className="form-label">Upload File (PDF):</label>
                 <input type="file" className="form-control" accept=".pdf" name="suggestions" onChange={handleChange} />
               </div>
 
-              <div className="text-center">
-                <button type="submit" className="btn btn-primary">Submit</button>
-              </div>
+              <button type="submit" className="btn btn-primary">
+                Submit
+              </button>
             </form>
           </div>
         </div>

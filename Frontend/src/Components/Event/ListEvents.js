@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AdminDashboard from '../Admin/AdminDashboard';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -12,6 +13,8 @@ const ListEvents = () => {
   const [pendingReports, setPendingReports] = useState([]);
   const [filteredReports, setFilteredReports] = useState([]);
   const [globalFilter, setGlobalFilter] = useState('');
+  
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
     fetchPendingReports();
@@ -43,10 +46,6 @@ const ListEvents = () => {
     console.log('Delete report', reportId);
   };
 
-  const addReport = () => {
-    console.log('Add new report');
-  };
-
   const actionBodyTemplate = (rowData) => {
     return (
       <React.Fragment>
@@ -55,7 +54,7 @@ const ListEvents = () => {
         {rowData.status !== 'Approved' && (
           <button className="btn btn-danger me-2" onClick={() => deleteReport(rowData.id)}>Delete</button>
         )}
-        <button className="btn btn-success" onClick={addReport}>Add Report</button>
+        <button className="btn btn-success" onClick={() => navigate('/addreport')}>Add Report</button> {/* Use navigate here */}
       </React.Fragment>
     );
   };
@@ -69,7 +68,7 @@ const ListEvents = () => {
         <div className="col-md-10 mt-5 pt-5">
           <div className="container mt-3">
             <div className="d-flex justify-content-center mb-4">
-              <h4 className="fw-bold text-center">Event Status</h4>
+              <h4 className="fw-bold text-center">Event List</h4>
             </div>
             <div className="d-flex justify-content-end mb-4">
               <div className="input-group" style={{ width: '300px' }}>
@@ -97,7 +96,7 @@ const ListEvents = () => {
                 <Column field="title" header="Event Title" filter filterPlaceholder="Search by title" style={{ minWidth: '12rem' }} />
                 <Column field="collaborators" header="Collaborators" filter filterPlaceholder="Search by collaborators" style={{ minWidth: '12rem' }} />
                 <Column field="status" header="Status" filter filterPlaceholder="Search by status" style={{ minWidth: '12rem' }} />
-                <Column header="Actions" body={actionBodyTemplate} style={{ minWidth: '12rem' }} />
+                <Column header="Actions (Under development)" body={actionBodyTemplate} style={{ minWidth: '12rem' }} />
               </DataTable>
             </div>
           </div>

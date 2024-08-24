@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminDashboard from '../Admin/AdminDashboard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const RegisterMultipleUser = () => {
-    const [departments, setDepartments] = useState([]);
-    const [campuses, setCampuses] = useState([]);
     const [file, setFile] = useState(null);
+<<<<<<< HEAD
     const [selectedDepartment, setSelectedDepartment] = useState('');
     const [selectedCampus, setSelectedCampus] = useState('');
     const [customDepartment, setCustomDepartment] = useState('');
@@ -38,6 +37,8 @@ const RegisterMultipleUser = () => {
         ];
         setCampuses(mockCampuses);
     };
+=======
+>>>>>>> cddc8bfd618ffe4e1ee50390b6e8a376c75082cf
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
@@ -54,24 +55,33 @@ const RegisterMultipleUser = () => {
         }
     };
 
+<<<<<<< HEAD
     const handleViewUsers = () => {
         navigate('/listuser');
     };
 
+=======
+>>>>>>> cddc8bfd618ffe4e1ee50390b6e8a376c75082cf
     return (
         <div>
             <AdminDashboard />
             <div className="container-fluid">
                 <div className="row">
+<<<<<<< HEAD
                     <div className="col-md-2 p-0">
                         {/* Placeholder for Sidebar or other components */}
+=======
+                    <div className="col-md-3 justify-content-center p-0">
+                        {/* Sidebar or other components can go here */}
+>>>>>>> cddc8bfd618ffe4e1ee50390b6e8a376c75082cf
                     </div>
-                    <div className="col-md-10 mt-1 pt-5">
+                    <div className="col-md-8 mt-1 pt-5">
                         <div className="container mt-3">
                             <div className="text-center fw-bold fs-5 mb-4">
-                                Register Multiple Users
+                                Register Users
                             </div>
                             <div className="register">
+<<<<<<< HEAD
                                 <div className="row mb-3">
                                     <div className="col-md-6">
                                         <div className="form-group">
@@ -127,8 +137,18 @@ const RegisterMultipleUser = () => {
                                             )}
                                         </div>
                                     </div>
+=======
+                                
+                                {/* Add "Download CSV Format" link here */}
+                                <div className="d-flex justify-content-end mb-2">
+                                    {/* Replace `#` with the actual link to download the CSV format */}
+                                    <a href="#" className="text-primary">
+                                        Download CSV Format
+                                    </a>
+>>>>>>> cddc8bfd618ffe4e1ee50390b6e8a376c75082cf
                                 </div>
-                                <div className="form-group mb-4">
+                                
+                                <div className="form-group mb-6">
                                     <label htmlFor="csvFile">Upload CSV File</label>
                                     <input
                                         type="file"
@@ -137,6 +157,12 @@ const RegisterMultipleUser = () => {
                                         onChange={handleFileChange}
                                     />
                                 </div>
+                                
+                                {/* Disclaimer below the file upload */}
+                                <div className="text-muted mb-6">
+                                    The file should include the following columns: Name, Emp ID, Email, Phone Number, Campus, Department.
+                                </div>
+                                
                                 <div className="row mb-3">
                                     <div className="col-md-2">
                                         <button
@@ -144,14 +170,6 @@ const RegisterMultipleUser = () => {
                                             onClick={handleFileUpload}
                                         >
                                             Upload CSV File
-                                        </button>
-                                    </div>
-                                    <div className="col-md-2">
-                                        <button
-                                            className="btn btn-secondary btn-sm w-100"
-                                            onClick={handleViewUsers}
-                                        >
-                                            View Users List
                                         </button>
                                     </div>
                                 </div>

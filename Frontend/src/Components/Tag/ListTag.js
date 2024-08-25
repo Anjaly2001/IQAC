@@ -1,15 +1,33 @@
-import React, { useState } from "react";
-import AdminDashboard from "../Admin/AdminDashboard";
+import React, { useState, useEffect } from 'react';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { Button } from 'primereact/button';
+import { InputText } from 'primereact/inputtext';
+import AdminDashboard from '../Admin/AdminDashboard';
 
 export default function ListTag() {
-    const [tagName, setTagName] = useState('');
-    const [description, setDescription] = useState('');
+    const [tags, setTags] = useState([]);
+    const [globalFilter, setGlobalFilter] = useState(null);
 
-    const handleSave = () => {
-        // Logic to save the tag name and description
-        console.log("Tag Name:", tagName);
-        console.log("Description:", description);
-    };
+    useEffect(() => {
+        // Fetch tags data from backend or use dummy data
+        const dummyData = [
+            { id: 1, tagName: 'Tag1', description: 'Description for Tag1' },
+            { id: 2, tagName: 'Tag2', description: 'Description for Tag2' },
+            // Add more dummy data here
+        ];
+        setTags(dummyData);
+    }, []);
+
+    const header = (
+        <div className="table-header d-flex justify-content-between">
+            <Button label="Add New Tag" icon="pi pi-plus" className="p-button-success" />
+            <span className="p-input-icon-left">
+                <i className="pi pi-search" />
+                <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Search..." />
+            </span>
+        </div>
+    );
 
     return (
         <div className="container-fluid">
@@ -19,33 +37,20 @@ export default function ListTag() {
                 </div>
                 <div className="col-md-10 mt-5 pt-5">
                     <div className="container mt-3">
-                        <div className="d-flex flex-column align-items-center mb-4">
-                            <h2>List Tag  --  under Development</h2>
-                            {/* <div className="p-field w-100 mb-3">
-                                <label htmlFor="tagName">Tag Name</label>
-                                <InputText
-                                    id="tagName"
-                                    value={tagName}
-                                    onChange={(e) => setTagName(e.target.value)}
-                                    placeholder="Enter tag name"
-                                    className="w-100"
-                                />
-                            </div>
-                            <div className="p-field w-100 mb-3">
-                                <label htmlFor="description">Description</label>
-                                <Editor
-                                    id="description"
-                                    value={description}
-                                    onTextChange={(e) => setDescription(e.htmlValue)}
-                                    style={{ height: '320px' }}
-                                    placeholder="Enter description here..."
-                                    className="w-100"
-                                />
-                            </div>
-                            <div className="p-field w-100">
-                                <Button label="Save" icon="pi pi-check" onClick={handleSave} />
-                            </div> */}
-                        </div>
+                        <h2>Tags List</h2>
+                        <DataTable value={tags} paginator rows={10} header={header} globalFilter={globalFilter} className="p-datatable-customers">
+                            <Column field="tagName" header="Tag Name" sortable />
+                            <Column field="description" header="Description" sortable />
+                            <Column
+                                header="Actions"
+                                body={(rowData) => (
+                                    <div>
+                                        <Button icon="pi pi-pencil" className="p-button-rounded p-button-warning mr-2" />
+                                        <Button icon="pi pi-trash" className="p-button-rounded p-button-danger" />
+                                    </div>
+                                )}
+                            />
+                        </DataTable>
                     </div>
                 </div>
             </div>

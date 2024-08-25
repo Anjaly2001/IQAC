@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';  // Import axios
 import AdminDashboard from '../Admin/AdminDashboard';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { toast } from 'react-toastify';  // Import toast for notifications
-import { user_register } from '../../axios/api';
+import { toast } from 'react-toastify';
+import { user_register, campus_list, department_list } from '../../axios/api';
 
 const RegisterSingleUser = () => {
     // State variables to manage the form input values
@@ -12,50 +11,68 @@ const RegisterSingleUser = () => {
     const [userEmail, setUserEmail] = useState('');
     const [userPhoneNumber, setUserPhoneNumber] = useState('');
     const [userDepartment, setUserDepartment] = useState('');
-    const [userCampus, setUserCampus] = useState('');
-    const [customDepartment, setCustomDepartment] = useState('');  // For custom department
-    const [customCampus, setCustomCampus] = useState('');  // For custom campus
+    const [customDepartment, setCustomDepartment] = useState('');
+    const [userCampus, setUserCampus] = useState('');  // Campus (same as location)
+    const [campuses, setCampuses] = useState([]);  // List of campus options
+    const [departments, setDepartments] = useState([]);  // List of department options
 
-    // Static campus data (You can replace this with API call if needed)
-    const [campus, setCampus] = useState([
-        { id: 1, campus: "Main Campus" },
-        { id: 2, campus: "North Campus" },
-        { id: 3, campus: "South Campus" },
-        // Add more campus options here
-    ]);
+    // Fetch the campus list from the backend
+    useEffect(() => {
+        const fetchCampuses = async () => {
+            try {
+                const response = await campus_list();
+                setCampuses(response);  // Set campuses data
+            } catch (error) {
+                console.error('Failed to fetch campuses:', error);
+                toast.error('Failed to load campus options.');
+            }
+        };
+        fetchCampuses();
+    }, []);
+
+    // Fetch the department list from the backend
+    useEffect(() => {
+        const fetchDepartments = async () => {
+            try {
+                const response = await department_list();  // Fetch departments
+                setDepartments(response);  // Set departments data
+            } catch (error) {
+                console.error('Failed to fetch departments:', error);
+                toast.error('Failed to load department options.');
+            }
+        };
+        fetchDepartments();
+    }, []);
 
     // Function to handle user creation
     const createUser = async () => {
-        let department = userDepartment === 'Others' ? customDepartment : userDepartment;
-        let campusSelection = userCampus === 'Others' ? customCampus : userCampus;
+        const department = userDepartment === 'Others' ? customDepartment : userDepartment;
 
         // Ensure all required fields are filled
-        if (userName && userEmpId && userEmail && department && campusSelection) {
+        if (userName && userEmpId && userEmail && department && userCampus) {
             const newUser = {
-                name: userName,
+                username: userName,
                 emp_id: userEmpId,
                 email: userEmail,
-                phone_number: userPhoneNumber,
-                department,
-                campus: campusSelection,
+                ph: userPhoneNumber,
+                department: department,
+                location: userCampus, 
             };
 
             try {
                 // Make the API call to register the user
                 const response = await user_register(newUser);
-                console.log('Created user response:', response.data);
-
+                console.log('User created successfully:', response);
                 toast.success('User created successfully!');
-                
+
                 // Reset the form fields after successful user creation
                 setUserName('');
                 setUserEmpId('');
                 setUserEmail('');
                 setUserPhoneNumber('');
                 setUserDepartment('');
-                setUserCampus('');
                 setCustomDepartment('');
-                setCustomCampus('');
+                setUserCampus('');
             } catch (error) {
                 console.error('Failed to create user:', error);
                 toast.error('Failed to create user.');
@@ -65,7 +82,7 @@ const RegisterSingleUser = () => {
         }
     };
 
-    return (
+       return (
         <div>
             {/* Admin Dashboard component, could include sidebar and other elements */}
             <AdminDashboard />
@@ -138,8 +155,8 @@ const RegisterSingleUser = () => {
                                                 onChange={(e) => setUserCampus(e.target.value)}
                                             >
                                                 <option value="">Choose Campus</option>
-                                                {campus.length > 0 ? (
-                                                    campus.map(loc => (
+                                                {campuses.length > 0 ? (
+                                                    campuses.map(loc => (
                                                         <option key={loc.id} value={loc.id}>
                                                             {loc.campus}
                                                         </option>
@@ -147,34 +164,26 @@ const RegisterSingleUser = () => {
                                                 ) : (
                                                     <option value="">No locations available</option>
                                                 )}
-                                                <option value="Others">Others</option>
                                             </select>
-                                            {userCampus === 'Others' && (
-                                                <input
-                                                    type="text"
-                                                    className="form-control mt-2"
-                                                    placeholder="Enter Campus"
-                                                    value={customCampus}
-                                                    onChange={(e) => setCustomCampus(e.target.value)}
-                                                />
-                                            )}
                                         </div>
                                         <div className="col-md-6">
-                                            <label htmlFor="userDepartment">Parent Department</label>
+                                        <label htmlFor="userDepartment">Parent Department</label>
                                             <select
-                                                className="form-select"
                                                 id="userDepartment"
+                                                className="form-select"
                                                 value={userDepartment}
                                                 onChange={(e) => setUserDepartment(e.target.value)}
                                             >
                                                 <option value="">Select Department</option>
-                                                <option value="Data Science">Data Science</option>
-                                                <option value="Law">Law</option>
-                                                <option value="BBA">BBA</option>
-                                                <option value="MBA">MBA</option>
-                                                <option value="Commerce">Commerce</option>
-                                                <option value="Language">Language</option>
-                                                <option value="Others">Others</option>
+                                                {departments.length > 0 ? (
+                                                    departments.map(dept => (
+                                                        <option key={dept.id} value={dept.id}>
+                                                            {dept.name}
+                                                        </option>
+                                                    ))
+                                                ) : (
+                                                    <option value="">No departments available</option>
+                                                )}
                                             </select>
                                             {userDepartment === 'Others' && (
                                                 <input

@@ -105,7 +105,7 @@ export const department_active = async (department_id) => {
 
 export const user_register = async (form) => {
   try {
-    const res = await axiosInstance.post('department_and_events/department_register/', form);
+    const res = await axiosInstance.post('authentication/register', form);
     return res.data;
   }
   catch (error) {

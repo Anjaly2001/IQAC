@@ -156,7 +156,7 @@ const RegisterSingleUser = () => {
                                     <div className="row mb-3">
                                         <div className="col-md-6">
                                             <label htmlFor="userCampus">Campus</label>
-                                            <select
+                                            {/* <select
                                                 id="userCampus"
                                                 className="form-select"
                                                 value={userCampus}
@@ -173,7 +173,7 @@ const RegisterSingleUser = () => {
                                                     <option value="">No locations available</option>
                                                 )}
                                                 <option value="Others">Others</option>
-                                            </select>
+                                            </select> */}
                                             {userCampus === 'Others' && (
                                                 <input
                                                     type="text"

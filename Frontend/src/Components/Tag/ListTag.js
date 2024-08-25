@@ -21,10 +21,16 @@ export default function ListTag() {
 
     const header = (
         <div className="table-header d-flex justify-content-between">
-            <Button label="Add New Tag" icon="pi pi-plus" className="p-button-success" />
+            <h2>Tags List</h2>
+            {/* <Button label="Add New Tag" icon="pi pi-plus" className="p-button-success" /> */}
             <span className="p-input-icon-left">
-                <i className="pi pi-search" />
-                <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Search..." />
+                <InputText 
+                    type="search" 
+                    onInput={(e) => setGlobalFilter(e.target.value)} 
+                    placeholder="Search..."
+                    style={{ paddingLeft: '2rem' }} // Adjust padding for icon
+                />
+                <i className="fa fa-search" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
             </span>
         </div>
     );
@@ -37,7 +43,6 @@ export default function ListTag() {
                 </div>
                 <div className="col-md-10 mt-5 pt-5">
                     <div className="container mt-3">
-                        <h2>Tags List</h2>
                         <DataTable value={tags} paginator rows={10} header={header} globalFilter={globalFilter} className="p-datatable-customers">
                             <Column field="tagName" header="Tag Name" sortable />
                             <Column field="description" header="Description" sortable />
@@ -45,8 +50,14 @@ export default function ListTag() {
                                 header="Actions"
                                 body={(rowData) => (
                                     <div>
-                                        <Button icon="pi pi-pencil" className="p-button-rounded p-button-warning mr-2" />
-                                        <Button icon="pi pi-trash" className="p-button-rounded p-button-danger" />
+                                        <Button 
+                                            icon="fa fa-edit" 
+                                            className="p-button-rounded p-button-warning mr-2" 
+                                        />
+                                        <Button 
+                                            icon="fa fa-trash" 
+                                            className="p-button-rounded p-button-danger" 
+                                        />
                                     </div>
                                 )}
                             />

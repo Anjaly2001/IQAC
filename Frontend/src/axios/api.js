@@ -88,7 +88,7 @@ export const department_active = async (department_id) => {
     return res.data;
   } catch (error) {
     console.log(error);
-    toast.error('Failed to delete department. Please try again.');
+    toast.error('Failed to activate department. Please try again.');
   }
 };
 
@@ -111,5 +111,47 @@ export const user_register = async (form) => {
   catch (error) {
     console.log(error);
     toast.error('Failed to create department. Please try again.');
+  }
+};
+
+export const multiple_user_register = async (form) => {
+  try {
+    const res = await postMultipartData('authentication/multiple_user_registration/', form);
+    return res;
+  }
+  catch (error) {
+    console.log(error);
+    toast.error('Failed to register users. Please try again.');
+  }
+};
+
+export const users_list= async (form) => {
+  try {
+    const res = await axiosInstance.get('authentication/user_list/', form);
+    return res.data;
+  }
+  catch (error) {
+    console.log(error);
+    toast.error('Failed to create department. Please try again.');
+  }
+};
+
+export const user_active = async (user_id) => {
+  try {
+    const res = await axiosInstance.post(`authentication/user_deactivate/${user_id}/`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    toast.error('Failed to activate user. Please try again.');
+  }
+};
+
+export const user_delete = async (department_id) => {
+  try {
+    const res = await axiosInstance.delete(`authentication/user_delete/${department_id}/`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    toast.error('Failed to delete user. Please try again.');
   }
 };

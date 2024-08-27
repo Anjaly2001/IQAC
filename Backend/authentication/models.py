@@ -27,7 +27,7 @@ class User_profile(models.Model):
     emp_id = models.IntegerField(unique=True)
     ph = models.CharField(max_length=15)
     department =  models.ForeignKey(Department,on_delete=models.CASCADE, related_name= 'dept')
-    location = models.ForeignKey(Location,on_delete=models.CASCADE, related_name= 'camp', null=True)
+    location = models.ForeignKey(Location,on_delete=models.CASCADE, related_name= 'camp')
    
 
     def __str__(self):

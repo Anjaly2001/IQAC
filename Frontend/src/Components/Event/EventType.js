@@ -5,31 +5,20 @@ import AdminDashboard from '../Admin/AdminDashboard';
 const EventType = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
+    const [eventTypes, setEventTypes] = useState([]); // State to store event types
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Logic for submitting the data will be handled here
+        const newEventType = { title, description };
+        setEventTypes([...eventTypes, newEventType]); // Add new event type to the list
+
+        // Reset form fields
+        setTitle('');
+        setDescription('');
+
         console.log('Title:', title);
         console.log('Description:', description);
-
-        // Uncomment and update the following logic when the backend is ready
-        /*
-        fetch('/api/create-event-type/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ title: title, description: description }),
-        })
-        .then(response => response.json())
-        .then(data => {
-          console.log('Success:', data);
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
-        */
     };
 
     return (
@@ -70,6 +59,25 @@ const EventType = () => {
                                     </button>
                                 </div>
                             </form>
+                        </div>
+                        <div className="mt-5">
+                            <h3>Event Types</h3>
+                            <table className="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {eventTypes.map((event, index) => (
+                                        <tr key={index}>
+                                            <td>{event.title}</td>
+                                            <td dangerouslySetInnerHTML={{ __html: event.description }} />
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

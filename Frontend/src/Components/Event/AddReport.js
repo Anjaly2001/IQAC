@@ -115,7 +115,7 @@ function AddReport() {
         <div className="col-7 mt-1 pt-2 d-flex justify-content-center">
           <div className="container" style={{ maxWidth: '800px' }}>
             <div className="text-center fw-bolder fs-5 mt-5">
-              Event Registration Form
+              Event Report Form
               <hr />
             </div>
             <form onSubmit={handleSubmit}>

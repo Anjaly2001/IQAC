@@ -4,7 +4,7 @@ import AdminDashboard from '../Admin/AdminDashboard';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faDownload, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faDownload, faTrash, faPlus, faEdit } from '@fortawesome/free-solid-svg-icons';
 import 'primereact/resources/themes/lara-light-indigo/theme.css'; // Choose a theme
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
@@ -15,7 +15,7 @@ const ListEvents = () => {
   const [pendingReports, setPendingReports] = useState([]);
   const [filteredReports, setFilteredReports] = useState([]);
   const [globalFilter, setGlobalFilter] = useState('');
-  
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -48,6 +48,11 @@ const ListEvents = () => {
     console.log('Delete report', reportId);
   };
 
+  const editReport = (reportId) => {
+    console.log('Edit report', reportId);
+    navigate(`/editreport/${reportId}`);
+  };
+
   const actionBodyTemplate = (rowData) => {
     return (
       <React.Fragment>
@@ -56,6 +61,9 @@ const ListEvents = () => {
         </button>
         <button className="btn btn-link" onClick={() => downloadReport(rowData.id)}>
           <FontAwesomeIcon icon={faDownload} />
+        </button>
+        <button className="btn btn-link" onClick={() => editReport(rowData.id)}>
+          <FontAwesomeIcon icon={faEdit} />
         </button>
         {rowData.status !== 'Approved' && (
           <button className="btn btn-link" onClick={() => deleteReport(rowData.id)}>

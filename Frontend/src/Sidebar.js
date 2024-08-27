@@ -318,7 +318,8 @@ function Sidebar() {
                     Register Event
                   </Nav.Link>
                 </Nav.Item>
-                <Nav.Item>
+
+                {/* <Nav.Item>
                   <Nav.Link
                     as={Link}
                     to="/addreport"
@@ -327,7 +328,8 @@ function Sidebar() {
                     <FontAwesomeIcon icon={faPlus} className="me-2" />
                     Add Report
                   </Nav.Link>
-                </Nav.Item>
+                </Nav.Item> */}
+
                 <Nav.Item>
                   <Nav.Link
                     as={Link}

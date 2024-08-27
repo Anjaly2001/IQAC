@@ -24,7 +24,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 class USerProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User_profile
-        fields = ['user','emp_id','ph','department']
+        fields = ['user','emp_id','ph','department','location']
 
         # def validate_department(self, value):
         # # Check if the input is a primary key (integer)

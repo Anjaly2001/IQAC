@@ -9,7 +9,9 @@ import AdminDashboard from '../Admin/AdminDashboard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
-// import { department_list } from '../../axios/api';  // user list
+import { users_list, user_active, user_delete} from '../../axios/api';  // user list
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ListUser = () => {
     const navigate = useNavigate();
@@ -25,79 +27,63 @@ const ListUser = () => {
     const [globalFilterValue, setGlobalFilterValue] = useState('');
 
     useEffect(() => {
-        fetchUsers();
+        const fetchUsers = async () => {
+            try {
+                const token = localStorage.getItem('access_token');
+                const response = await users_list(); // Call your API function, pass token if needed
+                setUsers(response);  // Adjust based on response structure
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        };
+        
+        fetchUsers(); // Fetch users when the component mounts
     }, []);
 
-    const fetchUsers = async () => {
-        const dummyUsers = [
-            {
-                id: 1,
-                name: 'Jesty',
-                emp_id: 'EMP001',
-                email: 'jesty@example.com',
-                campus: 'Main Campus',
-                department: 'Data Science',
-                status: true,
-                description: '20111'
-            },
-            {
-                id: 2,
-                name: 'Jasmine',
-                emp_id: 'EMP002',
-                email: 'jasmine@example.com',
-                campus: 'Pune Campus',
-                department: 'Law',
-                status: false,
-                description: '24126'
-            },
-            {
-                id: 3,
-                name: 'Denny',
-                emp_id: 'EMP003',
-                email: 'denny@example.com',
-                campus: 'Delhi Campus',
-                department: 'BBA',
-                status: true,
-               description: '2452'
-            },
-            {
-                id: 4,
-                name: 'Anusha',
-                emp_id: 'EMP004',
-                email: 'anusha@example.com',
-                campus: 'Kengeri Campus',
-                department: 'MBA',
-                status: false,
-               description: '20112'
-            },
-            {
-                id: 5,
-                name: 'Albert',
-                emp_id: 'EMP005',
-                email: 'albert@example.com',
-                campus: 'Pune Campus',
-                department: 'Commerce',
-                status: true,
-                description: '20512'
-            },
-        ];
+ 
 
-        setUsers(dummyUsers);
-    };
 
     const startEditing = (user) => {
         navigate(`/update-user/${user.id}`);
     };
 
-    const handleDeleteUser = (id) => {
-        setUsers(users.filter(user => user.id !== id));
+    
+    const handleDeleteUser = async (id) => {
+        const token = localStorage.getItem('access_token');
+        try {
+            const response = await user_delete(id);
+            setUsers(users.filter(user => user.id !== id));
+            toast.success('User deleted successfully!');
+            // setDepartments(response)
+        } catch (error) {
+            console.error('Error deleting User:', error);
+            console.log(error)
+            // toast.success('Department deleted successfully!');
+        }
     };
 
-    const toggleStatus = (user) => {
-        setUsers(users.map(u =>
-            u.id === user.id ? { ...u, status: !u.status } : u
-        ));
+    const toggleStatus = async (user) => {
+        try {
+            const updatedDepartment = await user_active(user.id);
+            setUsers(users.map(u =>
+                u.id === user.id ? { ...u, status: !u.status } : u
+            ));
+            if (user.status) {
+                toast.success('User deactivated successfully!');
+            } else {
+                toast.success('User activated successfully!');
+            }
+        } catch (error) {
+            console.error('Error toggling User status:', error);
+        }
     };
+
+
+    // const toggleStatus = (user) => {
+    //     setUsers(users.map(u =>
+    //         u.id === user.id ? { ...u, status: !u.status } : u
+    //     ));
+    // };
 
     const actionBodyTemplate = (rowData) => (
         <div>
@@ -150,6 +136,7 @@ const ListUser = () => {
 
     return (
         <div>
+            <ToastContainer />
             <div className="container-fluid mt-1">
                 <div className="row">
                     <div className="col-md-2 p-0">
@@ -164,14 +151,14 @@ const ListUser = () => {
                                     rows={10}
                                     dataKey="id"
                                     emptyMessage="No User found."
-                                    globalFilterFields={['name', 'emp_id', 'email', 'campus', 'department']}
+                                    globalFilterFields={['username', 'emp_id', 'email', 'campus', 'department']}
                                     filters={filters}
                                     filterDisplay="row"
                                     header={header}
                                     responsiveLayout="scroll"
                                 >
-                                    <Column field="name" header="User Name" filter filterPlaceholder="Search name" filterMatchMode="contains" />
-                                    <Column field="emp_id" header="Emp ID" filter filterPlaceholder="Search ID" filterMatchMode="contains" body={customBodyTemplate} />
+                                    <Column field="username" header="User Name" filter filterPlaceholder="Search name" filterMatchMode="contains" />
+                                    <Column field="emp_id" header="Emp ID" filter filterPlaceholder="Search ID" filterMatchMode="contains"  />
                                     <Column field="email" header="Email" filter filterPlaceholder="Search email" filterMatchMode="contains" />
                                     <Column field="campus" header="Campus" filter filterPlaceholder="Search campus" filterMatchMode="contains" />
                                     <Column field="department" header="Department" filter filterPlaceholder="Search Department" filterMatchMode="contains" />
@@ -188,3 +175,4 @@ const ListUser = () => {
 };
 
 export default ListUser;
+// body={customBodyTemplate}

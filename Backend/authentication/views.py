@@ -1,6 +1,8 @@
 
 
 from django.contrib.auth import login, logout
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
@@ -8,7 +10,6 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import CustomUser, User_profile
-from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework import status
@@ -22,6 +23,15 @@ from datetime import timedelta
 from .models import OTP, Location
 from django.utils import timezone
 
+import csv
+import re
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
+
+
 # from datetime import timedelta
 
 @api_view(['POST'])
@@ -30,28 +40,26 @@ def register(request):
        
         data = request.data.copy()
         data['role'] = 'staffs'
-
         data['is_superuser'] =  False
         data['is_staff'] = False
-
-       
         dep=request.data.get('department')
+        loc = request.data.get('location')
 
         if dep=='others':
             dep1 = request.data.get('new_department')
             depObj=Department.objects.create(name=dep1)
-
-
             data_user_profile = {
                 'emp_id':request.data.get('emp_id'),
                 'ph': request.data.get('ph'),                                                                  
                 'department': depObj.id,
+                'location':loc,
             } 
         else:
             data_user_profile = {
                 'emp_id':request.data.get('emp_id'),
                 'ph': request.data.get('ph'),
                 'department': dep,
+                'location':loc,
             } 
        
         serializer = UserRegistrationSerializer(data=data)
@@ -82,6 +90,10 @@ def register(request):
 @api_view(['POST'])
 def login_with_email(request):
     email = request.data.get('email')
+    # if not email.contains('@christuniversity.in'):
+    #     return Response({'you are not authorised to login'})
+    if '@christuniversity.in' not in email:
+        return Response({'error': 'You are not authorized to login.'}, status=status.HTTP_401_UNAUTHORIZED)
     if email:
         print(email)
         user = CustomUser.objects.get(email=email)
@@ -147,27 +159,80 @@ def user_token_refresh(request):
         
 
 
+def get_department_id(department_name):
+    try:
+        department = Department.objects.get(name=department_name)
+        return department.id
+    except Department.DoesNotExist:
+        return None
+
+def get_location_id(location_name):
+    try:
+        location = Location.objects.get(campus=location_name)
+        return location.id
+    except Location.DoesNotExist:
+        return None
+
+def validate_email_format(email):
+    return re.match(r".+@christuniversity\.in$", email)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def multiple_user_registration(request):
+    print(request.data)
     if 'file' not in request.FILES:
         return Response({"error": "No file provided"}, status=status.HTTP_400_BAD_REQUEST)
     
     # Handle file upload
     file = request.FILES['file']
-    file_path = default_storage.save('temp.csv', file)
+    file_name = default_storage.save('temp.csv', ContentFile(file.read()))
+
+    error_rows = []  # List to store rows with errors
 
     # Parse CSV and save data
-    with open(file_path, newline='') as csvfile:
+    with default_storage.open(file_name, mode='r') as csvfile:
         reader = csv.DictReader(csvfile)
+        
         for row in reader:
+            email = row['email']
+            
+            # Check if email format is valid
+            if not validate_email_format(email):
+                row['error'] = "Invalid email format"
+                error_rows.append(row)
+                continue
+
+            # Check if user already exists
+            if CustomUser.objects.filter(email=email).exists():
+                row['error'] = "User already exists"
+                error_rows.append(row)
+                continue
+
+            # Convert department and location names to IDs
+            department_id = get_department_id(row['department'])
+            location_id = get_location_id(row['location'])
+
+            error_message = ""
+
+            if not department_id:
+                error_message += "Department not found"
+            
+            if not location_id:
+                if error_message:
+                    error_message += " and Location not found"  # Append location error
+                else:
+                    error_message += "Location not found"
+            
+            if error_message:
+                row['error'] = error_message
+                error_rows.append(row)
+                continue
+
             # Extract CustomUser data
             user_data = {
-                'email': row['email'],
+                'email': email,
                 'username': row['username'],
-                'role': row['role'],
-                # Add other fields if needed
+                'role': 'staffs'
             }
 
             user_serializer = UserRegistrationSerializer(data=user_data)
@@ -179,42 +244,81 @@ def multiple_user_registration(request):
                     'user': user.id,
                     'emp_id': row['emp_id'],
                     'ph': row['ph'],
-                    'department': row['department'],  # This should be an ID or slug of the department
-                    # Add other fields if needed
+                    'department': department_id,
+                    'location': location_id
                 }
 
                 profile_serializer = USerProfileSerializer(data=profile_data)
                 if profile_serializer.is_valid():
                     profile_serializer.save()
                 else:
-                    return Response(profile_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                    row['error'] = profile_serializer.errors
+                    error_rows.append(row)
             else:
-                return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                row['error'] = user_serializer.errors
+                error_rows.append(row)
     
+    # If there are error rows, save them to a new CSV file
+    if error_rows:
+        error_file_name = 'error_report.csv'
+        error_file_path = default_storage.path(error_file_name)
+        
+        with open(error_file_path, mode='w', newline='') as error_file:
+            fieldnames = list(error_rows[0].keys())
+            writer = csv.DictWriter(error_file, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(error_rows)
+
+        # Return the error CSV file as a response
+        with open(error_file_path, 'rb') as f:
+            response = HttpResponse(f.read(), content_type='text/csv')
+            response['Content-Disposition'] = f'attachment; filename="{error_file_name}"'
+            return response
+
     return Response({"status": "success"}, status=status.HTTP_201_CREATED)
-
-
-
-# @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
-# def user_logout(request):
-#     if request.method == 'POST':
-#         refresh_token = request.data.get('refresh_token')
-#         if not refresh_token:
-#             return Response({"error": "Refresh token is missing"}, status=status.HTTP_400_BAD_REQUEST)
-#         try:
-#             refresh = RefreshToken(refresh_token)
-#             refresh.blacklist()
-#             return Response({"message": "Logout successful"}, status=status.HTTP_200_OK)
-#         except Exception as e:
-#             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 #______________USER LIST API__________
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def user_list(request):
-    obj = CustomUser.objects.all()
+    users = User_profile.objects.select_related('user', 'department', 'location').all()
+    
+    # Creating a list of dictionaries with the required fields
+    user_data = []
+    for profile in users:
+        user_data.append({
+            'id':profile.user.id,
+            'username': profile.user.username,
+            'emp_id': profile.emp_id,
+            'email': profile.user.email,
+            'campus': profile.location.campus,  # Assuming 'campus' is a field in the Location model
+            'department': profile.department.name,  # Assuming 'name' is a field in the Department model
+            'status': profile.user.is_active,
+        })
+    
+    return Response(user_data)
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def user_deactivate(request,id):
+    if request.method == 'POST':
+        user = get_object_or_404(CustomUser, id=id)
+        user.is_active = not user.is_active
+        user.save()
+        serializer = UserRegistrationSerializer(user)
+        return Response({'data': serializer.data, "message": "User status updated successfully."},status=status.HTTP_200_OK)
 
-
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def user_delete(request,id):
+    if request.method == 'DELETE':
+        user = CustomUser.objects.get(id = id)
+        user.delete()
+        return Response("User deleteed successfully")
+    
+# @api_view(['PUT'])
+# @permission_classes([IsAuthenticated])  
+# def user_update(request,id):
+#     if request.method == 'PUT':
+#         user = CustomUser

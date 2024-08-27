@@ -1,25 +1,66 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminDashboard from '../Admin/AdminDashboard';
+import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { multiple_user_register } from '../../axios/api';
+import { toast } from 'react-toastify';
 
 const RegisterMultipleUser = () => {
     const [file, setFile] = useState(null);
+    const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
+    const [errorFile, setErrorFile] = useState(null); // State to hold error file data
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
+        setError(null);  // Reset error when file is changed
+        setSuccess(null); // Reset success when file is changed
+        setErrorFile(null); // Reset error file when file is changed
     };
 
-    const handleFileUpload = () => {
+    const handleFileUpload = async () => {
         if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const text = e.target.result;
-                // Handle file parsing and user addition here
-            };
-            reader.readAsText(file);
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await multiple_user_register(formData);
+                // toast.error(response);
+                console.log(response);
+
+                if (response.status === 200) {
+                    setSuccess("Users registered successfully!");
+                }
+
+
+                // If the response contains a CSV file (errors)
+                if (response.headers['content-type'] === 'text/csv') {
+                    const blob = new Blob([response.data], { type: 'text/csv' });
+                    const url = window.URL.createObjectURL(blob);
+                    setErrorFile(url);  // Set error file URL for download
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'error_report.csv';  // Set the file name for download
+                    document.body.appendChild(a);
+                    a.click();  // Trigger the download
+                    document.body.removeChild(a);  // Clean up
+                
+                    // Optionally, set error message
+                    setError("Some users could not be registered. The error report is being downloaded.");
+                    setError("Some users could not be registered. Please download the error report.");
+                }
+
+
+            } catch (err) {
+                console.error("Error details:", err.response);
+                setError(err.response ? err.response.data : "Failed to register users. Please check the CSV file format.");
+            }
+        } else {
+            setError("Please upload a CSV file.");
         }
     };
+
 
     return (
         <div>

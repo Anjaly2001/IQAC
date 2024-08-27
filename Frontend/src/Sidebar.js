@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import { Nav } from 'react-bootstrap';
 import './Sidebar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -7,6 +7,7 @@ import { faUsers, faCalendar, faCog, faHandPointRight, faHome, faGears, faEye, f
 
 function Sidebar() {
   const location = useLocation(); // Hook to get the current path
+  const navigate = useNavigate(); // Hook to navigate programmatically
   const [openSections, setOpenSections] = useState({});
   const [userName, setUserName] = useState('John Doe'); // Replace with the actual user name logic
 
@@ -50,8 +51,8 @@ function Sidebar() {
   const isActive = (path) => location.pathname === path; // Check if the current path matches the link path
 
   const handleLogout = () => {
-    // Handle logout logic here
     console.log('User logged out');
+    navigate('/login'); // Navigate to the login page
   };
 
   return (
@@ -65,12 +66,19 @@ function Sidebar() {
           CHRIST University<br />
           IQAC | <span className='fw-normal'> EMT</span>
         </a>
-        <button className="btn btn-outline-light mt-2" onClick={handleLogout}>
-          <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />
-          Logout
-        </button>
 
         <Nav className="flex-column p-1 mt-5">
+
+          {/* Logout Button */}
+          <div className="mt-4">
+            <button
+              onClick={handleLogout}
+              className=" logout-button text-decoration-none"
+            >
+              <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />
+              Logout
+            </button>
+          </div>
           {/* Dashboard */}
           <Nav.Item>
             <Nav.Link
@@ -262,7 +270,7 @@ function Sidebar() {
                 {/* Tag Manager Section */}
                 <Nav.Item>
                   <Nav.Link
-                    className={`text-light fw-bold ${isActive('/createTag') || isActive('/listTag') ? 'active' : ''}`}
+                    className="text-light fw-bold"
                     onClick={() => toggleSection('tagManager')}
                   >
                     <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
@@ -287,7 +295,7 @@ function Sidebar() {
                           className={`text-light ${isActive('/listTag') ? 'active' : ''}`}
                         >
                           <FontAwesomeIcon icon={faEye} className="me-2" />
-                          Tag List
+                          List Tag
                         </Nav.Link>
                       </Nav.Item>
                     </Nav>
@@ -300,7 +308,7 @@ function Sidebar() {
           {/* Event Status Section */}
           <Nav.Item>
             <Nav.Link
-              className={`text-light fw-bold ${isActive('/registerEvent') || isActive('/addreport') || isActive('/listevents') ? 'active' : ''}`}
+              className="text-light fw-bold"
               onClick={() => toggleSection('eventStatus')}
             >
               <FontAwesomeIcon icon={faCalendar} className="me-2" />
@@ -318,8 +326,7 @@ function Sidebar() {
                     Register Event
                   </Nav.Link>
                 </Nav.Item>
-
-                {/* <Nav.Item>
+                <Nav.Item>
                   <Nav.Link
                     as={Link}
                     to="/addreport"
@@ -328,8 +335,7 @@ function Sidebar() {
                     <FontAwesomeIcon icon={faPlus} className="me-2" />
                     Add Report
                   </Nav.Link>
-                </Nav.Item> */}
-
+                </Nav.Item>
                 <Nav.Item>
                   <Nav.Link
                     as={Link}
@@ -337,7 +343,7 @@ function Sidebar() {
                     className={`text-light ${isActive('/listevents') ? 'active' : ''}`}
                   >
                     <FontAwesomeIcon icon={faEye} className="me-2" />
-                    Events List
+                    List Events
                   </Nav.Link>
                 </Nav.Item>
               </Nav>
@@ -345,6 +351,8 @@ function Sidebar() {
           </Nav.Item>
         </Nav>
       </div>
+
+
     </div>
   );
 }

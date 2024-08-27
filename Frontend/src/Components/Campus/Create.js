@@ -57,6 +57,13 @@ const CreateCampus = () => {
         }
     };
 
+    const deleteCampus = (campusId) => {
+        setCampuses(campuses.filter(campus => campus.id !== campusId));
+        console.log('Deleted campus with ID:', campusId);
+        // Optionally, add a call to the backend to delete the campus from the database
+    };
+
+
     const handleLogoChange = (e) => {
         const file = e.target.files[0];
         setLogo(file);

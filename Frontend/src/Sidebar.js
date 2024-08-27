@@ -3,32 +3,25 @@ import { Link, useLocation } from 'react-router-dom';
 import { Nav } from 'react-bootstrap';
 import './Sidebar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUsers, faCalendar, faCog, faHandPointRight, faHome, faGears, faEye ,faPlus } from '@fortawesome/free-solid-svg-icons';
-// import AcademicYear from './Components/AcademicYear/CreateAcademicYear';
-// import EventType from './Components/Event/EventType';
-
-
-
+import { faUsers, faCalendar, faCog, faHandPointRight, faHome, faGears, faEye, faPlus, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
 function Sidebar() {
   const location = useLocation(); // Hook to get the current path
   const [openSections, setOpenSections] = useState({});
+  const [userName, setUserName] = useState('John Doe'); // Replace with the actual user name logic
 
   useEffect(() => {
-    // Check the current path and open the relevant section
     const path = location.pathname;
-
-
     if (path.includes('/registerSingleuser') || path.includes('/registerMultipleUser') || path.includes('/listuser') || path.includes('/map')) {
       setOpenSections((prevState) => ({ ...prevState, accounts: true }));
     }
     if (path.includes('/createCampus') || path.includes('/listCampus')) {
       setOpenSections((prevState) => ({ ...prevState, settings: true, campus: true }));
     }
-    if (path.includes('/academicyear') ) {
+    if (path.includes('/academicyear')) {
       setOpenSections((prevState) => ({ ...prevState, settings: true, AcademicYear: true }));
     }
-    if (path.includes('/eventtype') ) {
+    if (path.includes('/eventtype')) {
       setOpenSections((prevState) => ({ ...prevState, settings: true, EventType: true }));
     }
     if (path.includes('/createdepartments') || path.includes('/listdepartment')) {
@@ -56,21 +49,34 @@ function Sidebar() {
 
   const isActive = (path) => location.pathname === path; // Check if the current path matches the link path
 
+  const handleLogout = () => {
+    // Handle logout logic here
+    console.log('User logged out');
+  };
+
   return (
-    <div className="sidebar text-left  fixed">
+    <div className="sidebar text-left fixed">
       <div className="container-fluid mb-6">
+        {/* User Info */}
+        <div className="text-white">
+          Logged in as: <strong>{userName}</strong>
+        </div>
         <a className="text-white fw-bolder fs-4 text-decoration-none">
           CHRIST University<br />
           IQAC | <span className='fw-normal'> EMT</span>
         </a>
-        <Nav className="flex-column p-1 mt-5">
+        <button className="btn btn-outline-light mt-2" onClick={handleLogout}>
+          <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />
+          Logout
+        </button>
 
+        <Nav className="flex-column p-1 mt-5">
+          {/* Dashboard */}
           <Nav.Item>
             <Nav.Link
               as={Link}
               to="/dashboard"
-              className={`text-light fw-bold ${isActive('/admin-dashboard') ? 'active' : ''}`} // Apply active class
-
+              className={`text-light  fw-bold ${isActive('/admin-dashboard') ? 'active' : ''}`} // Apply active class
             >
               <FontAwesomeIcon icon={faHome} className="me-2" />
               Dashboard
@@ -118,16 +124,6 @@ function Sidebar() {
                     Users List
                   </Nav.Link>
                 </Nav.Item>
-                {/* <Nav.Item>
-                <Nav.Link
-                  as={Link}
-                  to="/map"
-                  className={`text-light ${isActive('/map') ? 'active' : ''}`}
-                >
-                  <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
-                  Map User / Users
-                </Nav.Link>
-              </Nav.Item> */}
               </Nav>
             )}
           </Nav.Item>
@@ -143,8 +139,6 @@ function Sidebar() {
             </Nav.Link>
             {openSections.settings && (
               <Nav className="flex-column ms-3">
-
-
                 {/* Campus Section */}
                 <Nav.Item>
                   <Nav.Link
@@ -201,19 +195,18 @@ function Sidebar() {
                           New Academic Year
                         </Nav.Link>
                       </Nav.Item>
-                      
                     </Nav>
                   )}
                 </Nav.Item>
-                
-               {/* Event Type Section */}
-               <Nav.Item>
+
+                {/* Event Type Section */}
+                <Nav.Item>
                   <Nav.Link
-                    className={`text-light fw-bold ${isActive('/eventtype') }`}
+                    className={`text-light fw-bold ${isActive('/eventtype')}`}
                     onClick={() => toggleSection('EventType')}
                   >
                     <FontAwesomeIcon icon={faGears} className="me-2" />
-                   Event Type
+                    Event Type
                   </Nav.Link>
                   {openSections.EventType && (
                     <Nav className="flex-column ms-3">
@@ -227,7 +220,6 @@ function Sidebar() {
                           New Event Type
                         </Nav.Link>
                       </Nav.Item>
-                      
                     </Nav>
                   )}
                 </Nav.Item>
@@ -267,15 +259,15 @@ function Sidebar() {
                   )}
                 </Nav.Item>
 
+                {/* Tag Manager Section */}
                 <Nav.Item>
                   <Nav.Link
                     className={`text-light fw-bold ${isActive('/createTag') || isActive('/listTag') ? 'active' : ''}`}
                     onClick={() => toggleSection('tagManager')}
                   >
-                    <FontAwesomeIcon icon={faGears} className="me-2" />
+                    <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
                     Tag Manager
                   </Nav.Link>
-
                   {openSections.tagManager && (
                     <Nav className="flex-column ms-3">
                       <Nav.Item>
@@ -285,7 +277,7 @@ function Sidebar() {
                           className={`text-light ${isActive('/createTag') ? 'active' : ''}`}
                         >
                           <FontAwesomeIcon icon={faPlus} className="me-2" />
-                          New Tag
+                          Create Tag
                         </Nav.Link>
                       </Nav.Item>
                       <Nav.Item>
@@ -308,11 +300,11 @@ function Sidebar() {
           {/* Event Status Section */}
           <Nav.Item>
             <Nav.Link
-              className="text-light fw-bold"
+              className={`text-light fw-bold ${isActive('/registerEvent') || isActive('/addreport') || isActive('/listevents') ? 'active' : ''}`}
               onClick={() => toggleSection('eventStatus')}
             >
               <FontAwesomeIcon icon={faCalendar} className="me-2" />
-              Event
+              Event Status
             </Nav.Link>
             {openSections.eventStatus && (
               <Nav className="flex-column ms-3">
@@ -329,6 +321,16 @@ function Sidebar() {
                 <Nav.Item>
                   <Nav.Link
                     as={Link}
+                    to="/addreport"
+                    className={`text-light ${isActive('/addreport') ? 'active' : ''}`}
+                  >
+                    <FontAwesomeIcon icon={faPlus} className="me-2" />
+                    Add Report
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link
+                    as={Link}
                     to="/listevents"
                     className={`text-light ${isActive('/listevents') ? 'active' : ''}`}
                   >
@@ -336,23 +338,12 @@ function Sidebar() {
                     Events List
                   </Nav.Link>
                 </Nav.Item>
-                {/* <Nav.Item>
-                <Nav.Link
-                  as={Link}
-                  to="/addreport"
-                  className={`text-light ${isActive('/addreport') ? 'active' : ''}`}
-                >
-                  <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
-                  Create  Report
-                </Nav.Link>
-              </Nav.Item> */}
-
               </Nav>
             )}
           </Nav.Item>
         </Nav>
       </div>
-      </div>
+    </div>
   );
 }
 

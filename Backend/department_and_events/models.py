@@ -6,7 +6,7 @@ import datetime
 from django.conf import settings
 
 class Location(models.Model):
-    campus = models.CharField(max_length=200)
+    campus = models.CharField(max_length=200,unique=True)
     logo = models.ImageField(null = True)
     created_at = models.DateTimeField(auto_now_add=True)
     # created_by = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='created_by')

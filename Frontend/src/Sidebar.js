@@ -264,7 +264,7 @@ function Sidebar() {
                     className="text-light fw-bold"
                     onClick={() => toggleSection('tagManager')}
                   >
-                    <FontAwesomeIcon icon={faHandPointRight} className="me-2" />
+                    <FontAwesomeIcon icon={faGears} className="me-2" />
                     Tag Manager
                   </Nav.Link>
                   {openSections.tagManager && (

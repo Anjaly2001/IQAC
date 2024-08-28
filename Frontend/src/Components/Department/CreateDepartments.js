@@ -37,25 +37,24 @@ const CreateDepartment = ({ onAddDepartment }) => {
         };
         fetchLocations();
     }, []);
-
     const handleCreateDepartment = async () => {
         const finalType = type === 'Others' ? customType : type;
         const finalLocation = location === 'Others' ? customLocation : location;
-
+    
         if (departmentName && description && finalType && finalLocation) {
             const newDepartment = {
                 name: departmentName,
                 type: finalType,
                 location: finalLocation,
-                description
+                description,
             };
-
+    
             try {
                 const response = await department_register(newDepartment);
                 toast.success('Department created successfully!');
                 setMessage('Department created successfully!');
                 setMessageType('success');
-
+    
                 // Clear form fields after successful submission
                 setDepartmentName('');
                 setDescription('');
@@ -63,17 +62,18 @@ const CreateDepartment = ({ onAddDepartment }) => {
                 setLocation('');
                 setCustomType('');
                 setCustomLocation('');
-
-                // Redirect to department list page
+    
+                // Redirect to department list page after successful creation
                 navigate('/listdepartment');
             } catch (error) {
                 console.error('Failed to create department:', error);
-                toast.error('Failed to create department')
+                toast.error('Failed to create department');
             }
         } else {
             toast.error('Please fill in all fields.');
         }
     };
+    
 
     return (
         <div className="container-fluid">

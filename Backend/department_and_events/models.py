@@ -1,7 +1,7 @@
 import os
 from django.db import models
 from django.utils.text import slugify
-
+import datetime
 # from authentication.models import CustomUser
 from django.conf import settings
 
@@ -30,8 +30,11 @@ class Department(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
-
-
+class Academic_year(models.Model):
+    start_date = models.DateField()
+    end_date = models.DateField()
+    label = models.IntegerField(default=datetime.datetime.now().year)
+    
 # # Create your models here.
 # class Department(models.Model):
 #     TYPE_CHOICES = [

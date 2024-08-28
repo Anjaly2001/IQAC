@@ -1,4 +1,4 @@
-from .models import Department, Location
+from .models import Academic_year, Department, Location
 from rest_framework import serializers
 
 
@@ -17,6 +17,13 @@ class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
         fields = '__all__'
+
+class AcademicyearSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Academic_year
+        fields = '__all__'
+
+        
 
 # class DepartmentSerializer(serializers.ModelSerializer):
 #     class Meta:

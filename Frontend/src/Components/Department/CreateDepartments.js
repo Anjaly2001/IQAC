@@ -37,7 +37,15 @@ const CreateDepartment = ({ onAddDepartment }) => {
         };
         fetchLocations();
     }, []);
+    const isTitleCase = (str) => {
+        return str === str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+    };
     const handleCreateDepartment = async () => {
+        if (!isTitleCase(departmentName)) {
+            toast.error('Department name must be in title case.');
+            return;  // Stop further execution if validation fails
+        }
+
         const finalType = type === 'Others' ? customType : type;
         const finalLocation = location === 'Others' ? customLocation : location;
     

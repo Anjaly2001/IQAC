@@ -9,7 +9,7 @@ function Sidebar() {
   const location = useLocation(); // Hook to get the current path
   const navigate = useNavigate(); // Hook to navigate programmatically
   const [openSections, setOpenSections] = useState({});
-  const [userName, setUserName] = useState('John Doe'); // Replace with the actual user name logic
+  const [userName, setUserName] = useState('Admin'); // Replace with the actual user name logic
 
   useEffect(() => {
     const path = location.pathname;
@@ -59,26 +59,15 @@ function Sidebar() {
     <div className="sidebar text-left fixed">
       <div className="container-fluid mb-6">
         {/* User Info */}
-        <div className="text-white">
-          Logged in as: <strong>{userName}</strong>
-        </div>
+       
         <a className="text-white fw-bolder fs-4 text-decoration-none">
           CHRIST University<br />
           IQAC | <span className='fw-normal'> EMT</span>
         </a>
-
+        <div className="text-white mt-3">
+          Logged in as: <strong>{userName}</strong>
+        </div>
         <Nav className="flex-column p-1 mt-5">
-
-          {/* Logout Button */}
-          <div className="mt-4">
-            <button
-              onClick={handleLogout}
-              className=" logout-button text-decoration-none"
-            >
-              <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />
-              Logout
-            </button>
-          </div>
           {/* Dashboard */}
           <Nav.Item>
             <Nav.Link
@@ -182,6 +171,42 @@ function Sidebar() {
                   )}
                 </Nav.Item>
 
+                 {/* Department Section */}
+                 <Nav.Item>
+                  <Nav.Link
+                    className={`text-light fw-bold ${isActive('/createdepartments') || isActive('/listdepartment') ? 'active' : ''}`}
+                    onClick={() => toggleSection('department')}
+                  >
+                    <FontAwesomeIcon icon={faGears} className="me-2" />
+                    Department
+                  </Nav.Link>
+                  {openSections.department && (
+                    <Nav className="flex-column ms-3">
+                      <Nav.Item>
+                        <Nav.Link
+                          as={Link}
+                          to="/createdepartments"
+                          className={`text-light ${isActive('/createdepartments') ? 'active' : ''}`}
+                        >
+                          <FontAwesomeIcon icon={faPlus} className="me-2" />
+                          New Department
+                        </Nav.Link>
+                      </Nav.Item>
+                      <Nav.Item>
+                        <Nav.Link
+                          as={Link}
+                          to="/listdepartment"
+                          className={`text-light ${isActive('/listdepartment') ? 'active' : ''}`}
+                        >
+                          <FontAwesomeIcon icon={faEye} className="me-2" />
+                          Department List
+                        </Nav.Link>
+                      </Nav.Item>
+                    </Nav>
+                  )}
+                </Nav.Item>
+
+
                 {/* Academic Year Section */}
                 <Nav.Item>
                   <Nav.Link
@@ -232,41 +257,7 @@ function Sidebar() {
                   )}
                 </Nav.Item>
 
-                {/* Department Section */}
-                <Nav.Item>
-                  <Nav.Link
-                    className={`text-light fw-bold ${isActive('/createdepartments') || isActive('/listdepartment') ? 'active' : ''}`}
-                    onClick={() => toggleSection('department')}
-                  >
-                    <FontAwesomeIcon icon={faGears} className="me-2" />
-                    Department
-                  </Nav.Link>
-                  {openSections.department && (
-                    <Nav className="flex-column ms-3">
-                      <Nav.Item>
-                        <Nav.Link
-                          as={Link}
-                          to="/createdepartments"
-                          className={`text-light ${isActive('/createdepartments') ? 'active' : ''}`}
-                        >
-                          <FontAwesomeIcon icon={faPlus} className="me-2" />
-                          New Department
-                        </Nav.Link>
-                      </Nav.Item>
-                      <Nav.Item>
-                        <Nav.Link
-                          as={Link}
-                          to="/listdepartment"
-                          className={`text-light ${isActive('/listdepartment') ? 'active' : ''}`}
-                        >
-                          <FontAwesomeIcon icon={faEye} className="me-2" />
-                          Department List
-                        </Nav.Link>
-                      </Nav.Item>
-                    </Nav>
-                  )}
-                </Nav.Item>
-
+               
                 {/* Tag Manager Section */}
                 <Nav.Item>
                   <Nav.Link
@@ -351,7 +342,16 @@ function Sidebar() {
           </Nav.Item>
         </Nav>
       </div>
-
+ {/* Logout Button */}
+ <div className="mt-1">
+            <button
+              onClick={handleLogout}
+              className=" logout-button text-decoration-none"
+            >
+              <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />
+              Logout
+            </button>
+          </div>
 
     </div>
   );

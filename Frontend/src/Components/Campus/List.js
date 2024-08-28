@@ -9,7 +9,9 @@ import { InputIcon } from 'primereact/inputicon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import homeURL from '../../axios/homeurl';
-import { campus_list } from '../../axios/api';
+import { campus_list, campus_delete } from '../../axios/api';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ListCampus = () => {
     const [campuses, setCampuses] = useState([]);
@@ -84,18 +86,33 @@ const ListCampus = () => {
         navigate('/create-campus', { state: { campus: selectedCampus } });
     };
 
-    const deleteCampus = (campusId) => {
-        const updatedCampuses = campuses.filter(campus => campus.id !== campusId);
-        setCampuses(updatedCampuses);
-
-        // Optionally, make an API call to delete the campus from the server
-        // await deleteCampusAPI(campusId);
+    const deleteCampus = async (id) => {
+        const token = localStorage.getItem('access_token');
+        try {
+            const response = await campus_delete(id);
+            setCampuses(campuses.filter(campus => campus.id !== id));
+            toast.success('Campus deleted successfully!');
+            // setDepartments(response)
+        } catch (error) {
+            console.error('Error deleting Campus:', error);
+            console.log(error)
+            // toast.success('Department deleted successfully!');
+        }
     };
+
+    // const deleteCampus = (campusId) => {
+    //     const updatedCampuses = campuses.filter(campus => campus.id !== campusId);
+    //     setCampuses(updatedCampuses);
+
+    //     // Optionally, make an API call to delete the campus from the server
+    //     // await deleteCampusAPI(campusId);
+    // };
 
     const header = renderHeader();
 
     return (
         <div>
+            <ToastContainer />
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-md-2 p-0">

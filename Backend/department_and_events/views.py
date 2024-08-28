@@ -5,9 +5,9 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 
-from .models import Location,Department
+from .models import Academic_year, Location,Department
 
-from .serializers import DepartmentSerializer,  DepartmentSerializer, LocationSerializer
+from .serializers import AcademicyearSerializer, DepartmentSerializer,  DepartmentSerializer, LocationSerializer
 from django.contrib.auth.models import User
 
 
@@ -23,14 +23,14 @@ def department_register(request):
         if not request.user.is_superuser and not request.user.is_staff:
             return Response({"error": "Only admin can create departments"})
         data = request.data.copy()
-        # if data.get('location') == 'Others':
-        #     new_location_name = data.get('new_location')
-        #     new_location = Location.objects.create(campus=new_location_name, created_by=request.user)
-        #     data['location'] = new_location.id 
-        #     # Create a new location
-        #     loc_serializer = LocationSerializer(data= new_location)
-        #     if loc_serializer.is_valid():
-        #         loc_serializer.save()
+        if data.get('location') == 'Others':
+            new_location_name = data.get('new_location')
+            new_location = Location.objects.create(campus=new_location_name, created_by=request.user)
+            data['location'] = new_location.id 
+            # Create a new location
+            loc_serializer = LocationSerializer(data= new_location)
+            if loc_serializer.is_valid():
+                loc_serializer.save()
         serializer = DepartmentSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -119,6 +119,40 @@ def campus_list(request):
         obj = Location.objects.all().order_by('-created_at')
         serializer = LocationSerializer(obj, many=True)
         return Response(serializer.data)
+    
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def campus_delete(request,id):
+    if request.method == 'DELETE':
+        campus = Location.objects.get(id = id)
+        campus.delete()
+        return Response('Campus deleted successfully')
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def campus_update(request,id):
+    if request.method == 'PUT':
+        campus = Location.objects.get(id = id)
+        serializer = LocationSerializer(campus,data = request.data, partial = True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'data':serializer.data,'message':'Campus updates successfully'})
+        return Response(serializer.errors)
+
+
+#________ACADEMIC_YEAR API________
+
+
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+# def create_academic_year(request):
+#     if request.data == 'POST':
+#         serializer = AcademicyearSerializer(data = request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response({'data':serializer.data,'message':'Academic year created successfully'})
+#         return Response(serializer.error)
+
 
 # # Create your views here.
 

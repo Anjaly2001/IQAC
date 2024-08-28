@@ -59,7 +59,7 @@ function Sidebar() {
     <div className="sidebar text-left fixed">
       <div className="container-fluid mb-6">
         {/* User Info */}
-       
+
         <a className="text-white fw-bolder fs-4 text-decoration-none">
           CHRIST University<br />
           IQAC | <span className='fw-normal'> EMT</span>
@@ -171,8 +171,8 @@ function Sidebar() {
                   )}
                 </Nav.Item>
 
-                 {/* Department Section */}
-                 <Nav.Item>
+                {/* Department Section */}
+                <Nav.Item>
                   <Nav.Link
                     className={`text-light fw-bold ${isActive('/createdepartments') || isActive('/listdepartment') ? 'active' : ''}`}
                     onClick={() => toggleSection('department')}
@@ -257,7 +257,7 @@ function Sidebar() {
                   )}
                 </Nav.Item>
 
-               
+
                 {/* Tag Manager Section */}
                 <Nav.Item>
                   <Nav.Link
@@ -317,7 +317,8 @@ function Sidebar() {
                     Register Event
                   </Nav.Link>
                 </Nav.Item>
-                <Nav.Item>
+
+                {/* <Nav.Item>
                   <Nav.Link
                     as={Link}
                     to="/addreport"
@@ -326,7 +327,8 @@ function Sidebar() {
                     <FontAwesomeIcon icon={faPlus} className="me-2" />
                     Add Report
                   </Nav.Link>
-                </Nav.Item>
+                </Nav.Item> */}
+
                 <Nav.Item>
                   <Nav.Link
                     as={Link}
@@ -342,16 +344,17 @@ function Sidebar() {
           </Nav.Item>
         </Nav>
       </div>
- {/* Logout Button */}
- <div className="mt-1">
-            <button
-              onClick={handleLogout}
-              className=" logout-button text-decoration-none"
-            >
-              <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />
-              Logout
-            </button>
-          </div>
+
+      {/* Logout Button */}
+      <div className="mt-1">
+        <button
+          onClick={handleLogout}
+          className=" logout-button text-decoration-none"
+        >
+          <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />
+          Logout
+        </button>
+      </div>
 
     </div>
   );

@@ -129,7 +129,7 @@ const CreateCampus = () => {
                                                 <img
                                                     src={logoPreview}
                                                     alt="Logo Preview"
-                                                    style={{ maxWidth: '100%', height: 'auto' }}
+                                                    style={{ maxWidth: '20%', height: '30%' }}
                                                 />
                                             </div>
                                         )}

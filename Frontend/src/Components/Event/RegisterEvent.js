@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Use useNavigate instead of useHistory
+import EventSummary from './EventSummary'; // Import the EventSummary component
 import { InputText } from 'primereact/inputtext';
 import { Editor } from 'primereact/editor';
-import { Button } from 'primereact/button';
 import AdminDashboard from '../Admin/AdminDashboard';
 
 function RegisterEvent() {
@@ -22,8 +23,11 @@ function RegisterEvent() {
   const [proposal, setProposal] = useState(null);
   const [collaborators, setCollaborators] = useState([{ name: '', department: '', campus: '' }]);
   const [tag, setTag] = useState('');
+  const [submitted, setSubmitted] = useState(false); // New state to check if form is submitted
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const collaboratorNames = ["John Doe", "Jane Smith", "Michael Johnson", "Emily Davis"]; // Example names for dropdown
+
 
   const handleCollaboratorChange = (index, field, value) => {
     const updatedCollaborators = [...collaborators];
@@ -51,7 +55,6 @@ function RegisterEvent() {
     setNumberOfActivities(value);
 
     if (value > activities.length) {
-      // Add more activity slots if the number increases
       const additionalActivities = Array.from({ length: value - activities.length }, () => ({
         title: '',
         date: '',
@@ -60,20 +63,18 @@ function RegisterEvent() {
       }));
       setActivities([...activities, ...additionalActivities]);
     } else {
-      // Trim the activity slots if the number decreases
       setActivities(activities.slice(0, value));
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log({
+    const formData = {
       department,
       eventType,
       description,
       campus,
       eventTitle,
-      numberOfActivities,
       activities,
       startDate,
       endDate,
@@ -85,8 +86,14 @@ function RegisterEvent() {
       proposal,
       collaborators,
       tag,
-    });
+    };
+    setSubmitted(true); // Mark form as submitted
+    navigate('/eventsummary', { state: { formData } }); // Navigate to summary page
   };
+
+  if (submitted) {
+    return <EventSummary formData={{ department, eventType, description, campus, eventTitle, activities, startDate, endDate, startTime, endTime, venue, academicYear, eventTypeFocus, proposal, collaborators, tag }} />;
+  }
 
   return (
     <div className="container-fluid">

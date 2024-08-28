@@ -20,6 +20,7 @@ import CreateTag from './Components/Tag/CreateTag';
 import ListTag from './Components/Tag/ListTag';
 import AcademicYear from './Components/AcademicYear/CreateAcademicYear';
 import EventType from './Components/Event/EventType';
+import EventSummary from './Components/Event/EventSummary';
 
 const App = () => {
     return (
@@ -50,7 +51,7 @@ const App = () => {
                             <Route path="/listtag" element={<ListTag />} />
                             <Route path="/academicyear" element={<AcademicYear />} />
                             <Route path="/eventtype" element={<EventType />} />
-
+                            <Route path="/eventsummary" component={EventSummary} />
 
                         </Routes>
                     </>

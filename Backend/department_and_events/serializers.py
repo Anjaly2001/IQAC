@@ -18,6 +18,7 @@ class LocationSerializer(serializers.ModelSerializer):
         model = Location
         fields = '__all__'
 
+
 class AcademicyearSerializer(serializers.ModelSerializer):
     class Meta:
         model = Academic_year

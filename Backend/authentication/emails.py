@@ -15,7 +15,6 @@ def generate_otp():
 
 def send_otp_to_email(email):
     user = CustomUser.objects.get(email=email)
-    
     otp_code = generate_otp()
     otp_instance, created = OTP.objects.get_or_create(user=user)
     otp_instance.code = otp_code
@@ -33,6 +32,16 @@ def send_otp_to_email(email):
 
 
 
+def send_email(email):
+    user = CustomUser.objects.get(email=email)
+    subject = 'Successfully Registered in IQAC '
+    message = f'WELCOME { email}.'
+    from_email = settings.EMAIL_HOST_USER
+    recipient_list = [user.email]  # Send to user's email
+    print(f'Sending OTP to {user.username} ({user.email})')
+    send_mail(subject, message, from_email, recipient_list)
+
+    print(f'Email sent to {user.email}')
 
 
 

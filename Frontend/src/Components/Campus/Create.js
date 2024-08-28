@@ -27,7 +27,16 @@ const CreateCampus = () => {
         }
     }, [location.state]);
 
+    const isTitleCase = (str) => {
+        return str === str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+    };
+
     const handleCreateCampus = async () => {
+        if (!isTitleCase(campusName)) {
+            toast.error('Campus name must be in title case.');
+            return;  // Stop further execution if validation fails
+        }
+
         if (campusName && (logo || isEdit)) {
             const formData = new FormData();
             formData.append('campus', campusName);

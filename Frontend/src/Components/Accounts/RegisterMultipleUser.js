@@ -4,7 +4,8 @@ import AdminDashboard from '../Admin/AdminDashboard';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { multiple_user_register } from '../../axios/api';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const RegisterMultipleUser = () => {
     const [file, setFile] = useState(null);
@@ -31,6 +32,7 @@ const RegisterMultipleUser = () => {
 
                 if (response.status === 200) {
                     setSuccess("Users registered successfully!");
+                    toast.success("Users registered successfully!")
                 }
 
 
@@ -55,6 +57,7 @@ const RegisterMultipleUser = () => {
             } catch (err) {
                 console.error("Error details:", err.response);
                 setError(err.response ? err.response.data : "Failed to register users. Please check the CSV file format.");
+                toast.error("Failed to register users. Please check the CSV file format.")
             }
         } else {
             setError("Please upload a CSV file.");
@@ -64,6 +67,7 @@ const RegisterMultipleUser = () => {
 
     return (
         <div>
+            <ToastContainer />
             <AdminDashboard />
             <div className="container-fluid">
                 <div className="row">

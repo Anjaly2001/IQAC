@@ -6,7 +6,7 @@ import AdminDashboard from '../Admin/AdminDashboard';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { department_register, campus_list } from '../../axios/api';
-
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const CreateDepartment = ({ onAddDepartment }) => {
     const [departmentName, setDepartmentName] = useState('');
@@ -15,69 +15,33 @@ const CreateDepartment = ({ onAddDepartment }) => {
     const [location, setLocation] = useState('');
     const [customType, setCustomType] = useState('');
     const [customLocation, setCustomLocation] = useState('');
-    const [locations, setLocations] = useState([]); // Initialized with an empty array
+    const [locations, setLocations] = useState([]);
     const [message, setMessage] = useState('');  
     const [messageType, setMessageType] = useState('');
 
+    const navigate = useNavigate(); // Initialize useNavigate
+
     useEffect(() => {
         const fetchLocations = async () => {
-            // if (!areFieldsFilled()) {
-            //     toast.error('Please fill in all fields.');
-            //     return;  // Exit early if validation fails
-            // }
-            
             try {
                 const response = await campus_list();
-                console.log('Fetched locations:', response); 
                 if (response && Array.isArray(response)) {
-                    setLocations(response);  // Update the state with fetched data if it's an array
+                    setLocations(response);
                 } else {
                     console.error('Unexpected response format:', response);
-                    // Handle unexpected format
                 }
             } catch (error) {
                 console.error('Failed to fetch locations:', error);
-                toast.error('Failed to fetch locations.'); 
-                // Handle the error appropriately
+                toast.error('Failed to fetch locations.');
             }
-            
-    
         };
         fetchLocations();
-    }, []); 
-    // useEffect(() => {
-    //     const fetchLocations = async () => {
-    //         // Check if all fields are filled before making the API call
-    //         if (!areFieldsFilled()) {
-    //             toast.error('Please fill in all fields.');  // Display error message
-    //             return;  // Exit early if validation fails
-    //         }
-            
-    //         try {
-    //             const response = await campus_list(); // Assuming campus_list() is your API call function
-    //             console.log('Fetched locations:', response); 
-                
-    //             if (response && Array.isArray(response)) {
-    //                 setLocations(response);  // Update the state with the fetched data if it's in an expected format (array)
-    //             } else {
-    //                 console.error('Unexpected response format:', response);
-    //                 // Handle any unexpected response format here
-    //             }
-    //         } catch (error) {
-    //             console.error('Failed to fetch locations:', error);
-    //             toast.error('Failed to fetch locations.'); 
-    //             // Handle the error appropriately, e.g., show a message to the user
-    //         }
-    //     };
-    
-    //     fetchLocations();  // Call the async function to fetch the data when the component mounts
-    // }, []);  // Empty dependency array means this effect runs once when the component mounts
-    
+    }, []);
+
     const handleCreateDepartment = async () => {
         const finalType = type === 'Others' ? customType : type;
         const finalLocation = location === 'Others' ? customLocation : location;
 
-        // Ensure that all required fields are filled
         if (departmentName && description && finalType && finalLocation) {
             const newDepartment = {
                 name: departmentName,
@@ -88,8 +52,6 @@ const CreateDepartment = ({ onAddDepartment }) => {
 
             try {
                 const response = await department_register(newDepartment);
-                console.log('Created department response:', response.data);
-
                 toast.success('Department created successfully!');
                 setMessage('Department created successfully!');
                 setMessageType('success');
@@ -101,12 +63,13 @@ const CreateDepartment = ({ onAddDepartment }) => {
                 setLocation('');
                 setCustomType('');
                 setCustomLocation('');
+
+                // Redirect to department list page
+                navigate('/listdepartment');
             } catch (error) {
                 console.error('Failed to create department:', error);
-                // Handle the error appropriately
             }
-        }else {
-            // Display an error message if any required field is missing
+        } else {
             toast.error('Please fill in all fields.');
         }
     };
@@ -115,19 +78,14 @@ const CreateDepartment = ({ onAddDepartment }) => {
         <div className="container-fluid">
             <ToastContainer />
             <div className="row">
-                {/* Sidebar component for the Admin Dashboard */}
                 <div className="col-md-2 p-0">
                     <AdminDashboard />
                 </div>
-                
-                {/* Main content area for creating a new department */}
                 <div className="col-md-10 mt-5 pt-5">
                     <div className="container mt-3" style={{ maxWidth: '800px' }}>
                         <div className="text-center fw-bold fs-5 mb-4">
                             Create Department
                         </div>
-                        
-                        {/* Form fields for department details */}
                         <div className="d-flex flex-column align-items-center mb-4">
                             <div className="p-field w-100 mb-3">
                                 <label htmlFor="departmentName">Department Name</label>
@@ -139,7 +97,6 @@ const CreateDepartment = ({ onAddDepartment }) => {
                                     className="w-100"
                                 />
                             </div>
-                            
                             <div className="p-field w-100 mb-3">
                                 <label htmlFor="description">Description</label>
                                 <Editor
@@ -151,7 +108,6 @@ const CreateDepartment = ({ onAddDepartment }) => {
                                     className="w-100"
                                 />
                             </div>
-
                             <div className="p-field w-100 mb-3">
                                 <label htmlFor="type">Type</label>
                                 <select
@@ -169,8 +125,6 @@ const CreateDepartment = ({ onAddDepartment }) => {
                                     <option value="Others">Others</option>
                                 </select>
                             </div>
-
-                            {/* Display input for custom type if 'Others' is selected */}
                             {type === 'Others' && (
                                 <div className="p-field w-100 mb-3">
                                     <label htmlFor="customType">Enter Type</label>
@@ -183,7 +137,6 @@ const CreateDepartment = ({ onAddDepartment }) => {
                                     />
                                 </div>
                             )}
-
                             <div className="p-field w-100 mb-3">
                                 <label htmlFor="location">Location</label>
                                 <select
@@ -205,8 +158,6 @@ const CreateDepartment = ({ onAddDepartment }) => {
                                     <option value="Others">Others</option>
                                 </select>
                             </div>
-
-                            {/* Display input for custom location if 'Others' is selected */}
                             {location === 'Others' && (
                                 <div className="p-field w-100 mb-3">
                                     <label htmlFor="customLocation">Enter Location</label>
@@ -219,8 +170,6 @@ const CreateDepartment = ({ onAddDepartment }) => {
                                     />
                                 </div>
                             )}
-
-                            {/* Button to trigger department creation */}
                             <div className="p-field w-100">
                                 <Button label="Create Department" icon="pi pi-check" onClick={handleCreateDepartment} />
                             </div>
@@ -237,15 +186,27 @@ export default CreateDepartment;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 // import React, { useState, useEffect } from 'react';
 // import { InputText } from 'primereact/inputtext';
 // import { Editor } from 'primereact/editor';
 // import { Button } from 'primereact/button';
 // import AdminDashboard from '../Admin/AdminDashboard';
-// import Axios from 'axios';
 // import { ToastContainer, toast } from 'react-toastify';
 // import 'react-toastify/dist/ReactToastify.css';
-// import { department_register,campus_list } from '../../axios/api';
+// import { department_register, campus_list } from '../../axios/api';
+
 
 // const CreateDepartment = ({ onAddDepartment }) => {
 //     const [departmentName, setDepartmentName] = useState('');
@@ -254,69 +215,85 @@ export default CreateDepartment;
 //     const [location, setLocation] = useState('');
 //     const [customType, setCustomType] = useState('');
 //     const [customLocation, setCustomLocation] = useState('');
-//     const [locations, setLocations] = useState([]);  // State to hold the list of locations
-//     const [message, setMessage] = useState('');  // State for success or error message
+//     const [locations, setLocations] = useState([]); // Initialized with an empty array
+//     const [message, setMessage] = useState('');  
 //     const [messageType, setMessageType] = useState('');
 
-//     // Fetch locations from the backend when the component mounts
 //     useEffect(() => {
 //         const fetchLocations = async () => {
+//             // if (!areFieldsFilled()) {
+//             //     toast.error('Please fill in all fields.');
+//             //     return;  // Exit early if validation fails
+//             // }
+            
 //             try {
-//                 const token = localStorage.getItem('access_token'); // Retrieve the token from local storage
 //                 const response = await campus_list();
-//                 console.log('Fetched locations:', response);  // Log the response data to verify it
-//                 setLocations(response);  // Update the locations state with the fetched data
+//                 console.log('Fetched locations:', response); 
+//                 if (response && Array.isArray(response)) {
+//                     setLocations(response);  // Update the state with fetched data if it's an array
+//                 } else {
+//                     console.error('Unexpected response format:', response);
+//                     // Handle unexpected format
+//                 }
 //             } catch (error) {
 //                 console.error('Failed to fetch locations:', error);
+//                 toast.error('Failed to fetch locations.'); 
 //                 // Handle the error appropriately
 //             }
+            
+    
 //         };
-
 //         fetchLocations();
-//     }, []);  // Empty dependency array means this useEffect runs once when the component mounts
-   
+//     }, []); 
+//     // useEffect(() => {
+//     //     const fetchLocations = async () => {
+//     //         // Check if all fields are filled before making the API call
+//     //         if (!areFieldsFilled()) {
+//     //             toast.error('Please fill in all fields.');  // Display error message
+//     //             return;  // Exit early if validation fails
+//     //         }
+            
+//     //         try {
+//     //             const response = await campus_list(); // Assuming campus_list() is your API call function
+//     //             console.log('Fetched locations:', response); 
+                
+//     //             if (response && Array.isArray(response)) {
+//     //                 setLocations(response);  // Update the state with the fetched data if it's in an expected format (array)
+//     //             } else {
+//     //                 console.error('Unexpected response format:', response);
+//     //                 // Handle any unexpected response format here
+//     //             }
+//     //         } catch (error) {
+//     //             console.error('Failed to fetch locations:', error);
+//     //             toast.error('Failed to fetch locations.'); 
+//     //             // Handle the error appropriately, e.g., show a message to the user
+//     //         }
+//     //     };
+    
+//     //     fetchLocations();  // Call the async function to fetch the data when the component mounts
+//     // }, []);  // Empty dependency array means this effect runs once when the component mounts
+    
 //     const handleCreateDepartment = async () => {
 //         const finalType = type === 'Others' ? customType : type;
 //         const finalLocation = location === 'Others' ? customLocation : location;
-    
+
+//         // Ensure that all required fields are filled
 //         if (departmentName && description && finalType && finalLocation) {
 //             const newDepartment = {
 //                 name: departmentName,
 //                 type: finalType,
 //                 location: finalLocation,
-//                 description  // Ensure description is included
+//                 description
 //             };
-    
+
 //             try {
-//                 // const token = localStorage.getItem('access_token'); // Retrieve token from local storage
-    
-//                 // console.log('Posting department data:', newDepartment); // Log data being sent
-                
-
 //                 const response = await department_register(newDepartment);
-    
-//                 // const response = await Axios.post(
-//                 //     'http://127.0.0.1:8000/api/authentication/department_register/',
-//                 //     newDepartment,
-//                 //     {
-//                 //         headers: {
-//                 //             'Authorization': `Bearer ${token}`,
-//                 //             'Content-Type': 'application/json'
-//                 //         }
-//                 //     }
-//                 // );
-    
-//                 console.log('Created department response:', response.data); // Debugging line
-                
-    
-              
-//                 toast.success('Department created successfully!');
+//                 console.log('Created department response:', response.data);
 
-//                 // Set success message and message type
+//                 toast.success('Department created successfully!');
 //                 setMessage('Department created successfully!');
 //                 setMessageType('success');
 
-    
 //                 // Clear form fields after successful submission
 //                 setDepartmentName('');
 //                 setDescription('');
@@ -328,22 +305,29 @@ export default CreateDepartment;
 //                 console.error('Failed to create department:', error);
 //                 // Handle the error appropriately
 //             }
+//         }else {
+//             // Display an error message if any required field is missing
+//             toast.error('Please fill in all fields.');
 //         }
 //     };
-    
 
 //     return (
 //         <div className="container-fluid">
-//         <ToastContainer />  
+//             <ToastContainer />
 //             <div className="row">
+//                 {/* Sidebar component for the Admin Dashboard */}
 //                 <div className="col-md-2 p-0">
 //                     <AdminDashboard />
 //                 </div>
+                
+//                 {/* Main content area for creating a new department */}
 //                 <div className="col-md-10 mt-5 pt-5">
 //                     <div className="container mt-3" style={{ maxWidth: '800px' }}>
 //                         <div className="text-center fw-bold fs-5 mb-4">
 //                             Create Department
 //                         </div>
+                        
+//                         {/* Form fields for department details */}
 //                         <div className="d-flex flex-column align-items-center mb-4">
 //                             <div className="p-field w-100 mb-3">
 //                                 <label htmlFor="departmentName">Department Name</label>
@@ -355,6 +339,7 @@ export default CreateDepartment;
 //                                     className="w-100"
 //                                 />
 //                             </div>
+                            
 //                             <div className="p-field w-100 mb-3">
 //                                 <label htmlFor="description">Description</label>
 //                                 <Editor
@@ -366,6 +351,7 @@ export default CreateDepartment;
 //                                     className="w-100"
 //                                 />
 //                             </div>
+
 //                             <div className="p-field w-100 mb-3">
 //                                 <label htmlFor="type">Type</label>
 //                                 <select
@@ -384,6 +370,7 @@ export default CreateDepartment;
 //                                 </select>
 //                             </div>
 
+//                             {/* Display input for custom type if 'Others' is selected */}
 //                             {type === 'Others' && (
 //                                 <div className="p-field w-100 mb-3">
 //                                     <label htmlFor="customType">Enter Type</label>
@@ -396,7 +383,7 @@ export default CreateDepartment;
 //                                     />
 //                                 </div>
 //                             )}
-                            
+
 //                             <div className="p-field w-100 mb-3">
 //                                 <label htmlFor="location">Location</label>
 //                                 <select
@@ -419,6 +406,7 @@ export default CreateDepartment;
 //                                 </select>
 //                             </div>
 
+//                             {/* Display input for custom location if 'Others' is selected */}
 //                             {location === 'Others' && (
 //                                 <div className="p-field w-100 mb-3">
 //                                     <label htmlFor="customLocation">Enter Location</label>
@@ -432,6 +420,7 @@ export default CreateDepartment;
 //                                 </div>
 //                             )}
 
+//                             {/* Button to trigger department creation */}
 //                             <div className="p-field w-100">
 //                                 <Button label="Create Department" icon="pi pi-check" onClick={handleCreateDepartment} />
 //                             </div>
@@ -444,42 +433,3 @@ export default CreateDepartment;
 // };
 
 // export default CreateDepartment;
-
-
-
-
-// // import React, { useState } from 'react';
-// // import { InputText } from 'primereact/inputtext';
-// // import { Editor } from 'primereact/editor';
-// // import { Button } from 'primereact/button';
-// // import AdminDashboard from '../Admin/AdminDashboard';
-
-// // const CreateDepartment = ({ onAddDepartment }) => {
-// //     const [departmentName, setDepartmentName] = useState('');
-// //     const [description, setDescription] = useState('');
-// //     const [type, setType] = useState('');
-// //     const [location, setLocation] = useState('');
-// //     const [customType, setCustomType] = useState('');
-// //     const [customLocation, setCustomLocation] = useState('');
-
-// //     const handleCreateDepartment = () => {
-// //         const finalType = type === 'Others' ? customType : type;
-// //         const finalLocation = location === 'Others' ? customLocation : location;
-
-// //         if (departmentName && description && finalType && finalLocation) {
-// //             const newDepartment = { 
-// //                 id: Date.now(), 
-// //                 name: departmentName, 
-// //                 description, 
-// //                 type: finalType, 
-// //                 location: finalLocation 
-// //             };
-// //             onAddDepartment(newDepartment);
-// //             setDepartmentName('');
-// //             setDescription('');
-// //             setType('');
-// //             setLocation('');
-// //             setCustomType('');
-// //             setCustomLocation('');
-// //         }
-// //     };

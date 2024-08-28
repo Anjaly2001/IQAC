@@ -28,7 +28,7 @@ export const verify_otp = async (form) => {
 export const campus_register = async (form) => {
   try {
     const res = await postMultipartData('department_and_events/campus_register/', form);
-    toast.success('campus created Successfully')
+    // toast.success('campus created Successfully')
     return res.data;
     
   }
@@ -48,6 +48,17 @@ export const campus_list = async (form) => {
     toast.error('Failed to create campus. Please try again.');
   }
 };
+
+export const campus_delete = async (campus_id) => {
+  try {
+    const res = await axiosInstance.delete(`authentication/user_delete/${campus_id}/`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    // toast.error('Failed to delete campus. Please try again.');
+  }
+};
+
 
 export const department_register = async (form) => {
   try {

@@ -295,7 +295,7 @@ function Sidebar() {
                           className={`text-light ${isActive('/listTag') ? 'active' : ''}`}
                         >
                           <FontAwesomeIcon icon={faEye} className="me-2" />
-                          List Tag
+                          List Tags
                         </Nav.Link>
                       </Nav.Item>
                     </Nav>

@@ -9,7 +9,7 @@ function Sidebar() {
   const location = useLocation(); // Hook to get the current path
   const navigate = useNavigate(); // Hook to navigate programmatically
   const [openSections, setOpenSections] = useState({});
-  const [userName, setUserName] = useState('John Doe'); // Replace with the actual user name logic
+  const [userName, setUserName] = useState('Admin'); // Replace with the actual user name logic
 
   useEffect(() => {
     const path = location.pathname;
@@ -70,7 +70,7 @@ function Sidebar() {
         <Nav className="flex-column p-1 mt-5">
 
           {/* Logout Button */}
-          <div className="mt-4">
+          <div className="mt-1">
             <button
               onClick={handleLogout}
               className=" logout-button text-decoration-none"

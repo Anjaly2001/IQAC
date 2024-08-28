@@ -68,6 +68,7 @@ const CreateDepartment = ({ onAddDepartment }) => {
                 navigate('/listdepartment');
             } catch (error) {
                 console.error('Failed to create department:', error);
+                toast.error('Failed to create department')
             }
         } else {
             toast.error('Please fill in all fields.');

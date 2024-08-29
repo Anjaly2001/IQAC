@@ -134,7 +134,7 @@ const CreateDepartment = ({ onAddDepartment }) => {
                                     <option value="Others">Others</option>
                                 </select>
                             </div>
-                            {type === 'Others' && (
+                            {/* {type === 'Others' && (
                                 <div className="p-field w-100 mb-3">
                                     <label htmlFor="customType">Enter Type</label>
                                     <InputText
@@ -145,7 +145,7 @@ const CreateDepartment = ({ onAddDepartment }) => {
                                         className="w-100"
                                     />
                                 </div>
-                            )}
+                            )} */}
                             <div className="p-field w-100 mb-3">
                                 <label htmlFor="location">Location</label>
                                 <select
@@ -164,10 +164,10 @@ const CreateDepartment = ({ onAddDepartment }) => {
                                     ) : (
                                         <option value="">No locations available</option>
                                     )}
-                                    <option value="Others">Others</option>
+                                    {/* <option value="Others">Others</option> */}
                                 </select>
                             </div>
-                            {location === 'Others' && (
+                            {/* {location === 'Others' && (
                                 <div className="p-field w-100 mb-3">
                                     <label htmlFor="customLocation">Enter Location</label>
                                     <InputText
@@ -177,8 +177,8 @@ const CreateDepartment = ({ onAddDepartment }) => {
                                         placeholder="Enter location"
                                         className="w-100"
                                     />
-                                </div>
-                            )}
+                                </div> */}
+                            {/* )} */}
                             <div className="p-field w-100">
                                 <Button label="Create Department" icon="pi pi-check" onClick={handleCreateDepartment} />
                             </div>

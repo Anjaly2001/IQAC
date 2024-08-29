@@ -155,7 +155,7 @@ const RegisterSingleUser = () => {
                                                 onChange={(e) => setUserCampus(e.target.value)}
                                             >
                                                 <option value="">Choose Campus</option>
-                                                {campuses.length > 0 ? (
+                                                {campuses && campuses.length > 0 ? (
                                                     campuses.map(loc => (
                                                         <option key={loc.id} value={loc.id}>
                                                             {loc.campus}
@@ -175,7 +175,7 @@ const RegisterSingleUser = () => {
                                                 onChange={(e) => setUserDepartment(e.target.value)}
                                             >
                                                 <option value="">Select Department</option>
-                                                {departments.length > 0 ? (
+                                                {departments && departments.length > 0 ? (
                                                     departments.map(dept => (
                                                         <option key={dept.id} value={dept.id}>
                                                             {dept.name}

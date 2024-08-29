@@ -1,3 +1,278 @@
+// import React, { useState, useEffect } from 'react';
+// import AdminDashboard from '../Admin/AdminDashboard';
+// import 'bootstrap/dist/css/bootstrap.min.css';
+// import { toast } from 'react-toastify';
+// import { user_register, campus_list, department_list, check_user_exists } from '../../axios/api';
+
+
+// const RegisterSingleUser = () => {
+//     const [userName, setUserName] = useState('');
+//     const [userEmpId, setUserEmpId] = useState('');
+//     const [userEmail, setUserEmail] = useState('');
+//     const [userPhoneNumber, setUserPhoneNumber] = useState('');
+//     const [userDepartment, setUserDepartment] = useState('');
+//     const [customDepartment, setCustomDepartment] = useState('');
+//     const [userCampus, setUserCampus] = useState('');
+//     const [campuses, setCampuses] = useState([]);
+//     const [departments, setDepartments] = useState([]);
+//     const [validationError, setValidationError] = useState({}); // Validation errors for each field
+
+//     useEffect(() => {
+//         const fetchCampuses = async () => {
+//             try {
+//                 const response = await campus_list();
+//                 setCampuses(response);
+//             } catch (error) {
+//                 console.error('Failed to fetch campuses:', error);
+//                 toast.error('Failed to load campus options.');
+//             }
+//         };
+//         fetchCampuses();
+//     }, []);
+
+//     useEffect(() => {
+//         const fetchDepartments = async () => {
+//             try {
+//                 const response = await department_list();
+//                 setDepartments(response);
+//             } catch (error) {
+//                 console.error('Failed to fetch departments:', error);
+//                 toast.error('Failed to load department options.');
+//             }
+//         };
+//         fetchDepartments();
+//     }, []);
+
+//     const validateField = async (fieldName, value) => {
+//         try {
+//             const response = await check_user_exists({ [fieldName]: value });
+//             if (response.exists) {
+//                 setValidationError((prev) => ({
+//                     ...prev,
+//                     [fieldName]: `${fieldName} already exists.`,
+//                 }));
+//                 toast.error(`${fieldName} already exists.`);
+//             } else {
+//                 setValidationError((prev) => ({
+//                     ...prev,
+//                     [fieldName]: '',
+//                 }));
+//             }
+//         } catch (error) {
+//             console.error(`Failed to validate ${fieldName}:`, error);
+//         }
+//     };
+
+//     const handleBlur = (fieldName, value) => {
+//         if (value) {
+//             validateField(fieldName, value);
+//         }
+//     };
+
+//     const createUser = async () => {
+//         const department = userDepartment === 'Others' ? customDepartment : userDepartment;
+
+//         // Check if any validation errors exist or any field is empty
+//         if (
+//             !userName ||
+//             !userEmpId ||
+//             !userEmail ||
+//             !userPhoneNumber ||
+//             !department ||
+//             !userCampus ||
+//             Object.values(validationError).some((error) => error)
+//         ) {
+//             toast.error('Please fill in all fields correctly.');
+//             return;
+//         }
+
+//         const newUser = {
+//             username: userName,
+//             emp_id: userEmpId,
+//             email: userEmail,
+//             ph: userPhoneNumber,
+//             department: department,
+//             location: userCampus,
+//         };
+
+//         try {
+//             const response = await user_register(newUser);
+//             console.log('User created successfully:', response);
+//             toast.success('User created successfully!');
+//             // Reset form
+//             setUserName('');
+//             setUserEmpId('');
+//             setUserEmail('');
+//             setUserPhoneNumber('');
+//             setUserDepartment('');
+//             setCustomDepartment('');
+//             setUserCampus('');
+//             setValidationError({});
+//         } catch (error) {
+//             console.error('Failed to create user:', error);
+//             toast.error('Failed to create user.');
+//         }
+//     };
+
+//     return (
+//         <div>
+//             <AdminDashboard />
+//             <div className="container-fluid mt-1">
+//                 <div className="row">
+//                     <div className="col-md-3 justify-content-center p-0"></div>
+//                     <div className="col-md-8 mt-1 pt-5">
+//                         <div className="container mt-3">
+//                             <div className="text-center fw-bold fs-5 mb-4">Register User</div>
+//                             <div className="register mt-5">
+//                                 <div className="user-actions mb-4">
+//                                     <div className="row mb-3">
+//                                         <div className="col-md-6">
+//                                             <label htmlFor="userName">Name</label>
+//                                             <input
+//                                                 type="text"
+//                                                 className="form-control"
+//                                                 id="userName"
+//                                                 placeholder="Name"
+//                                                 value={userName}
+//                                                 required
+//                                                 onChange={(e) => setUserName(e.target.value)}
+//                                                 onBlur={() => handleBlur('username', userName)}
+//                                             />
+//                                             {validationError.username && (
+//                                                 <div className="text-danger">{validationError.username}</div>
+//                                             )}
+//                                         </div>
+//                                         <div className="col-md-6">
+//                                             <label htmlFor="userEmpId">Emp ID</label>
+//                                             <input
+//                                                 type="text"
+//                                                 className="form-control"
+//                                                 id="userEmpId"
+//                                                 placeholder="Emp ID"
+//                                                 value={userEmpId}
+//                                                 required
+//                                                 onChange={(e) => setUserEmpId(e.target.value)}
+//                                                 onBlur={() => handleBlur('emp_id', userEmpId)}
+//                                             />
+//                                             {validationError.emp_id && (
+//                                                 <div className="text-danger">{validationError.emp_id}</div>
+//                                             )}
+//                                         </div>
+//                                     </div>
+//                                     <div className="row mb-3">
+//                                         <div className="col-md-6">
+//                                             <label htmlFor="userEmail">Email</label>
+//                                             <input
+//                                                 type="email"
+//                                                 className="form-control"
+//                                                 id="userEmail"
+//                                                 placeholder="Email"
+//                                                 value={userEmail}
+//                                                 required
+//                                                 onChange={(e) => setUserEmail(e.target.value)}
+//                                                 onBlur={() => handleBlur('email', userEmail)}
+//                                             />
+//                                             {validationError.email && (
+//                                                 <div className="text-danger">{validationError.email}</div>
+//                                             )}
+//                                         </div>
+//                                         <div className="col-md-6">
+//                                             <label htmlFor="userPhoneNumber">Phone Number</label>
+//                                             <input
+//                                                 type="text"
+//                                                 className="form-control"
+//                                                 id="userPhoneNumber"
+//                                                 placeholder="Phone Number"
+//                                                 value={userPhoneNumber}
+//                                                 required
+//                                                 onChange={(e) => setUserPhoneNumber(e.target.value)}
+//                                                 onBlur={() => handleBlur('ph', userPhoneNumber)}
+//                                             />
+//                                             {validationError.ph && (
+//                                                 <div className="text-danger">{validationError.ph}</div>
+//                                             )}
+//                                         </div>
+//                                     </div>
+//                                     <div className="row mb-3">
+//                                         <div className="col-md-6">
+//                                             <label htmlFor="userCampus">Campus</label>
+//                                             <select
+//                                                 id="userCampus"
+//                                                 className="form-select"
+//                                                 value={userCampus}
+//                                                 required
+//                                                 onChange={(e) => setUserCampus(e.target.value)}
+//                                                 onBlur={() => handleBlur('location', userCampus)}
+//                                             >
+//                                                 <option value="">Choose Campus</option>
+//                                                 {campuses && campuses.length > 0 ? (
+//                                                     campuses.map((loc) => (
+//                                                         <option key={loc.id} value={loc.id}>
+//                                                             {loc.campus}
+//                                                         </option>
+//                                                     ))
+//                                                 ) : (
+//                                                     <option value="">No locations available</option>
+//                                                 )}
+//                                             </select>
+//                                             {validationError.location && (
+//                                                 <div className="text-danger">{validationError.location}</div>
+//                                             )}
+//                                         </div>
+//                                         <div className="col-md-6">
+//                                             <label htmlFor="userDepartment">Parent Department</label>
+//                                             <select
+//                                                 id="userDepartment"
+//                                                 className="form-select"
+//                                                 value={userDepartment}
+//                                                 required
+//                                                 onChange={(e) => setUserDepartment(e.target.value)}
+//                                                 onBlur={() => handleBlur('department', userDepartment)}
+//                                             >
+//                                                 <option value="">Select Department</option>
+//                                                 {departments && departments.length > 0 ? (
+//                                                     departments.map((dept) => (
+//                                                         <option key={dept.id} value={dept.id}>
+//                                                             {dept.name}
+//                                                         </option>
+//                                                     ))
+//                                                 ) : (
+//                                                     <option value="">No departments available</option>
+//                                                 )}
+//                                             </select>
+//                                             {userDepartment === 'Others' && (
+//                                                 <input
+//                                                     type="text"
+//                                                     className="form-control mt-2"
+//                                                     placeholder="Enter Department"
+//                                                     value={customDepartment}
+//                                                     required
+//                                                     onChange={(e) => setCustomDepartment(e.target.value)}
+//                                                 />
+//                                             )}
+//                                             {validationError.department && (
+//                                                 <div className="text-danger">{validationError.department}</div>
+//                                             )}
+//                                         </div>
+//                                     </div>
+//                                     <button
+//                                         className="btn btn-primary mb-3"
+//                                         onClick={createUser}
+//                                     >
+//                                         Create User
+//                                     </button>
+//                                 </div>
+//                             </div>
+//                         </div>
+//                     </div>
+//                 </div>
+//             </div>
+//         </div>
+//     );
+// };
+
+// export default RegisterSingleUser;
+
 import React, { useState, useEffect } from 'react';
 import AdminDashboard from '../Admin/AdminDashboard';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -5,23 +280,21 @@ import { toast } from 'react-toastify';
 import { user_register, campus_list, department_list } from '../../axios/api';
 
 const RegisterSingleUser = () => {
-    // State variables to manage the form input values
     const [userName, setUserName] = useState('');
     const [userEmpId, setUserEmpId] = useState('');
     const [userEmail, setUserEmail] = useState('');
     const [userPhoneNumber, setUserPhoneNumber] = useState('');
     const [userDepartment, setUserDepartment] = useState('');
     const [customDepartment, setCustomDepartment] = useState('');
-    const [userCampus, setUserCampus] = useState('');  // Campus (same as location)
-    const [campuses, setCampuses] = useState([]);  // List of campus options
-    const [departments, setDepartments] = useState([]);  // List of department options
+    const [userCampus, setUserCampus] = useState('');
+    const [campuses, setCampuses] = useState([]);
+    const [departments, setDepartments] = useState([]);
 
-    // Fetch the campus list from the backend
     useEffect(() => {
         const fetchCampuses = async () => {
             try {
                 const response = await campus_list();
-                setCampuses(response);  // Set campuses data
+                setCampuses(response);
             } catch (error) {
                 console.error('Failed to fetch campuses:', error);
                 toast.error('Failed to load campus options.');
@@ -30,12 +303,11 @@ const RegisterSingleUser = () => {
         fetchCampuses();
     }, []);
 
-    // Fetch the department list from the backend
     useEffect(() => {
         const fetchDepartments = async () => {
             try {
-                const response = await department_list();  // Fetch departments
-                setDepartments(response);  // Set departments data
+                const response = await department_list();
+                setDepartments(response);
             } catch (error) {
                 console.error('Failed to fetch departments:', error);
                 toast.error('Failed to load department options.');
@@ -44,11 +316,9 @@ const RegisterSingleUser = () => {
         fetchDepartments();
     }, []);
 
-    // Function to handle user creation
     const createUser = async () => {
         const department = userDepartment === 'Others' ? customDepartment : userDepartment;
 
-        // Ensure all required fields are filled
         if (userName && userEmpId && userEmail && department && userCampus) {
             const newUser = {
                 username: userName,
@@ -60,12 +330,9 @@ const RegisterSingleUser = () => {
             };
 
             try {
-                // Make the API call to register the user
                 const response = await user_register(newUser);
                 console.log('User created successfully:', response);
                 toast.success('User created successfully!');
-
-                // Reset the form fields after successful user creation
                 setUserName('');
                 setUserEmpId('');
                 setUserEmail('');
@@ -82,9 +349,8 @@ const RegisterSingleUser = () => {
         }
     };
 
-       return (
+    return (
         <div>
-            {/* Admin Dashboard component, could include sidebar and other elements */}
             <AdminDashboard />
             <div className="container-fluid mt-1">
                 <div className="row">
@@ -96,7 +362,6 @@ const RegisterSingleUser = () => {
                             <div className="text-center fw-bold fs-5 mb-4">Register User</div>
                             <div className="register mt-5">
                                 <div className="user-actions mb-4">
-                                    {/* Form for user registration */}
                                     <div className="row mb-3">
                                         <div className="col-md-6">
                                             <label htmlFor="userName">Name</label>
@@ -107,6 +372,7 @@ const RegisterSingleUser = () => {
                                                 placeholder="Name"
                                                 value={userName}
                                                 onChange={(e) => setUserName(e.target.value)}
+                                                required
                                             />
                                         </div>
                                         <div className="col-md-6">
@@ -118,6 +384,7 @@ const RegisterSingleUser = () => {
                                                 placeholder="Emp ID"
                                                 value={userEmpId}
                                                 onChange={(e) => setUserEmpId(e.target.value)}
+                                                required
                                             />
                                         </div>
                                     </div>
@@ -131,6 +398,7 @@ const RegisterSingleUser = () => {
                                                 placeholder="Email"
                                                 value={userEmail}
                                                 onChange={(e) => setUserEmail(e.target.value)}
+                                                required
                                             />
                                         </div>
                                         <div className="col-md-6">
@@ -142,6 +410,7 @@ const RegisterSingleUser = () => {
                                                 placeholder="Phone Number"
                                                 value={userPhoneNumber}
                                                 onChange={(e) => setUserPhoneNumber(e.target.value)}
+                                                required
                                             />
                                         </div>
                                     </div>
@@ -153,6 +422,7 @@ const RegisterSingleUser = () => {
                                                 className="form-select"
                                                 value={userCampus}
                                                 onChange={(e) => setUserCampus(e.target.value)}
+                                                required
                                             >
                                                 <option value="">Choose Campus</option>
                                                 {campuses && campuses.length > 0 ? (
@@ -167,12 +437,13 @@ const RegisterSingleUser = () => {
                                             </select>
                                         </div>
                                         <div className="col-md-6">
-                                        <label htmlFor="userDepartment">Parent Department</label>
+                                            <label htmlFor="userDepartment">Parent Department</label>
                                             <select
                                                 id="userDepartment"
                                                 className="form-select"
                                                 value={userDepartment}
                                                 onChange={(e) => setUserDepartment(e.target.value)}
+                                                required
                                             >
                                                 <option value="">Select Department</option>
                                                 {departments && departments.length > 0 ? (
@@ -192,6 +463,7 @@ const RegisterSingleUser = () => {
                                                     placeholder="Enter Department"
                                                     value={customDepartment}
                                                     onChange={(e) => setCustomDepartment(e.target.value)}
+                                                    required
                                                 />
                                             )}
                                         </div>
@@ -213,252 +485,3 @@ const RegisterSingleUser = () => {
 };
 
 export default RegisterSingleUser;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import React, { useState } from 'react';
-// import AdminDashboard from '../Admin/AdminDashboard';
-// import 'bootstrap/dist/css/bootstrap.min.css';
-
-// const RegisterSingleUser = () => {
-//     // State variables to manage the form input values
-//     const [userName, setUserName] = useState('');
-//     const [userEmpId, setUserEmpId] = useState('');
-//     const [userEmail, setUserEmail] = useState('');
-//     const [userPhoneNumber, setUserPhoneNumber] = useState('');
-//     const [userDepartment, setUserDepartment] = useState('');
-//     const [userCampus, setUserCampus] = useState('');
-
-//     // Function to handle user creation
-//     const createUser = () => {
-//         let department = userDepartment === 'Others' ? customDepartment : userDepartment;
-//         let campus = userCampus === 'Others' ? customCampus : userCampus;
-
-//         if (userName && userEmpId && userEmail && department && campus) {
-//             // Logic to handle the creation of the user
-
-//             // Reset the form fields after user creation
-//             setUserName('');
-//             setUserEmpId('');
-//             setUserEmail('');
-//             setUserPhoneNumber('');
-//             setUserDepartment('');
-//             setUserCampus('');
-//         }
-//     };
-
-// .............................................................................
-// import React, { useState } from 'react';
-// import axios from 'axios';  // Import axios
-// import AdminDashboard from '../Admin/AdminDashboard';
-// import 'bootstrap/dist/css/bootstrap.min.css';
-// import { toast } from 'react-toastify';  // Import toast for notifications
-// import {user_register} from '../../axios/api';
-
-// const RegisterSingleUser = () => {
-//     // State variables to manage the form input values
-//     const [userName, setUserName] = useState('');
-//     const [userEmpId, setUserEmpId] = useState('');
-//     const [userEmail, setUserEmail] = useState('');
-//     const [userPhoneNumber, setUserPhoneNumber] = useState('');
-//     const [userDepartment, setUserDepartment] = useState('');
-//     const [userCampus, setUserCampus] = useState('');
-//     const [customDepartment, setCustomDepartment] = useState('');  // For custom department
-//     const [customCampus, setCustomCampus] = useState('');  // For custom campus
-
-   
-
-//     // Function to handle user creation
-//     const createUser = async () => {
-//         let department = userDepartment === 'Others' ? customDepartment : userDepartment;
-//         let campus = userCampus === 'Others' ? customCampus : userCampus;
-
-//         // Ensure all required fields are filled
-//         if (userName && userEmpId && userEmail && department && campus) {
-//             const newUser = {
-//                 name: userName,
-//                 emp_id: userEmpId,
-//                 email: userEmail,
-//                 phone_number: userPhoneNumber,
-//                 department,
-//                 campus,
-//             };
-
-//             try {
-//                 // Make the API call to register the user
-//                 const response = await user_register(newUser);
-//                 console.log('Created department response:', response.data);
-
-
-//                 toast.success('User created successfully!');
-                
-//                 // Reset the form fields after successful user creation
-//                 setUserName('');
-//                 setUserEmpId('');
-//                 setUserEmail('');
-//                 setUserPhoneNumber('');
-//                 setUserDepartment('');
-//                 setUserCampus('');
-//                 setCustomDepartment('');
-//                 setCustomCampus('');
-//             } catch (error) {
-//                 console.error('Failed to create user:', error);
-//                 toast.error('Failed to create user.');
-//             }
-//         } else {
-//             toast.error('Please fill in all fields.');
-//         }
-//     };
-
-//     return (
-//         <div>
-//             {/* Admin Dashboard component, could include sidebar and other elements */}
-//             <AdminDashboard />
-//             <div className="container-fluid mt-1">
-//                 <div className="row">
-//                     <div className="col-md-3 justify-content-center p-0">
-//                         {/* Sidebar or other components can go here */}
-//                     </div>
-//                     <div className="col-md-8 mt-1 pt-5">
-//                         <div className="container mt-3">
-//                             <div className="text-center fw-bold fs-5 mb-4">Register User</div>
-//                             <div className="register mt-5">
-//                                 <div className="user-actions mb-4">
-//                                     {/* Form for user registration */}
-//                                     <div className="row mb-3">
-//                                         <div className="col-md-6">
-//                                             <label htmlFor="userName">Name</label>
-//                                             <input
-//                                                 type="text"
-//                                                 className="form-control"
-//                                                 id="userName"
-//                                                 placeholder="Name"
-//                                                 value={userName}
-//                                                 onChange={(e) => setUserName(e.target.value)}
-//                                             />
-//                                         </div>
-//                                         <div className="col-md-6">
-//                                             <label htmlFor="userEmpId">Emp ID</label>
-//                                             <input
-//                                                 type="text"
-//                                                 className="form-control"
-//                                                 id="userEmpId"
-//                                                 placeholder="Emp ID"
-//                                                 value={userEmpId}
-//                                                 onChange={(e) => setUserEmpId(e.target.value)}
-//                                             />
-//                                         </div>
-//                                     </div>
-//                                     <div className="row mb-3">
-//                                         <div className="col-md-6">
-//                                             <label htmlFor="userEmail">Email</label>
-//                                             <input
-//                                                 type="email"
-//                                                 className="form-control"
-//                                                 id="userEmail"
-//                                                 placeholder="Email"
-//                                                 value={userEmail}
-//                                                 onChange={(e) => setUserEmail(e.target.value)}
-//                                             />
-//                                         </div>
-//                                         <div className="col-md-6">
-//                                             <label htmlFor="userPhoneNumber">Phone Number</label>
-//                                             <input
-//                                                 type="text"
-//                                                 className="form-control"
-//                                                 id="userPhoneNumber"
-//                                                 placeholder="Phone Number"
-//                                                 value={userPhoneNumber}
-//                                                 onChange={(e) => setUserPhoneNumber(e.target.value)}
-//                                             />
-//                                         </div>
-//                                     </div>
-//                                     <div className="row mb-3">
-//                                         <div className="col-md-6">
-//                                             <label htmlFor="userCampus">Campus</label>
-//                                             <select
-//                                                 id="userCampus"
-//                                                 className="form-select"
-//                                                 value={userCampus}
-//                                                 onChange={(e) => setUserCampus(e.target.value)}
-//                                             >
-//                                                 <option value="">Choose Campus</option>
-//                                                 {campus.length > 0 ? (
-//                                                     campus.map(loc => (
-//                                                         <option key={loc.id} value={loc.id}>
-//                                                             {loc.campus}
-//                                                         </option>
-//                                                     ))
-//                                                 ) : (
-//                                                     <option value="">No locations available</option>
-//                                                 )}
-//                                                 <option value="Others">Others</option>
-//                                             </select>
-//                                             {userCampus === 'Others' && (
-//                                                 <input
-//                                                     type="text"
-//                                                     className="form-control mt-2"
-//                                                     placeholder="Enter Campus"
-//                                                     value={customCampus}
-//                                                     onChange={(e) => setCustomCampus(e.target.value)}
-//                                                 />
-//                                             )}
-//                                         </div>
-//                                         <div className="col-md-6">
-//                                             <label htmlFor="userDepartment">Parent Department</label>
-//                                             <select
-//                                                 className="form-select"
-//                                                 id="userDepartment"
-//                                                 value={userDepartment}
-//                                                 onChange={(e) => setUserDepartment(e.target.value)}
-//                                             >
-//                                                 <option value="">Select Department</option>
-//                                                 <option value="Data Science">Data Science</option>
-//                                                 <option value="Law">Law</option>
-//                                                 <option value="BBA">BBA</option>
-//                                                 <option value="MBA">MBA</option>
-//                                                 <option value="Commerce">Commerce</option>
-//                                                 <option value="Language">Language</option>
-//                                                 <option value="Others">Others</option>
-//                                             </select>
-//                                             {userDepartment === 'Others' && (
-//                                                 <input
-//                                                     type="text"
-//                                                     className="form-control mt-2"
-//                                                     placeholder="Enter Department"
-//                                                     value={customDepartment}
-//                                                     onChange={(e) => setCustomDepartment(e.target.value)}
-//                                                 />
-//                                             )}
-//                                         </div>
-//                                     </div>
-//                                     <button
-//                                         className="btn btn-primary mb-3"
-//                                         onClick={createUser}
-//                                     >
-//                                         Create User
-//                                     </button>
-//                                 </div>
-//                             </div>
-//                         </div>
-//                     </div>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default RegisterSingleUser;

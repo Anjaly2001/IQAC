@@ -272,7 +272,6 @@
 // };
 
 // export default RegisterSingleUser;
-
 import React, { useState, useEffect } from 'react';
 import AdminDashboard from '../Admin/AdminDashboard';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -319,35 +318,41 @@ const RegisterSingleUser = () => {
     const createUser = async () => {
         const department = userDepartment === 'Others' ? customDepartment : userDepartment;
 
-        if (userName && userEmpId && userEmail && department && userCampus) {
-            const newUser = {
-                username: userName,
-                emp_id: userEmpId,
-                email: userEmail,
-                ph: userPhoneNumber,
-                department: department,
-                location: userCampus, 
-            };
-
-            try {
-                const response = await user_register(newUser);
-                console.log('User created successfully:', response);
-                toast.success('User created successfully!');
-                setUserName('');
-                setUserEmpId('');
-                setUserEmail('');
-                setUserPhoneNumber('');
-                setUserDepartment('');
-                setCustomDepartment('');
-                setUserCampus('');
-            } catch (error) {
-                console.error('Failed to create user:', error);
-                toast.error('Failed to create user.');
-            }
-        } else {
+        // Check if any required field is empty
+        if (!userName || !userEmpId || !userEmail || !department || !userCampus) {
             toast.error('Please fill in all fields.');
+            return;
+        }
+
+        const newUser = {
+            username: userName,
+            emp_id: userEmpId,
+            email: userEmail,
+            ph: userPhoneNumber,
+            department: department,
+            location: userCampus, 
+        };
+
+        try {
+            const response = await user_register(newUser);
+            console.log('User created successfully:', response);
+            toast.success('User created successfully!');
+            setUserName('');
+            setUserEmpId('');
+            setUserEmail('');
+            setUserPhoneNumber('');
+            setUserDepartment('');
+            setCustomDepartment('');
+            setUserCampus('');
+        } catch (error) {
+            console.error('Failed to create user:', error);
+            toast.error('Failed to create user.');
         }
     };
+
+    const renderAsterisk = () => (
+        <span style={{ color: 'red' }}>*</span>
+    );
 
     return (
         <div>
@@ -364,7 +369,7 @@ const RegisterSingleUser = () => {
                                 <div className="user-actions mb-4">
                                     <div className="row mb-3">
                                         <div className="col-md-6">
-                                            <label htmlFor="userName">Name</label>
+                                            <label htmlFor="userName">Name {renderAsterisk()}</label>
                                             <input
                                                 type="text"
                                                 className="form-control"
@@ -372,11 +377,10 @@ const RegisterSingleUser = () => {
                                                 placeholder="Name"
                                                 value={userName}
                                                 onChange={(e) => setUserName(e.target.value)}
-                                                required
                                             />
                                         </div>
                                         <div className="col-md-6">
-                                            <label htmlFor="userEmpId">Emp ID</label>
+                                            <label htmlFor="userEmpId">Emp ID {renderAsterisk()}</label>
                                             <input
                                                 type="text"
                                                 className="form-control"
@@ -384,13 +388,12 @@ const RegisterSingleUser = () => {
                                                 placeholder="Emp ID"
                                                 value={userEmpId}
                                                 onChange={(e) => setUserEmpId(e.target.value)}
-                                                required
                                             />
                                         </div>
                                     </div>
                                     <div className="row mb-3">
                                         <div className="col-md-6">
-                                            <label htmlFor="userEmail">Email</label>
+                                            <label htmlFor="userEmail">Email {renderAsterisk()}</label>
                                             <input
                                                 type="email"
                                                 className="form-control"
@@ -398,11 +401,10 @@ const RegisterSingleUser = () => {
                                                 placeholder="Email"
                                                 value={userEmail}
                                                 onChange={(e) => setUserEmail(e.target.value)}
-                                                required
                                             />
                                         </div>
                                         <div className="col-md-6">
-                                            <label htmlFor="userPhoneNumber">Phone Number</label>
+                                            <label htmlFor="userPhoneNumber">Phone Number {renderAsterisk()}</label>
                                             <input
                                                 type="text"
                                                 className="form-control"
@@ -410,19 +412,17 @@ const RegisterSingleUser = () => {
                                                 placeholder="Phone Number"
                                                 value={userPhoneNumber}
                                                 onChange={(e) => setUserPhoneNumber(e.target.value)}
-                                                required
                                             />
                                         </div>
                                     </div>
                                     <div className="row mb-3">
                                         <div className="col-md-6">
-                                            <label htmlFor="userCampus">Campus</label>
+                                            <label htmlFor="userCampus">Campus {renderAsterisk()}</label>
                                             <select
                                                 id="userCampus"
                                                 className="form-select"
                                                 value={userCampus}
                                                 onChange={(e) => setUserCampus(e.target.value)}
-                                                required
                                             >
                                                 <option value="">Choose Campus</option>
                                                 {campuses && campuses.length > 0 ? (
@@ -437,13 +437,12 @@ const RegisterSingleUser = () => {
                                             </select>
                                         </div>
                                         <div className="col-md-6">
-                                            <label htmlFor="userDepartment">Parent Department</label>
+                                            <label htmlFor="userDepartment">Parent Department {renderAsterisk()}</label>
                                             <select
                                                 id="userDepartment"
                                                 className="form-select"
                                                 value={userDepartment}
                                                 onChange={(e) => setUserDepartment(e.target.value)}
-                                                required
                                             >
                                                 <option value="">Select Department</option>
                                                 {departments && departments.length > 0 ? (
@@ -485,3 +484,4 @@ const RegisterSingleUser = () => {
 };
 
 export default RegisterSingleUser;
+

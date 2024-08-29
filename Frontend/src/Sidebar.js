@@ -22,7 +22,7 @@ function Sidebar() {
     if (path.includes('/academicyear')) {
       setOpenSections((prevState) => ({ ...prevState, settings: true, AcademicYear: true }));
     }
-    if (path.includes('/eventtype')) {
+    if (path.includes('/eventtype')|| path.includes('/eventtypelist')) {
       setOpenSections((prevState) => ({ ...prevState, settings: true, EventType: true }));
     }
     if (path.includes('/createdepartments') || path.includes('/listdepartment')) {
@@ -67,7 +67,7 @@ function Sidebar() {
         <div className="text-white mt-3">
           Logged in as: <strong>{userName}</strong>
         </div>
-        <Nav className="flex-column p-1 mt-5">
+        <Nav className="flex-column p-0 mt-5">
           {/* Dashboard */}
           <Nav.Item>
             <Nav.Link
@@ -251,6 +251,16 @@ function Sidebar() {
                         >
                           <FontAwesomeIcon icon={faPlus} className="me-2" />
                           New Event Type
+                        </Nav.Link>
+                      </Nav.Item>
+                      <Nav.Item>
+                        <Nav.Link
+                          as={Link}
+                          to="/eventtypelist"
+                          className={`text-light ${isActive('/eventtypelist') ? 'active' : ''}`}
+                        >
+                          <FontAwesomeIcon icon={faEye} className="me-2" />
+                          Event Type List
                         </Nav.Link>
                       </Nav.Item>
                     </Nav>

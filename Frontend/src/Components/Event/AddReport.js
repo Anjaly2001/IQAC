@@ -105,7 +105,9 @@ function AddReport() {
     // Submit form logic here
     console.log(form);
   };
-
+  const renderAsterisk = () => (
+    <span style={{ color: 'red' }}>*</span>
+);
   return (
     <div className="container-fluid">
       <div className="row">
@@ -121,7 +123,7 @@ function AddReport() {
             <form onSubmit={handleSubmit}>
               <div className="mb-3 row">
                 <div className="col">
-                  <label htmlFor="campus" className="form-label">Campus</label>
+                  <label htmlFor="campus" className="form-label">Campus {}</label>
                   <select
                     id="campus"
                     className="form-select"

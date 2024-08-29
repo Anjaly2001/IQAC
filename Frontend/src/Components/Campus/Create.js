@@ -93,6 +93,9 @@ const CreateCampus = () => {
             setLogoPreview('');
         }
     };
+    const renderAsterisk = () => (
+        <span style={{ color: 'red' }}>*</span>
+    );
 
     return (
         <div>
@@ -110,7 +113,7 @@ const CreateCampus = () => {
                             <div className="register">
                                 <div className="campus-actions mb-4">
                                     <div className="mb-3">
-                                        <label htmlFor="campusName" className="form-label">Campus Name</label>
+                                        <label htmlFor="campusName" className="form-label">Campus Name{renderAsterisk()}</label>
                                         <input
                                             type="text"
                                             id="campusName"
@@ -121,7 +124,7 @@ const CreateCampus = () => {
                                         />
                                     </div>
                                     <div className="mb-3">
-                                        <label htmlFor="logo" className="form-label">Logo</label>
+                                        <label htmlFor="logo" className="form-label">Logo{renderAsterisk()}</label>
                                         <div className="d-flex align-items-center">
                                             <input
                                                 type="file"

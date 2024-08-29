@@ -68,6 +68,9 @@ const RegisterMultipleUser = () => {
         }
     };
 
+    const renderAsterisk = () => (
+        <span style={{ color: 'red' }}>*</span>
+    );
     return (
         <div>
             <ToastContainer />
@@ -93,7 +96,7 @@ const RegisterMultipleUser = () => {
                                 </div>
 
                                 <div className="form-group mb-6">
-                                    <label htmlFor="csvFile">Upload CSV File</label>
+                                    <label htmlFor="csvFile">Upload CSV File{renderAsterisk()}</label>
                                     <input
                                         type="file"
                                         className="form-control"

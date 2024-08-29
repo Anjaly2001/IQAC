@@ -14,6 +14,10 @@ export default function CreateTag() {
         console.log("Description:", description);
     };
 
+    const renderAsterisk = () => (
+        <span style={{ color: 'red' }}>*</span>
+    );
+
     return (
         <div className="container-fluid">
             <div className="row">
@@ -25,7 +29,7 @@ export default function CreateTag() {
                         <div className="d-flex flex-column align-items-center mb-4">
                             <h2>Create Tag</h2>
                             <div className="p-field w-100 mb-3">
-                                <label htmlFor="tagName">Tag Name</label>
+                                <label htmlFor="tagName">Tag Name{renderAsterisk()}</label>
                                 <InputText
                                     id="tagName"
                                     value={tagName}
@@ -35,7 +39,7 @@ export default function CreateTag() {
                                 />
                             </div>
                             <div className="p-field w-100 mb-3">
-                                <label htmlFor="description">Description</label>
+                                <label htmlFor="description">Description{renderAsterisk()}</label>
                                 <Editor
                                     id="description"
                                     value={description}

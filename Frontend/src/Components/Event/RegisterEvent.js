@@ -94,6 +94,10 @@ function RegisterEvent() {
   if (submitted) {
     return <EventSummary formData={{ department, eventType, description, campus, eventTitle, activities, startDate, endDate, startTime, endTime, venue, academicYear, eventTypeFocus, proposal, collaborators, tag }} />;
   }
+  const renderAsterisk = () => (
+    <span style={{ color: 'red' }}>*</span>
+);
+
 
   return (
     <div className="container-fluid">
@@ -110,7 +114,7 @@ function RegisterEvent() {
             <form onSubmit={handleSubmit}>
               <div className="mb-3 row">
                 <div className="col">
-                  <label htmlFor="campus" className="form-label">Campus</label>
+                  <label htmlFor="campus" className="form-label">Campus {renderAsterisk()}</label>
                   <select
                     id="campus"
                     className="form-select"
@@ -128,7 +132,7 @@ function RegisterEvent() {
                   </select>
                 </div>
                 <div className="col">
-                  <label htmlFor="department" className="form-label">Department</label>
+                  <label htmlFor="department" className="form-label">Department{renderAsterisk()}</label>
                   <select
                     id="department"
                     className="form-select"
@@ -221,7 +225,7 @@ function RegisterEvent() {
               </div>
 
               <div className="mb-3">
-                <label htmlFor="eventTitle" className="form-label">Event Title</label>
+                <label htmlFor="eventTitle" className="form-label">Event Title{renderAsterisk()}</label>
                 <InputText
                   id="eventTitle"
                   value={eventTitle}
@@ -232,7 +236,7 @@ function RegisterEvent() {
               </div>
 
               <div className="mb-3">
-                <label htmlFor="description" className="form-label">Description</label>
+                <label htmlFor="description" className="form-label">Description{renderAsterisk()}</label>
                 <Editor
                   id="description"
                   value={description}
@@ -243,7 +247,7 @@ function RegisterEvent() {
               </div>
               
               <div className="mb-3">
-                <label htmlFor="numberOfActivities" className="form-label">Number of Activities</label>
+                <label htmlFor="numberOfActivities" className="form-label">Number of Activities{renderAsterisk()}</label>
                 <InputText
                   id="numberOfActivities"
                   type="number"
@@ -256,7 +260,7 @@ function RegisterEvent() {
               
               {activities.map((activity, index) => (
                 <div key={index} className="mb-3">
-                  <label htmlFor={`activityTitle-${index}`} className="form-label">Activity {index + 1} Title</label>
+                  <label htmlFor={`activityTitle-${index}`} className="form-label">Activity {index + 1} Title {renderAsterisk()}</label>
                   <InputText
                     id={`activityTitle-${index}`}
                     value={activity.title}
@@ -265,7 +269,7 @@ function RegisterEvent() {
                     className="w-100"
                   />
                   
-                  <label htmlFor={`activityDate-${index}`} className="form-label mt-3">Date</label>
+                  <label htmlFor={`activityDate-${index}`} className="form-label mt-3">Date{renderAsterisk()}</label>
                   <InputText
                     id={`activityDate-${index}`}
                     type="date"
@@ -276,7 +280,7 @@ function RegisterEvent() {
                   
                   <div className="row mt-3">
                     <div className="col">
-                      <label htmlFor={`startTime-${index}`} className="form-label">Start Time</label>
+                      <label htmlFor={`startTime-${index}`} className="form-label">Start Time{renderAsterisk()}</label>
                       <InputText
                         id={`startTime-${index}`}
                         type="time"
@@ -286,7 +290,7 @@ function RegisterEvent() {
                       />
                     </div>
                     <div className="col">
-                      <label htmlFor={`endTime-${index}`} className="form-label">End Time</label>
+                      <label htmlFor={`endTime-${index}`} className="form-label">End Time{renderAsterisk()}</label>
                       <InputText
                         id={`endTime-${index}`}
                         type="time"
@@ -300,7 +304,7 @@ function RegisterEvent() {
               ))}
 
               <div className="mb-3">
-                <label htmlFor="venue" className="form-label">Venue</label>
+                <label htmlFor="venue" className="form-label">Venue{renderAsterisk()}</label>
                 <InputText
                   id="venue"
                   value={venue}
@@ -311,7 +315,7 @@ function RegisterEvent() {
               </div>
 
               <div className="mb-3">
-                <label htmlFor="academicYear" className="form-label">Academic Year</label>
+                <label htmlFor="academicYear" className="form-label">Academic Year{renderAsterisk()}</label>
                 <InputText
                   id="academicYear"
                   value={academicYear}
@@ -322,18 +326,18 @@ function RegisterEvent() {
               </div>
 
               <div className="mb-3">
-                <label htmlFor="eventTypeFocus" className="form-label">Event Type Focus</label>
+                <label htmlFor="eventType" className="form-label">Event Type{renderAsterisk()}</label>
                 <InputText
-                  id="eventTypeFocus"
+                  id="eventType"
                   value={eventTypeFocus}
                   onChange={(e) => setEventTypeFocus(e.target.value)}
-                  placeholder="Enter event type focus"
+                  placeholder="Enter event type"
                   className="w-100"
                 />
               </div>
 
               <div className="mb-3">
-                <label htmlFor="proposal" className="form-label">Upload Proposal</label>
+                <label htmlFor="proposal" className="form-label">Upload Proposal{renderAsterisk()}</label>
                 <InputText
                   id="proposal"
                   type="file"
@@ -343,7 +347,7 @@ function RegisterEvent() {
               </div>
 
               <div className="mb-3">
-                <label htmlFor="tag" className="form-label">Tag</label>
+                <label htmlFor="tag" className="form-label">Tag{renderAsterisk()}</label>
                 <InputText
                   id="tag"
                   value={tag}

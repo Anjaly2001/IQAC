@@ -81,7 +81,9 @@ const CreateDepartment = ({ onAddDepartment }) => {
             toast.error('Please fill in all fields.');
         }
     };
-    
+    const renderAsterisk = () => (
+        <span style={{ color: 'red' }}>*</span>
+    );
 
     return (
         <div className="container-fluid">
@@ -97,7 +99,7 @@ const CreateDepartment = ({ onAddDepartment }) => {
                         </div>
                         <div className="d-flex flex-column align-items-center mb-4">
                             <div className="p-field w-100 mb-3">
-                                <label htmlFor="departmentName">Department Name</label>
+                                <label htmlFor="departmentName">Department Name{renderAsterisk()}</label>
                                 <InputText
                                     id="departmentName"
                                     value={departmentName}
@@ -107,7 +109,7 @@ const CreateDepartment = ({ onAddDepartment }) => {
                                 />
                             </div>
                             <div className="p-field w-100 mb-3">
-                                <label htmlFor="description">Description</label>
+                                <label htmlFor="description">Description{renderAsterisk()}</label>
                                 <Editor
                                     id="description"
                                     value={description}
@@ -118,7 +120,7 @@ const CreateDepartment = ({ onAddDepartment }) => {
                                 />
                             </div>
                             <div className="p-field w-100 mb-3">
-                                <label htmlFor="type">Type</label>
+                                <label htmlFor="type">Type{renderAsterisk()}</label>
                                 <select
                                     id="type"
                                     className="form-select"
@@ -147,7 +149,7 @@ const CreateDepartment = ({ onAddDepartment }) => {
                                 </div>
                             )} */}
                             <div className="p-field w-100 mb-3">
-                                <label htmlFor="location">Location</label>
+                                <label htmlFor="location">Location{renderAsterisk()}</label>
                                 <select
                                     id="location"
                                     className="form-select"

@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'; // Import use
 import { Nav } from 'react-bootstrap';
 import './Sidebar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUsers, faCalendar, faCog, faHandPointRight, faHome, faGears, faEye, faPlus, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faUsers, faCalendar, faCog, faHome, faGears, faEye, faPlus, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
 function Sidebar() {
   const location = useLocation(); // Hook to get the current path
@@ -73,7 +73,7 @@ function Sidebar() {
             <Nav.Link
               as={Link}
               to="/dashboard"
-              className={`text-light  fw-bold ${isActive('/admin-dashboard') ? 'active' : ''}`} // Apply active class
+              className={`text-light  fw-bold ${isActive('/dashboard') ? 'active' : ''}`} // Apply active class
             >
               <FontAwesomeIcon icon={faHome} className="me-2" />
               Dashboard
@@ -342,20 +342,19 @@ function Sidebar() {
               </Nav>
             )}
           </Nav.Item>
-        </Nav>
+        
+        {/* Logout Section */}
+       <Nav.Item>
+            <Nav.Link
+              onClick={handleLogout} // Applying the extracted logout logic
+              className="text-light fw-bold"
+            >
+              <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />
+              Logout
+            </Nav.Link>
+          </Nav.Item>
+          </Nav>
       </div>
-
-      {/* Logout Button */}
-      <div className="mt-1">
-        <button
-          onClick={handleLogout}
-          className=" logout-button text-decoration-none"
-        >
-          <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />
-          Logout
-        </button>
-      </div>
-
     </div>
   );
 }

@@ -28,6 +28,7 @@ class User_profile(models.Model):
     ph = models.CharField(max_length=15)
     department =  models.ForeignKey(Department,on_delete=models.CASCADE, related_name= 'dept')
     location = models.ForeignKey(Location,on_delete=models.CASCADE, related_name= 'camp')
+    country_code = models.CharField(max_length=5) 
    
 
     def __str__(self):

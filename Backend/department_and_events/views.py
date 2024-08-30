@@ -5,9 +5,9 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 
-from .models import Academic_year, Location,Department
+from .models import Academic_year, Event_type, Location,Department
 
-from .serializers import AcademicyearSerializer, DepartmentSerializer,  DepartmentSerializer, LocationSerializer
+from .serializers import AcademicyearSerializer, DepartmentSerializer,  DepartmentSerializer, EventTypeSerializer, LocationSerializer
 from django.contrib.auth.models import User
 
 
@@ -142,16 +142,81 @@ def campus_update(request,id):
 
 #________ACADEMIC_YEAR API________
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_academic_year(request):
+    location_ids = request.data.get('location_id')
+    if not location_ids:
+        return Response({'error': 'location_id field is required'}, status=status.HTTP_400_BAD_REQUEST)
+    created_academic_years = []  
+    errors = []  
+    for location_id in location_ids:
+        academic_year_data = request.data.copy()
+        academic_year_data['location_id'] = location_id
+        serializer = AcademicyearSerializer(data=academic_year_data)
+        if serializer.is_valid():
+            academic_year = serializer.save(created_by=request.user)
+            created_academic_years.append(AcademicyearSerializer(academic_year).data)
+        else:
+            errors.append(serializer.errors)
+    if created_academic_years:
+        return Response({
+            'data': created_academic_years,
+            'message': 'Academic year(s) created successfully'
+        }, status=status.HTTP_201_CREATED)
+    return Response({'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
 
-# @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
-# def create_academic_year(request):
-#     if request.data == 'POST':
-#         serializer = AcademicyearSerializer(data = request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response({'data':serializer.data,'message':'Academic year created successfully'})
-#         return Response(serializer.error)
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_academic_year(request):
+    if request.method == 'GET':
+        year = Academic_year.objects.all()
+        serializer = AcademicyearSerializer(year,many = True)
+        return Response({'data': serializer.data,}, status=status.HTTP_200_OK)
+    
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_academic_year(request,id):
+    if request.method == 'PUT':
+        year = Academic_year.objects.get(id = id)
+        serializer = AcademicyearSerializer(year, data = request.data,partial = True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'data':serializer.data,'message':'Successfully updated the data'},status=status.HTTP_200_OK)
+        return Response(serializer.errors)
+
+
+    
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_academic_year(request,id):
+    if request.method == 'DELETE':
+        year = Academic_year.objects.get(id = id)
+        year.delete()
+        return Response("Year deleted successfully")
+    
+
+#________EVENT TYPE API__________
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_event_type(request):
+    if request.method == 'POST':
+        serializer = EventTypeSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save(created_by=request.user)
+            return Response({'data':serializer.data,'message':'Successfully created event type'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors)
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_event_type(request):
+    if request.method == 'GET':
+        event_type = Event_type.objects.all()
+        serializer = EventTypeSerializer(event_type, many = True)
+        return Response(serializer.data ,status=status.HTTP_200_OK)
+
+
+
 
 
 # # Create your views here.

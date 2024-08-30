@@ -1,4 +1,4 @@
-from .models import Academic_year, Department, Location
+from .models import Academic_year, Department, Event_type, Location
 from rest_framework import serializers
 
 
@@ -18,13 +18,25 @@ class LocationSerializer(serializers.ModelSerializer):
         model = Location
         fields = '__all__'
 
-
 class AcademicyearSerializer(serializers.ModelSerializer):
+    location = LocationSerializer(read_only=True)
+    location_id = serializers.PrimaryKeyRelatedField(queryset=Location.objects.all(), write_only=True, source='location')
+
     class Meta:
         model = Academic_year
-        fields = '__all__'
+        fields = ['id', 'start_date', 'end_date', 'label', 'location', 'location_id']
 
-        
+    def create(self, validated_data):
+        # Create an Academic_year instance
+        location = validated_data.pop('location')
+        academic_year = Academic_year.objects.create(location=location, **validated_data)
+        return academic_year
+
+
+class EventTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model =  Event_type    
+        fields = ['id','title','description']
 
 # class DepartmentSerializer(serializers.ModelSerializer):
 #     class Meta:

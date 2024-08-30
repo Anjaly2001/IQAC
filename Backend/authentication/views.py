@@ -44,12 +44,14 @@ def register(request):
         data['is_staff'] = False
         dep=request.data.get('department')
         loc = request.data.get('location')
+        country_code = request.data.get('country_code')
 
         if dep=='others':
             dep1 = request.data.get('new_department')
             depObj=Department.objects.create(name=dep1)
             data_user_profile = {
                 'emp_id':request.data.get('emp_id'),
+                'country_code':country_code,
                 'ph': request.data.get('ph'),                                                                  
                 'department': depObj.id,
                 'location':loc,
@@ -58,6 +60,7 @@ def register(request):
             data_user_profile = {
                 'emp_id':request.data.get('emp_id'),
                 'ph': request.data.get('ph'),
+                'country_code':country_code,
                 'department': dep,
                 'location':loc,
             } 
@@ -212,6 +215,14 @@ def multiple_user_registration(request):
                 error_rows.append(row)
                 continue
 
+             # Validate phone number based on country code
+            phone_number = row['ph']
+            country_code = row.get('country_code')
+            error_message = ""
+
+            # if not validate_ph(phone_number, country_code):
+            #     error_message += f"Invalid phone number for country code {country_code}. "
+
             department_id = get_department_id(row['department'])
             location_id = get_location_id(row['location'])
 
@@ -243,7 +254,8 @@ def multiple_user_registration(request):
                 profile_data = {
                     'user': user.id,
                     'emp_id': row['emp_id'],
-                    'ph': row['ph'],
+                    'country_code':row['country_code'],
+                    'phone_number': row['ph'],
                     'department': department_id,
                     'location': location_id
                 }
@@ -257,6 +269,7 @@ def multiple_user_registration(request):
                         'email': email,
                         'username': row['username'],
                         'emp_id': row['emp_id'],
+                        'country_code':row['country_code'],
                         'ph': row['ph'],
                         'department': row['department'],
                         'location': row['location']

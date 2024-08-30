@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import campus_delete, campus_update,  department_register,campus_register, campus_list, department_list, department_activation,department_update,department_delete
+from .views import campus_delete, campus_update, create_academic_year, create_event_type, delete_academic_year,  department_register,campus_register, campus_list, department_list, department_activation,department_update,department_delete, list_academic_year, list_event_type, update_academic_year
 
 
 urlpatterns = [
@@ -14,7 +14,13 @@ urlpatterns = [
     path('campus_delete/<int:id>/',campus_delete, name = 'campus_delete'),
     path('campus_update/<int:id>/',campus_update, name = 'campus_update'),
 
-    # path('create_academic_year/',create_academic_year, name = 'create_academic_year'),
+    path('create_academic_year/',create_academic_year, name = 'create_academic_year'),
+    path('list_academic_year/',list_academic_year, name = 'list_academic_year'),
+    path('update_academic_year/<int:id>/',update_academic_year, name = 'update_academic_year'),
+    path('delete_academic_year/<int:id>/',delete_academic_year,name ='delete_academic_year'),
+    
+    path('create_event_type/',create_event_type, name = 'create_event_type'),
+    path('list_event_type/',list_event_type, name = 'list_event_type'),
 ]
 
 

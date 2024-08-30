@@ -31,9 +31,19 @@ class Department(models.Model):
     updated_at = models.DateTimeField(auto_now_add=True)
 
 class Academic_year(models.Model):
+    location = models.ForeignKey(Location,on_delete=models.CASCADE, related_name= 'cam')
     start_date = models.DateField()
     end_date = models.DateField()
-    label = models.IntegerField(default=datetime.datetime.now().year)
+    label = models.CharField(max_length=9,null=False)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE, related_name = 'creat')
+    created_on = models.DateTimeField(auto_now_add=True)
+
+
+class Event_type(models.Model):
+    title = models.CharField(max_length=250)
+    description = models.TextField()
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE, related_name = 'created')
+    created_on = models.DateTimeField(auto_now_add=True)
     
 # # Create your models here.
 # class Department(models.Model):

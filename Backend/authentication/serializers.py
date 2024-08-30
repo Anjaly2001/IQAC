@@ -3,6 +3,8 @@ from django.contrib.auth import authenticate
 from .models import CustomUser,User_profile
 from rest_framework_simplejwt.tokens import RefreshToken 
 from .models import Department, Location
+import re
+
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,39 +28,41 @@ class USerProfileSerializer(serializers.ModelSerializer):
         model = User_profile
         fields = ['user','emp_id','ph','department','location']
 
-        # def validate_department(self, value):
-        # # Check if the input is a primary key (integer)
-        #     if isinstance(value, int):
-        #         try:
-        #             return Department.objects.get(pk=value)
-        #         except Department.DoesNotExist:
-        #             raise serializers.ValidationError('Department with this ID does not exist.')
-            
-        #     # If not a primary key, handle the "Other" case or validate the department name
-        #     if value.lower() == 'other':
-        #         # Retrieve the custom department name from the request data
-        #         custom_department_name = self.context['request'].data.get('custom_department_name')
-        #         if not custom_department_name:
-        #             raise serializers.ValidationError('Custom department name is required when "Other" is selected.')
-        #         # Create or get the department
-        #         department, created = Department.objects.get_or_create(name=custom_department_name)
-        #         return department  # Return the department instance
-        #     else:
-        #         # Return the existing department if not "Other" and not a primary key
-        #         try:
-        #             return Department.objects.get(name=value)
-        #         except Department.DoesNotExist:
-        #             raise serializers.ValidationError('Selected department does not exist.')
+    def validate_ph(self, value):
+        country_code = self.initial_data.get('country_code')
 
-        def create(self, validated_data):
-            # The department field is already converted to a Department instance by validate_department
-            validated_data['department'] = validated_data['department']
-            return super().create(validated_data)
+        # Define phone number length limits based on country code
+        country_phone_patterns = {
+            '91': r'^\d{10}$',  # India: 10 digits
+            '1': r'^\d{10}$',  # US: 10 digits (without country code)
+            '44': r'^\d{11}$',  # UK: 11 digits
+            # Add other country codes and their phone number patterns here
+        }
+
+        # Validate based on the country code
+        if country_code in country_phone_patterns:
+            phone_pattern = re.compile(country_phone_patterns[country_code])
+            if not phone_pattern.match(value):
+                raise serializers.ValidationError(f"Invalid phone number for {country_code}. Please enter a valid number.")
+        else:
+            raise serializers.ValidationError("Invalid country code.")
+        
+        return value
+
+    def create(self, validated_data):
+        return super().create(validated_data)
+
+
+    def create(self, validated_data):
+        # The department field is already converted to a Department instance by validate_department
+        validated_data['department'] = validated_data['department']
+        return super().create(validated_data)
 
 
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
+
     def validate(self, data):
         email = data.get('email')
         password = data.get('password')

@@ -43,10 +43,45 @@ const RegisterSingleUser = () => {
     }, []);
 
     const createUser = async () => {
+         // Combine validation for better clarity and debug logging
+    let isValid = true;
+
+    if (!userName) {
+        toast.error('Please enter the user name.');
+        isValid = false;
+    }
+    if (!userEmpId) {
+        toast.error('Please enter the employee ID.');
+        isValid = false;
+    }
+    if (!userEmail) {
+        toast.error('Please enter the email address.');
+        isValid = false;
+    }
+    if (!userPhoneNumber || userPhoneNumber.length !== 10) {
+        toast.error('Please enter a valid 10-digit phone number.');
+        isValid = false;
+    }
+    if (!userCampus) {
+        toast.error('Please select a campus.');
+        isValid = false;
+    }
+    if (!userDepartment && userDepartment !== 'Others') {
+        toast.error('Please select a department.');
+        isValid = false;
+    }
+    if (userDepartment === 'Others' && !customDepartment) {
+        toast.error('Please enter a department name.');
+        isValid = false;
+    }
+
+    if (!isValid) {
+        return;  // Stop execution if the form is not valid
+    }
         const department = userDepartment === 'Others' ? customDepartment : userDepartment;
 
         // Validate if all required fields are filled
-        if (!userName || !userEmpId || !userEmail || !department || !userCampus) {
+        if (!userName || !userEmpId || !userEmail || !userPhoneNumber || !department || !userCampus) {
             toast.error('Please fill in all fields.');
             return;
         }
@@ -77,9 +112,6 @@ const RegisterSingleUser = () => {
             toast.error('Failed to create user.');
         }
     };
-
-    const [countryCode, setCountryCode] = useState('+1'); // Default to '+1' (USA)
-
 
     const renderAsterisk = () => (
         <span style={{ color: 'red' }}>*</span>
@@ -149,24 +181,6 @@ const RegisterSingleUser = () => {
                                                 onChange={(e) => setUserEmail(e.target.value)}
                                             />
                                         </div>
-
-
-                                        {/* <div className="col-md-6">
-                                            <OverlayTrigger
-                                                placement="top"
-                                                overlay={<Tooltip id="tooltip-userPhoneNumber">Enter the user's phone number.</Tooltip>}
-                                            >
-                                                <label htmlFor="userPhoneNumber">Phone Number {renderAsterisk()}</label>
-                                            </OverlayTrigger>
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                id="userPhoneNumber"
-                                                placeholder="Phone Number"
-                                                value={userPhoneNumber}
-                                                onChange={(e) => setUserPhoneNumber(e.target.value)}
-                                            />
-                                        </div> */}
                                         <div className="col-md-6">
                                             <OverlayTrigger
                                                 placement="top"

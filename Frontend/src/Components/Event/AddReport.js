@@ -401,10 +401,6 @@ function AddReport() {
                 />
               </div>
 
-
-
-             
-
               <h3 className="text-center mt-4 mb-3">OUTCOMES OF THE EVENT</h3>
               {form.outcomes.map((outcome, index) => (
                 <div key={index} className="mb-3">

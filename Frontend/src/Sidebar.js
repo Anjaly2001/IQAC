@@ -323,7 +323,7 @@ function Sidebar() {
               onClick={() => toggleSection('eventStatus')}
             >
               <FontAwesomeIcon icon={faCalendar} className="me-2" />
-              Event Status
+              Events
             </Nav.Link>
             {openSections.eventStatus && (
               <Nav className="flex-column ms-3">

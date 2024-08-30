@@ -120,7 +120,7 @@ const DepartmentList = () => {
                         <AdminDashboard />
                     </div>
                     <div className="col-md-10 mt-1 pt-5">
-                        <div className="container mt-3">
+                        <div className="container mt-5 p-6">
                             <div className="table-container">
                                 <DataTable
                                     value={users}

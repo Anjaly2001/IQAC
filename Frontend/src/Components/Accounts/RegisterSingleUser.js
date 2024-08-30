@@ -45,6 +45,7 @@ const RegisterSingleUser = () => {
     const createUser = async () => {
         const department = userDepartment === 'Others' ? customDepartment : userDepartment;
 
+        // Validate if all required fields are filled
         if (!userName || !userEmpId || !userEmail || !department || !userCampus) {
             toast.error('Please fill in all fields.');
             return;
@@ -63,6 +64,7 @@ const RegisterSingleUser = () => {
             const response = await user_register(newUser);
             console.log('User created successfully:', response);
             toast.success('User created successfully!');
+            // Reset the form fields
             setUserName('');
             setUserEmpId('');
             setUserEmail('');
@@ -240,6 +242,7 @@ const RegisterSingleUser = () => {
 };
 
 export default RegisterSingleUser;
+
 
 
 

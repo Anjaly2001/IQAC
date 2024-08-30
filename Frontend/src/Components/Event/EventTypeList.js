@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import AdminDashboard from "../Admin/AdminDashboard";
-import Sidebar from "../../Sidebar";
+
 
 const EventTypeList = ({ eventTypes = [], setEventTypes }) => {
     const navigate = useNavigate();

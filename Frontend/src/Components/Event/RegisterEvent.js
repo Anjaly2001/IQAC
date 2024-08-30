@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'; // Use useNavigate instead of us
 import EventSummary from './EventSummary'; // Import the EventSummary component
 import { InputText } from 'primereact/inputtext';
 import { Editor } from 'primereact/editor';
+import { Dropdown } from 'primereact/dropdown';
 import AdminDashboard from '../Admin/AdminDashboard';
 
 function RegisterEvent() {
@@ -96,7 +97,21 @@ function RegisterEvent() {
   }
   const renderAsterisk = () => (
     <span style={{ color: 'red' }}>*</span>
-);
+  );
+
+  const academicYearOptions = [
+    { label: '2023-2024', value: '2023-2024' },
+    { label: '2024-2025', value: '2024-2025' },
+    // Add more academic years as needed
+  ];
+
+  const eventTypeOptions = [
+    { label: 'Seminar', value: 'Seminar' },
+    { label: 'Workshop', value: 'Workshop' },
+    { label: 'Conference', value: 'Conference' },
+    // Add more event types as needed
+  ];
+
 
 
   return (
@@ -245,7 +260,7 @@ function RegisterEvent() {
                   placeholder="Enter description here..."
                 />
               </div>
-              
+
               <div className="mb-3">
                 <label htmlFor="numberOfActivities" className="form-label">Number of Activities{renderAsterisk()}</label>
                 <InputText
@@ -257,7 +272,7 @@ function RegisterEvent() {
                   min="1"
                 />
               </div>
-              
+
               {activities.map((activity, index) => (
                 <div key={index} className="mb-3">
                   <label htmlFor={`activityTitle-${index}`} className="form-label">Activity {index + 1} Title {renderAsterisk()}</label>
@@ -268,7 +283,7 @@ function RegisterEvent() {
                     placeholder="Enter activity title"
                     className="w-100"
                   />
-                  
+
                   <label htmlFor={`activityDate-${index}`} className="form-label mt-3">Date{renderAsterisk()}</label>
                   <InputText
                     id={`activityDate-${index}`}
@@ -277,7 +292,7 @@ function RegisterEvent() {
                     onChange={(e) => handleActivitiesChange(index, 'date', e.target.value)}
                     className="w-100"
                   />
-                  
+
                   <div className="row mt-3">
                     <div className="col">
                       <label htmlFor={`startTime-${index}`} className="form-label">Start Time{renderAsterisk()}</label>
@@ -316,25 +331,28 @@ function RegisterEvent() {
 
               <div className="mb-3">
                 <label htmlFor="academicYear" className="form-label">Academic Year{renderAsterisk()}</label>
-                <InputText
+                <Dropdown
                   id="academicYear"
                   value={academicYear}
-                  onChange={(e) => setAcademicYear(e.target.value)}
-                  placeholder="Enter academic year"
+                  options={academicYearOptions}
+                  onChange={(e) => setAcademicYear(e.value)}
+                  placeholder="Select academic year"
                   className="w-100"
                 />
               </div>
 
               <div className="mb-3">
                 <label htmlFor="eventType" className="form-label">Event Type{renderAsterisk()}</label>
-                <InputText
+                <Dropdown
                   id="eventType"
                   value={eventTypeFocus}
-                  onChange={(e) => setEventTypeFocus(e.target.value)}
-                  placeholder="Enter event type"
+                  options={eventTypeOptions}
+                  onChange={(e) => setEventTypeFocus(e.value)}
+                  placeholder="Select event type"
                   className="w-100"
                 />
               </div>
+
 
               <div className="mb-3">
                 <label htmlFor="proposal" className="form-label">Upload Proposal{renderAsterisk()}</label>

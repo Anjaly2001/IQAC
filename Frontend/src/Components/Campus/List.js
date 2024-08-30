@@ -53,7 +53,7 @@ const ListCampus = () => {
     };
 
     const renderHeader = () => (
-        <div className="d-flex justify-content-between align-items-center">
+        <div className="d-flex  justify-content-between align-items-center">
             <div className="fw-bold fs-5">List of Campuses</div>
             <IconField iconPosition="left">
                 <InputIcon className="pi pi-search" />
@@ -118,9 +118,9 @@ const ListCampus = () => {
                     <div className="col-md-2 p-0">
                         <AdminDashboard />
                     </div>
-                    <div className="col-md-10 mt-5 pt-5">
-                        <div className="container mt-3">
-                            <div className="card">
+                    <div className="col-md-10 mt-4 pt-6 justify-content-center">
+                        <div className="container mt-1 p-8">
+                            <div className="card p-7">
                                 <DataTable value={campuses} paginator rows={10} dataKey="id" filters={filters} globalFilterFields={['name']} header={header} emptyMessage="No campuses found.">
                                     <Column field="name" header="Campus Name" style={{ minWidth: '12rem' }} />
                                     <Column header="Logo" body={logoBodyTemplate} style={{ minWidth: '12rem' }} />

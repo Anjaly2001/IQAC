@@ -19,7 +19,7 @@ function Sidebar() {
     if (path.includes('/createCampus') || path.includes('/listCampus')) {
       setOpenSections((prevState) => ({ ...prevState, settings: true, campus: true }));
     }
-    if (path.includes('/academicyear')) {
+    if (path.includes('/academicyear')|| path.includes('/listacademicyear')) {
       setOpenSections((prevState) => ({ ...prevState, settings: true, AcademicYear: true }));
     }
     if (path.includes('/eventtype')|| path.includes('/eventtypelist')) {
@@ -226,6 +226,16 @@ function Sidebar() {
                         >
                           <FontAwesomeIcon icon={faPlus} className="me-2" />
                           New Academic Year
+                        </Nav.Link>
+                      </Nav.Item>
+                      <Nav.Item>
+                        <Nav.Link
+                          as={Link}
+                          to="/listacademicyear"
+                          className={`text-light ${isActive('/listacademicyear') ? 'active' : ''}`}
+                        >
+                          <FontAwesomeIcon icon={faEye} className="me-2" />
+                           Academic Year List
                         </Nav.Link>
                       </Nav.Item>
                     </Nav>

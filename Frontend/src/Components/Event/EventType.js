@@ -3,13 +3,17 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Editor } from "primereact/editor";
 import AdminDashboard from '../Admin/AdminDashboard';
 
-const EventType = ({ eventTypes = [], setEventTypes }) => {
+const EventType = () => {
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const [eventTypes, setEventTypes] = useState([]); // State to store event types
+    const [editIndex, setEditIndex] = useState(null);
+    
     const location = useLocation();
     const navigate = useNavigate();
 
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const [editIndex, setEditIndex] = useState(null);
+   
+    
 
     useEffect(() => {
         if (location.state) {

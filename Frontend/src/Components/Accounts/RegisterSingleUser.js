@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AdminDashboard from '../Admin/AdminDashboard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { toast } from 'react-toastify';
@@ -15,6 +16,8 @@ const RegisterSingleUser = () => {
     const [userCampus, setUserCampus] = useState('');
     const [campuses, setCampuses] = useState([]);
     const [departments, setDepartments] = useState([]);
+
+    const history = useNavigate();
 
     useEffect(() => {
         const fetchCampuses = async () => {
@@ -43,48 +46,42 @@ const RegisterSingleUser = () => {
     }, []);
 
     const createUser = async () => {
-         // Combine validation for better clarity and debug logging
-    let isValid = true;
+        let isValid = true;
 
-    if (!userName) {
-        toast.error('Please enter the user name.');
-        isValid = false;
-    }
-    if (!userEmpId) {
-        toast.error('Please enter the employee ID.');
-        isValid = false;
-    }
-    if (!userEmail) {
-        toast.error('Please enter the email address.');
-        isValid = false;
-    }
-    if (!userPhoneNumber || userPhoneNumber.length !== 10) {
-        toast.error('Please enter a valid 10-digit phone number.');
-        isValid = false;
-    }
-    if (!userCampus) {
-        toast.error('Please select a campus.');
-        isValid = false;
-    }
-    if (!userDepartment && userDepartment !== 'Others') {
-        toast.error('Please select a department.');
-        isValid = false;
-    }
-    if (userDepartment === 'Others' && !customDepartment) {
-        toast.error('Please enter a department name.');
-        isValid = false;
-    }
-
-    if (!isValid) {
-        return;  // Stop execution if the form is not valid
-    }
-        const department = userDepartment === 'Others' ? customDepartment : userDepartment;
-
-        // Validate if all required fields are filled
-        if (!userName || !userEmpId || !userEmail || !userPhoneNumber || !department || !userCampus) {
-            toast.error('Please fill in all fields.');
-            return;
+        if (!userName) {
+            toast.error('Please enter the user name.');
+            isValid = false;
         }
+        if (!userEmpId) {
+            toast.error('Please enter the employee ID.');
+            isValid = false;
+        }
+        if (!userEmail) {
+            toast.error('Please enter the email address.');
+            isValid = false;
+        }
+        if (!userPhoneNumber || userPhoneNumber.length !== 10) {
+            toast.error('Please enter a valid 10-digit phone number.');
+            isValid = false;
+        }
+        if (!userCampus) {
+            toast.error('Please select a campus.');
+            isValid = false;
+        }
+        if (!userDepartment && userDepartment !== 'Others') {
+            toast.error('Please select a department.');
+            isValid = false;
+        }
+        if (userDepartment === 'Others' && !customDepartment) {
+            toast.error('Please enter a department name.');
+            isValid = false;
+        }
+
+        if (!isValid) {
+            return;  // Stop execution if the form is not valid
+        }
+
+        const department = userDepartment === 'Others' ? customDepartment : userDepartment;
 
         const newUser = {
             username: userName,
@@ -107,9 +104,11 @@ const RegisterSingleUser = () => {
             setUserDepartment('');
             setCustomDepartment('');
             setUserCampus('');
+            // Navigate to the list user page
+            history.push('/list-users');
         } catch (error) {
             console.error('Failed to create user:', error);
-            toast.error('Failed to create user.');
+            // You can show an additional error toast here if needed, but it's not required based on your request.
         }
     };
 
@@ -254,29 +253,35 @@ const RegisterSingleUser = () => {
                                                 ) : (
                                                     <option value="">No departments available</option>
                                                 )}
+                                                <option value="Others">Others</option>
                                             </select>
-                                            {userDepartment === 'Others' && (
-                                                <input
-                                                    type="text"
-                                                    className="form-control mt-2"
-                                                    placeholder="Enter Department"
-                                                    value={customDepartment}
-                                                    onChange={(e) => setCustomDepartment(e.target.value)}
-                                                    required
-                                                />
-                                            )}
                                         </div>
                                     </div>
-                                    <button
-                                        className="btn btn-primary mb-3"
-                                        onClick={createUser}
-                                    >
-                                        Create User
+                                    {userDepartment === 'Others' && (
+                                        <div className="row mb-3">
+                                            <div className="col-md-6">
+                                                <label htmlFor="customDepartment">Enter Department Name {renderAsterisk()}</label>
+                                                <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    id="customDepartment"
+                                                    placeholder="Enter department name"
+                                                    value={customDepartment}
+                                                    onChange={(e) => setCustomDepartment(e.target.value)}
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="text-center">
+                                    <button className="btn btn-primary" onClick={createUser}>
+                                        Register User
                                     </button>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div className="col-md-1"></div>
                 </div>
             </div>
         </div>

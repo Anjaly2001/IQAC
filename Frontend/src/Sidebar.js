@@ -64,9 +64,9 @@ function Sidebar() {
           CHRIST University<br />
           IQAC | <span className='fw-normal'> EMT</span>
         </a>
-        <div className="text-white mt-3">
+        {/* <div className="text-white mt-3">
           Logged in as: <strong>{userName}</strong>
-        </div>
+        </div> */}
         <Nav className="flex-column p-0 mt-5">
           {/* Dashboard */}
           <Nav.Item>
@@ -76,7 +76,7 @@ function Sidebar() {
               className={`text-light  fw-bold ${isActive('/dashboard') ? 'active' : ''}`} // Apply active class
             >
               <FontAwesomeIcon icon={faHome} className="me-2" />
-              Dashboard
+              Admin
             </Nav.Link>
           </Nav.Item>
 

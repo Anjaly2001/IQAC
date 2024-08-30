@@ -92,7 +92,7 @@ const Login = () => {
                     {!otpSent ? (
                         <form onSubmit={handleSendOtp}>
                             <div className="form-group">
-                                <label htmlFor="email">Email</label>
+                                <label htmlFor="email">Email,,,</label>
                                 <input
                                     type="email"
                                     className="form-control"

@@ -143,7 +143,7 @@ const ListUser = () => {
                         <AdminDashboard />
                     </div>
                     <div className="col-md-10 mt-1 pt-5">
-                        <div className="container mt-3 ">
+                        <div className="container mt-3 p-5">
                             <div className="table-container">
                                 <DataTable
                                     value={users}

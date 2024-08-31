@@ -50,13 +50,13 @@ const CreateAcademicYear = () => {
                 <div className="col-md-2 p-0">
                     <AdminDashboard />
                 </div>
-                <div className="col-md-10 mt-6 pt-6">
-                    <div className="container mt-5 p-4">
+                <div className="col-md-10 mt-1 pt-6">
+                    <div className="container mt-5 p-6">
                         <div className="d-flex flex-column align-items-center mb-5 mt-5">
                             <h2>Create Academic Year</h2>
                             <form onSubmit={handleSubmit} className="w-100">
                                 <div className="row mb-4">
-                                    <div className="col-md-6 mt-3">
+                                    <div className="col-md-6 mt-4">
                                         <label htmlFor="campus">
                                             Campus: <span className="text-danger">*</span>
                                         </label>
@@ -72,7 +72,7 @@ const CreateAcademicYear = () => {
                                         <small className="form-text text-muted">Select the campus for this academic year.</small>
                                     </div>
 
-                                    <div className="col-md-6 mt-3">
+                                    <div className="col-md-6 mt-4 mb-4">
                                         <label htmlFor="label">
                                             Label: <span className="text-danger">*</span>
                                         </label>

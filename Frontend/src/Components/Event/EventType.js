@@ -8,7 +8,7 @@ const EventType = () => {
     const [description, setDescription] = useState('');
     const [eventTypes, setEventTypes] = useState([]); // State to store event types
     const [editIndex, setEditIndex] = useState(null);
-    
+
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -53,7 +53,7 @@ const EventType = () => {
                     <AdminDashboard />
                 </div>
                 <div className="col-md-10 mt-5 pt-5">
-                    <div className="container mt-3">
+                    <div className="container mt-3 p-6">
                         <div className="d-flex flex-column align-items-center mb-4">
                             <h2>Create Event Type</h2>
                             <form onSubmit={handleSubmit} className="w-100">
@@ -64,6 +64,7 @@ const EventType = () => {
                                         id="title"
                                         className="form-control"
                                         value={title}
+                                        placeholder="enter title"
                                         onChange={(e) => setTitle(e.target.value)}
                                         required
                                     />
@@ -75,6 +76,7 @@ const EventType = () => {
                                             value={description}
                                             onTextChange={(e) => setDescription(e.htmlValue)}
                                             style={{ height: '320px' }}
+                                            placeholder="enter description here....."
                                         />
                                     </div>
                                 </div>

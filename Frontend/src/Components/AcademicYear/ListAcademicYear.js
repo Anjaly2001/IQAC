@@ -29,10 +29,10 @@ const ListAcademicYear = () => {
                 <div className="col-md-2 p-0">
                     <AdminDashboard />
                 </div>
-                <div className="col-md-10 mt-6 pt-6">
-                    <div className="container mt-5 p-5">
+                <div className="col-md-10 mt-5 pt-6">
+                    <div className="container mt-4 p-6 text-center text-bold">
                         <h3>Academic Years</h3>
-                        <table className="table table-striped">
+                        <table className="table table-striped mt-5">
                             <thead>
                                 <tr>
                                     <th>Campus</th>

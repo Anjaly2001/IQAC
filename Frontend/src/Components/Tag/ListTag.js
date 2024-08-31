@@ -30,7 +30,7 @@ export default function ListTag() {
                 <button className="btn btn-link">
                     <FontAwesomeIcon icon={faEdit} />
                 </button>
-                <button className="btn btn-link">
+                <button className="btn btn-link text-danger">
                     <FontAwesomeIcon icon={faTrash} />
                 </button>
             </div>
@@ -44,7 +44,7 @@ export default function ListTag() {
                     <AdminDashboard />
                 </div>
                 <div className="col-md-10 mt-5 pt-5">
-                    <div className="container mt-3">
+                    <div className="container mt-3 p-5">
                         <div className="d-flex justify-content-center mb-4">
                             <h4 className="fw-bold text-center">Tags List</h4>
                         </div>

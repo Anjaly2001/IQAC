@@ -66,7 +66,7 @@ const ListEvents = () => {
           <FontAwesomeIcon icon={faEdit} />
         </button>
         {rowData.status !== 'Approved' && (
-          <button className="btn btn-link" onClick={() => deleteReport(rowData.id)}>
+          <button className="btn btn-link text-danger" onClick={() => deleteReport(rowData.id)}>
             <FontAwesomeIcon icon={faTrash} />
           </button>
         )}

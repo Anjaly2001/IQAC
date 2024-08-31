@@ -5,6 +5,8 @@ import { InputText } from 'primereact/inputtext';
 import { Editor } from 'primereact/editor';
 import { Dropdown } from 'primereact/dropdown';
 import AdminDashboard from '../Admin/AdminDashboard';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 function RegisterEvent() {
   const [department, setDepartment] = useState('');
@@ -26,6 +28,8 @@ function RegisterEvent() {
   const [tag, setTag] = useState('');
   const [submitted, setSubmitted] = useState(false); // New state to check if form is submitted
   const navigate = useNavigate(); // Initialize useNavigate
+  const [files, setFiles] = useState([]);
+  const [error, setError] = useState(null);
 
   const collaboratorNames = ["John Doe", "Jane Smith", "Michael Johnson", "Emily Davis"]; // Example names for dropdown
 
@@ -112,7 +116,22 @@ function RegisterEvent() {
     // Add more event types as needed
   ];
 
+  const handleFileChange = (e) => {
+    const newFile = e.target.files[0];
 
+    // Validate if the file is a PDF
+    if (newFile && newFile.type !== "application/pdf") {
+        setError("Only PDF files are allowed.");
+        return;
+    }
+
+    setFiles([...files, newFile]);
+    setError(null); // Reset error if the file is valid
+};
+
+const handleAddFile = () => {
+    document.getElementById('fileInput').click();
+};
 
   return (
     <div className="container-fluid">
@@ -314,11 +333,7 @@ function RegisterEvent() {
                         className="w-100"
                       />
                     </div>
-                  </div>
-                </div>
-              ))}
-
-              <div className="mb-3">
+                    <div className="mb-3">
                 <label htmlFor="venue" className="form-label">Venue{renderAsterisk()}</label>
                 <InputText
                   id="venue"
@@ -328,6 +343,11 @@ function RegisterEvent() {
                   className="w-100"
                 />
               </div>
+                  </div>
+                </div>
+              ))}
+
+              
 
               <div className="mb-3">
                 <label htmlFor="academicYear" className="form-label">Academic Year{renderAsterisk()}</label>
@@ -354,15 +374,29 @@ function RegisterEvent() {
               </div>
 
 
-              <div className="mb-3">
+              <div>
+            <div className="mb-3">
                 <label htmlFor="proposal" className="form-label">Upload Proposal{renderAsterisk()}</label>
-                <InputText
-                  id="proposal"
-                  type="file"
-                  onChange={(e) => setProposal(e.target.files[0])}
-                  className="w-100"
+                <div className="d-flex flex-wrap">
+                    {files.map((file, index) => (
+                        <div key={index} className="file-box p-3 me-2 mb-2 border border-primary">
+                            <span>{file.name}</span>
+                        </div>
+                    ))}
+                    <div className="file-box p-3 me-2 mb-2 border border-primary d-flex align-items-center justify-content-center" onClick={handleAddFile}>
+                        <FontAwesomeIcon icon={faPlus} />
+                    </div>
+                </div>
+                <input
+                    id="fileInput"
+                    type="file"
+                    accept=".pdf"
+                    onChange={handleFileChange}
+                    className="d-none"
                 />
-              </div>
+            </div>
+            {error && <div className="text-danger">{error}</div>}
+        </div>
 
               <div className="mb-3">
                 <label htmlFor="tag" className="form-label">Tag{renderAsterisk()}</label>

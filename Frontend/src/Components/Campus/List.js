@@ -74,7 +74,7 @@ const ListCampus = () => {
                 <button className="btn btn-link" onClick={() => editCampus(rowData.id)}>
                     <FontAwesomeIcon icon={faEdit} />
                 </button>
-                <button className="btn btn-link" onClick={() => deleteCampus(rowData.id)}>
+                <button className="btn btn-link text-danger" onClick={() => deleteCampus(rowData.id)}>
                     <FontAwesomeIcon icon={faTrash} />
                 </button>
             </div>

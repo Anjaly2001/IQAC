@@ -1,19 +1,40 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { FaEdit, FaTrash } from "react-icons/fa";
-import AdminDashboard from "../Admin/AdminDashboard";
+import React, { useState, useEffect } from 'react';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { InputText } from 'primereact/inputtext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import AdminDashboard from '../Admin/AdminDashboard';
 
+export default function EventTypeList() {
+    const [eventTypes, setEventTypes] = useState([]);
+    const [globalFilter, setGlobalFilter] = useState(null);
 
-const EventTypeList = ({ eventTypes = [], setEventTypes }) => {
-    const navigate = useNavigate();
+    useEffect(() => {
+        // Fetch event types data from backend or use dummy data
+        const dummyData = [
+            { id: 1, eventTypeName: 'Conference', description: 'Annual conference event' },
+            { id: 2, eventTypeName: 'Workshop', description: 'Technical workshop' },
+            // Add more dummy data here
+        ];
+        setEventTypes(dummyData);
+    }, []);
 
-    const handleDelete = (index) => {
-        const updatedEventTypes = eventTypes.filter((_, i) => i !== index);
-        setEventTypes(updatedEventTypes);
+    const handleSearchChange = (e) => {
+        setGlobalFilter(e.target.value);
     };
 
-    const handleEdit = (eventType, index) => {
-        navigate('/eventtype', { state: { eventType, index } });
+    const actionBodyTemplate = (rowData) => {
+        return (
+            <div>
+                <button className="btn btn-link">
+                    <FontAwesomeIcon icon={faEdit} />
+                </button>
+                <button className="btn btn-link text-danger">
+                    <FontAwesomeIcon icon={faTrash} />
+                </button>
+            </div>
+        );
     };
 
     return (
@@ -23,43 +44,41 @@ const EventTypeList = ({ eventTypes = [], setEventTypes }) => {
                     <AdminDashboard />
                 </div>
                 <div className="col-md-10 mt-5 pt-5">
-                    <div className="container mt-3">
-                        <div className="d-flex flex-column align-items-center mb-4">
-                            <h3>Event Types</h3>
-                            <table className="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Title</th>
-                                        <th>Description</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {eventTypes.map((event, index) => (
-                                        <tr key={index}>
-                                            <td>{event.title}</td>
-                                            <td dangerouslySetInnerHTML={{ __html: event.description }} />
-                                            <td>
-                                                <FaEdit
-                                                    className="me-3"
-                                                    style={{ cursor: "pointer" }}
-                                                    onClick={() => handleEdit(event, index)}
-                                                />
-                                                <FaTrash
-                                                    style={{ cursor: "pointer" }}
-                                                    onClick={() => handleDelete(index)}
-                                                />
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                    <div className="container mt-3 p-5">
+                        <div className="d-flex justify-content-center mb-4">
+                            <h4 className="fw-bold text-center">Event Types List</h4>
+                        </div>
+                        <div className="d-flex justify-content-end mb-4">
+                            <div className="input-group" style={{ width: '300px' }}>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Search event types"
+                                    value={globalFilter}
+                                    onChange={handleSearchChange}
+                                />
+                                <span className="input-group-text">
+                                    <i className="bi bi-search"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div className="mt-4">
+                            <DataTable 
+                                value={eventTypes}
+                                paginator 
+                                rows={10} 
+                                dataKey="id" 
+                                globalFilter={globalFilter}
+                                emptyMessage="No event types found."
+                            >
+                                <Column field="eventTypeName" header="Event Type Name" sortable />
+                                <Column field="description" header="Description" sortable />
+                                <Column header="Actions" body={actionBodyTemplate} />
+                            </DataTable>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     );
-};
-
-export default EventTypeList;
+}

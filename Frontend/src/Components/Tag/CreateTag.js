@@ -25,7 +25,7 @@ export default function CreateTag() {
                     <AdminDashboard />
                 </div>
                 <div className="col-md-10 mt-5 pt-5">
-                    <div className="container mt-3">
+                    <div className="container mt-3 p-6">
                         <div className="d-flex flex-column align-items-center mb-4">
                             <h2>Create Tag</h2>
                             <div className="p-field w-100 mb-3">
@@ -34,7 +34,7 @@ export default function CreateTag() {
                                     id="tagName"
                                     value={tagName}
                                     onChange={(e) => setTagName(e.target.value)}
-                                    placeholder="Enter tag name"
+                                    placeholder="Enter tag name" 
                                     className="w-100"
                                 />
                             </div>

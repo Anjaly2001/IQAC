@@ -1,6 +1,7 @@
 
 
 from django.contrib.auth import login, logout
+from django.forms import ValidationError
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import status
@@ -8,6 +9,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+
+from authentication.validations import validate_email_format, validate_phone_number
 
 from .models import CustomUser, User_profile
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
@@ -44,14 +47,26 @@ def register(request):
         data['is_staff'] = False
         dep=request.data.get('department')
         loc = request.data.get('location')
-        country_code = request.data.get('country_code')
+        phone_number = request.data.get('ph')
+        print(f"Phone number received: {phone_number}")
+
+        try:
+            validate_phone_number(phone_number)
+        except ValidationError as e:
+            # Return error response with status code 400
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        # try:
+        #     validate_phone_number(phone_number)
+        # except ValidationError as e:
+        #     return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
         if dep=='others':
             dep1 = request.data.get('new_department')
             depObj=Department.objects.create(name=dep1)
             data_user_profile = {
                 'emp_id':request.data.get('emp_id'),
-                'country_code':country_code,
+                # 'country_code':country_code,
                 'ph': request.data.get('ph'),                                                                  
                 'department': depObj.id,
                 'location':loc,
@@ -60,7 +75,7 @@ def register(request):
             data_user_profile = {
                 'emp_id':request.data.get('emp_id'),
                 'ph': request.data.get('ph'),
-                'country_code':country_code,
+                # 'country_code':country_code,
                 'department': dep,
                 'location':loc,
             } 
@@ -83,7 +98,7 @@ def register(request):
                     print(user.role)
                     send_email(email)
 
-                # Return both the user and user profile data
+                
                 return Response({
                     'user': UserRegistrationSerializer(user).data,
                     'user_profile': USerProfileSerializer(user_profile).data,
@@ -182,8 +197,6 @@ def get_location_id(location_name):
     except Location.DoesNotExist:
         return None
 
-def validate_email_format(email):
-    return re.match(r".+@christuniversity\.in$", email)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -197,12 +210,14 @@ def multiple_user_registration(request):
 
     error_rows = []
     success_rows = []
+    total_count = 0  
 
     # Parse CSV and save data
     with default_storage.open(file_name, mode='r') as csvfile:
         reader = csv.DictReader(csvfile)
 
         for row in reader:
+            total_count += 1 
             email = row['email']
             
             if not validate_email_format(email):
@@ -217,18 +232,21 @@ def multiple_user_registration(request):
 
              # Validate phone number based on country code
             phone_number = row['ph']
-            country_code = row.get('country_code')
+            # country_code = row.get('country_code')
             error_message = ""
 
-            # if not validate_ph(phone_number, country_code):
-            #     error_message += f"Invalid phone number for country code {country_code}. "
+            if not validate_phone_number(phone_number):
+                error_message += "Invalid phone number. "
 
             department_id = get_department_id(row['department'])
             location_id = get_location_id(row['location'])
 
-            error_message = ""
+            # error_message = ""
             if not department_id:
-                error_message += "Department not found"
+                if error_message:
+                    error_message += " and Department not found"
+                else:
+                    error_message += "Department not found"
             if not location_id:
                 if error_message:
                     error_message += " and Location not found"
@@ -254,7 +272,7 @@ def multiple_user_registration(request):
                 profile_data = {
                     'user': user.id,
                     'emp_id': row['emp_id'],
-                    'country_code':row['country_code'],
+                    # 'country_code':row['country_code'],
                     'phone_number': row['ph'],
                     'department': department_id,
                     'location': location_id
@@ -269,7 +287,7 @@ def multiple_user_registration(request):
                         'email': email,
                         'username': row['username'],
                         'emp_id': row['emp_id'],
-                        'country_code':row['country_code'],
+                        # 'country_code':row['country_code'],
                         'ph': row['ph'],
                         'department': row['department'],
                         'location': row['location']
@@ -312,6 +330,9 @@ def multiple_user_registration(request):
 
     response_data = {
         "status": "success",
+        "total_count": total_count,  # Total number of users in the CSV
+        "success_count": len(success_rows),  # Number of successfully registered users
+        "error_count": len(error_rows),
         "success_file_url": success_file_url,
         "error_file_url": error_file_url,
     }

@@ -1,4 +1,4 @@
-from .models import Academic_year, Department, Event_type, Location
+from .models import Academic_year, Activity, Collaborators, Department, Event_Register, Event_type, Location, Proposal_Upload
 from rest_framework import serializers
 
 
@@ -37,6 +37,51 @@ class EventTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model =  Event_type    
         fields = ['id','title','description']
+
+
+class ActivitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Activity
+        fields = ['activity_title', 'activity_description', 'activity_date', 'venue']
+
+class CollaboratorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Collaborators
+        fields = ['department', 'location', 'users']
+
+class UploadProposalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Proposal_Upload
+        fields = ['files']
+
+class EventRegisterSerializer(serializers.ModelSerializer):
+    activities = ActivitySerializer(many=True)
+    collaborators = CollaboratorSerializer(many=True)
+    # files = UploadProposalSerializer(many=True)
+
+    class Meta:
+        model = Event_Register
+        fields = ['location', 'department', 'event_title', 'no_of_activities', 
+                  'start_date', 'end_date', 'venue', 'academic_year', 
+                  'event_type', 'activities', 'collaborators', 'files']
+
+    def create(self, validated_data):
+        activities_data = validated_data.pop('activities')
+        collaborators_data = validated_data.pop('collaborators')
+        # files_data = validated_data.pop('files')
+
+        event = Event_Register.objects.create(**validated_data)
+
+        for activity_data in activities_data:
+            Activity.objects.create(event=event, **activity_data)
+
+        for collaborator_data in collaborators_data:
+            Collaborators.objects.create(event=event, **collaborator_data)
+
+        # for file_data in files_data:
+        #     Proposal_Upload.objects.create(event=event, **file_data)
+
+        return event
 
 # class DepartmentSerializer(serializers.ModelSerializer):
 #     class Meta:

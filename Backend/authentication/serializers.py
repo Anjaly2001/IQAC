@@ -28,26 +28,26 @@ class USerProfileSerializer(serializers.ModelSerializer):
         model = User_profile
         fields = ['user','emp_id','ph','department','location']
 
-    def validate_ph(self, value):
-        country_code = self.initial_data.get('country_code')
+    # def validate_ph(self, value):
+    #     country_code = self.initial_data.get('country_code')
 
-        # Define phone number length limits based on country code
-        country_phone_patterns = {
-            '91': r'^\d{10}$',  # India: 10 digits
-            '1': r'^\d{10}$',  # US: 10 digits (without country code)
-            '44': r'^\d{11}$',  # UK: 11 digits
-            # Add other country codes and their phone number patterns here
-        }
+    #     # Define phone number length limits based on country code
+    #     country_phone_patterns = {
+    #         '91': r'^\d{10}$',  # India: 10 digits
+    #         '1': r'^\d{10}$',  # US: 10 digits (without country code)
+    #         '44': r'^\d{11}$',  # UK: 11 digits
+    #         # Add other country codes and their phone number patterns here
+    #     }
 
-        # Validate based on the country code
-        if country_code in country_phone_patterns:
-            phone_pattern = re.compile(country_phone_patterns[country_code])
-            if not phone_pattern.match(value):
-                raise serializers.ValidationError(f"Invalid phone number for {country_code}. Please enter a valid number.")
-        else:
-            raise serializers.ValidationError("Invalid country code.")
+    #     # Validate based on the country code
+    #     if country_code in country_phone_patterns:
+    #         phone_pattern = re.compile(country_phone_patterns[country_code])
+    #         if not phone_pattern.match(value):
+    #             raise serializers.ValidationError(f"Invalid phone number for {country_code}. Please enter a valid number.")
+    #     else:
+    #         raise serializers.ValidationError("Invalid country code.")
         
-        return value
+        # return value
 
     def create(self, validated_data):
         return super().create(validated_data)

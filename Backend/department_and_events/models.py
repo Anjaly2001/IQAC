@@ -44,7 +44,49 @@ class Event_type(models.Model):
     description = models.TextField()
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE, related_name = 'created')
     created_on = models.DateTimeField(auto_now_add=True)
-    
+
+class Event_Register(models.Model):
+    location = models.ForeignKey(Location,on_delete=models.CASCADE, related_name= 'locate')
+    department = models.ForeignKey(Department, on_delete= models.CASCADE, related_name='dpt')
+    event_title = models.CharField(max_length=350)
+    no_of_activities = models.IntegerField()
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    venue = models.TextField(max_length=250)
+    academic_year = models.ForeignKey(Academic_year,on_delete= models.CASCADE, related_name='year')
+    event_type =models.ForeignKey(Event_type,on_delete= models.CASCADE, related_name='event')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE, related_name = 'c')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at =  models.DateTimeField(auto_now_add=True)
+
+
+class Activity(models.Model):
+    event = models.ForeignKey(Event_Register, on_delete= models.CASCADE)
+    activity_title = models.CharField(max_length=350)
+    activity_description = models.TextField()
+    activity_date = models.DateTimeField()
+    venue = models.TextField(max_length=250)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE, related_name = 'cr')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+
+class Collaborators(models.Model):
+    event = models.ForeignKey(Event_Register, on_delete= models.CASCADE)
+    department = models.ForeignKey(Department, on_delete= models.CASCADE, related_name='deptmt')
+    location = models.ForeignKey(Location,on_delete=models.CASCADE, related_name= 'loca')
+    users =models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE, related_name = 'user')
+
+def custom_upload_to(instance, filename):
+    # Use slugify to create a safe directory name based on the event title
+    event_title_slug = slugify(instance.event.event_title)
+    upload_path = os.path.join(event_title_slug, filename)
+    return upload_path
+
+class Proposal_Upload(models.Model):
+    event = models.ForeignKey(Event_Register, on_delete= models.CASCADE)
+    files =  models.FileField(upload_to=custom_upload_to)
+
+#  
 # # Create your models here.
 # class Department(models.Model):
 #     TYPE_CHOICES = [

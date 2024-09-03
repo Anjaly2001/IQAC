@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import campus_delete, campus_update, create_academic_year, create_event_type, delete_academic_year,  department_register,campus_register, campus_list, department_list, department_activation,department_update,department_delete, list_academic_year, list_event_type, update_academic_year
+from .views import campus_delete, campus_update, create_academic_year, create_event_type, delete_academic_year,  department_register,campus_register, campus_list, department_list, department_activation,department_update,department_delete, event_register, list_academic_year, list_event_type, update_academic_year
 
 
 urlpatterns = [
@@ -21,6 +21,8 @@ urlpatterns = [
     
     path('create_event_type/',create_event_type, name = 'create_event_type'),
     path('list_event_type/',list_event_type, name = 'list_event_type'),
+
+    path('event_register/',event_register,name ='event_register'),
 ]
 
 

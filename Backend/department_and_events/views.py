@@ -7,7 +7,7 @@ from rest_framework import status
 
 from .models import Academic_year, Event_type, Location,Department
 
-from .serializers import AcademicyearSerializer, DepartmentSerializer,  DepartmentSerializer, EventTypeSerializer, LocationSerializer
+from .serializers import AcademicyearSerializer, DepartmentSerializer,  DepartmentSerializer, EventRegisterSerializer, EventTypeSerializer, LocationSerializer
 from django.contrib.auth.models import User
 
 
@@ -214,6 +214,32 @@ def list_event_type(request):
         event_type = Event_type.objects.all()
         serializer = EventTypeSerializer(event_type, many = True)
         return Response(serializer.data ,status=status.HTTP_200_OK)
+
+
+#_______EVENT REGISTER API_______________
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def event_register(request):
+    if request.method == 'POST':
+        serializer = EventRegisterSerializer(data = request.data)
+        if serializer.is_valid(created_by= request.user):
+            serializer.save()
+            return Response({'data':serializer.data,'message':'Event Registered Successfully'})
+        return Response(serializer.errors)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -24,6 +24,7 @@ import EventSummary from './Components/Event/EventSummary';
 import EventTypeList from './Components/Event/EventTypeList';
 import ListAcademicYear from './Components/AcademicYear/ListAcademicYear';
 
+
 const App = () => {
     return (
 

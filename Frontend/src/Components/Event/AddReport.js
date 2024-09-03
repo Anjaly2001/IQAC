@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
-import AdminDashboard from '../Admin/AdminDashboard';
-import { Editor } from 'primereact/editor';
+import { useNavigate } from 'react-router-dom'; // Use useNavigate instead of useHistory
+import EventSummary from './EventSummary'; // Import the EventSummary component
 import { InputText } from 'primereact/inputtext';
+import { Editor } from 'primereact/editor';
+import { Dropdown } from 'primereact/dropdown';
+import AdminDashboard from '../Admin/AdminDashboard';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 function AddReport() {
   // Defining state variables
@@ -18,6 +23,8 @@ function AddReport() {
   const [collaboratorNames, setCollaboratorNames] = useState(['John Doe', 'Jane Smith']); // Dummy names
   const [activities, setActivities] = useState([{ title: '', date: '', startTime: '', endTime: '' }]);
   const [summary, setSummary] = useState('');
+  const [files, setFiles] = useState([]);
+  const [error, setError] = useState(null);
 
   const [form, setForm] = useState({
     department: '',
@@ -60,6 +67,18 @@ function AddReport() {
     }
   };
 
+  const academicYearOptions = [
+    { label: '2023-2024', value: '2023-2024' },
+    { label: '2024-2025', value: '2024-2025' },
+    // Add more academic years as needed
+  ];
+
+  const eventTypeOptions = [
+    { label: 'Seminar', value: 'Seminar' },
+    { label: 'Workshop', value: 'Workshop' },
+    { label: 'Conference', value: 'Conference' },
+    // Add more event types as needed
+  ];
   const handleCollaboratorChange = (index, field, value) => {
     const updatedCollaborators = [...form.collaborators];
     updatedCollaborators[index][field] = value;
@@ -105,9 +124,26 @@ function AddReport() {
     // Submit form logic here
     console.log(form);
   };
+  const handleFileChange = (e) => {
+    const newFile = e.target.files[0];
+
+    // Validate if the file is a PDF
+    if (newFile && newFile.type !== "application/pdf") {
+      setError("Only PDF files are allowed.");
+      return;
+    }
+
+    setFiles([...files, newFile]);
+    setError(null); // Reset error if the file is valid
+  };
+
+  const handleAddFile = () => {
+    document.getElementById('fileInput').click();
+  };
   const renderAsterisk = () => (
     <span style={{ color: 'red' }}>*</span>
-);
+  );
+
   return (
     <div className="container-fluid">
       <div className="row">
@@ -123,7 +159,7 @@ function AddReport() {
             <form onSubmit={handleSubmit}>
               <div className="mb-3 row">
                 <div className="col">
-                  <label htmlFor="campus" className="form-label">Campus {}</label>
+                  <label htmlFor="campus" className="form-label">Campus {renderAsterisk()}</label>
                   <select
                     id="campus"
                     className="form-select"
@@ -141,7 +177,7 @@ function AddReport() {
                   </select>
                 </div>
                 <div className="col">
-                  <label htmlFor="department" className="form-label">Department</label>
+                  <label htmlFor="department" className="form-label">Department{renderAsterisk()}</label>
                   <select
                     id="department"
                     className="form-select"
@@ -161,7 +197,7 @@ function AddReport() {
               </div>
 
               <div className="mb-3">
-                <label className="form-label">Collaborators</label>
+                <label className="form-label">Collaborators{renderAsterisk()}</label>
                 {form.collaborators.map((collaborator, index) => (
                   <div key={index} className="row mb-2 align-items-center">
                     <div className="col">
@@ -218,7 +254,7 @@ function AddReport() {
               </div>
 
               <div className="mb-3">
-                <label htmlFor="eventTitle" className="form-label">Event Title</label>
+                <label htmlFor="eventTitle" className="form-label">Event Title{renderAsterisk()}</label>
                 <input
                   type="text"
                   className="form-control"
@@ -232,7 +268,7 @@ function AddReport() {
               </div>
 
               <div className="mb-3">
-                <label className="form-label">Description</label>
+                <label className="form-label">Description{renderAsterisk()}</label>
                 <Editor
                   value={description}
                   onTextChange={(e) => setDescription(e.htmlValue)}
@@ -241,113 +277,122 @@ function AddReport() {
               </div>
 
               <div className="mb-3">
-                <label className="form-label">Number of Activities</label>
-                <input
+                <label htmlFor="numberOfActivities" className="form-label">Number of Activities{renderAsterisk()}</label>
+                <InputText
+                  id="numberOfActivities"
                   type="number"
-                  className="form-control"
-                  value={numberOfActivities}
+                  value={numberOfActivities > 0 ? numberOfActivities : 1} // Ensure only positive numbers
                   onChange={handleNumberOfActivitiesChange}
+                  className="w-100"
                   min="1"
-                  required
                 />
               </div>
 
               {activities.map((activity, index) => (
                 <div key={index} className="mb-3">
-                  <label className="form-label">Activity {index + 1}</label>
-                  <input
-                    type="text"
-                    className="form-control mb-2"
-                    placeholder="Activity Title"
+                  <label htmlFor={`activityTitle-${index}`} className="form-label">Activity {index + 1} Title {renderAsterisk()}</label>
+                  <InputText
+                    id={`activityTitle-${index}`}
                     value={activity.title}
                     onChange={(e) => handleActivitiesChange(index, 'title', e.target.value)}
+                    placeholder="Enter activity title"
+                    className="w-100"
                   />
-                  <input
+
+                  <label htmlFor={`activityDate-${index}`} className="form-label mt-3">Date{renderAsterisk()}</label>
+                  <InputText
+                    id={`activityDate-${index}`}
                     type="date"
-                    className="form-control mb-2"
                     value={activity.date}
                     onChange={(e) => handleActivitiesChange(index, 'date', e.target.value)}
+                    className="w-100"
                   />
-                  <div className="row">
+
+                  <div className="row mt-3">
                     <div className="col">
-                      <input
+                      <label htmlFor={`startTime-${index}`} className="form-label">Start Time{renderAsterisk()}</label>
+                      <InputText
+                        id={`startTime-${index}`}
                         type="time"
-                        className="form-control"
-                        placeholder="Start Time"
                         value={activity.startTime}
                         onChange={(e) => handleActivitiesChange(index, 'startTime', e.target.value)}
+                        className="w-100"
                       />
                     </div>
                     <div className="col">
-                      <input
+                      <label htmlFor={`endTime-${index}`} className="form-label">End Time{renderAsterisk()}</label>
+                      <InputText
+                        id={`endTime-${index}`}
                         type="time"
-                        className="form-control"
-                        placeholder="End Time"
                         value={activity.endTime}
                         onChange={(e) => handleActivitiesChange(index, 'endTime', e.target.value)}
+                        className="w-100"
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="venue" className="form-label">Venue{renderAsterisk()}</label>
+                      <InputText
+                        id="venue"
+                        value={venue}
+                        onChange={(e) => setVenue(e.target.value)}
+                        placeholder="Enter venue"
+                        className="w-100"
                       />
                     </div>
                   </div>
                 </div>
               ))}
-
               <div className="mb-3">
-                <label htmlFor="venue" className="form-label">Venue</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="venue"
-                  name="venue"
-                  value={venue}
-                  onChange={(e) => setVenue(e.target.value)}
-                  placeholder="Enter the venue"
-                  required
-                />
-              </div>
-
-              <div className="mb-3">
-                <label htmlFor="academicYear" className="form-label">Academic Year</label>
-                <input
-                  type="text"
-                  className="form-control"
+                <label htmlFor="academicYear" className="form-label">Academic Year{renderAsterisk()}</label>
+                <Dropdown
                   id="academicYear"
-                  name="academicYear"
                   value={academicYear}
-                  onChange={(e) => setAcademicYear(e.target.value)}
-                  placeholder="Enter the academic year"
-                  required
+                  options={academicYearOptions}
+                  onChange={(e) => setAcademicYear(e.value)}
+                  placeholder="Select academic year"
+                  className="w-100"
                 />
               </div>
 
               <div className="mb-3">
-                <label htmlFor="eventTypeFocus" className="form-label">Event Type Focus</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="eventTypeFocus"
-                  name="eventTypeFocus"
+                <label htmlFor="eventType" className="form-label">Event Type{renderAsterisk()}</label>
+                <Dropdown
+                  id="eventType"
                   value={eventTypeFocus}
-                  onChange={(e) => setEventTypeFocus(e.target.value)}
-                  placeholder="Enter the event type focus"
-                  required
+                  options={eventTypeOptions}
+                  onChange={(e) => setEventTypeFocus(e.value)}
+                  placeholder="Select event type"
+                  className="w-100"
                 />
               </div>
 
-              <div className="mb-3">
-                <label className="form-label">Proposal</label>
-                <input
-                  type="file"
-                  className="form-control"
-                  id="proposal"
-                  name="proposal"
-                  onChange={(e) => handleChange(e)}
-                  accept=".pdf,.doc,.docx"
-                  required
-                />
+
+              <div>
+                <div className="mb-3">
+                  <label htmlFor="proposal" className="form-label">Upload Proposal{renderAsterisk()}</label>
+                  <div className="d-flex flex-wrap">
+                    {files.map((file, index) => (
+                      <div key={index} className="file-box p-3 me-2 mb-2 border border-primary">
+                        <span>{file.name}</span>
+                      </div>
+                    ))}
+                    <div className="file-box p-3 me-2 mb-2 border border-primary d-flex align-items-center justify-content-center" onClick={handleAddFile}>
+                      <FontAwesomeIcon icon={faPlus} />
+                    </div>
+                  </div>
+                  <input
+                    id="fileInput"
+                    type="file"
+                    accept=".pdf"
+                    onChange={handleFileChange}
+                    className="d-none"
+                  />
+                </div>
+                {error && <div className="text-danger">{error}</div>}
               </div>
 
               <div className="mb-3">
-                <label className="form-label">Tag</label>
+                <label className="form-label">Tag{renderAsterisk()}</label>
                 <input
                   type="text"
                   className="form-control"
@@ -361,39 +406,39 @@ function AddReport() {
 
               {/* Additional Form Fields */}
               <div className="mb-3">
-                <label className="form-label">Blog Link:</label>
+                <label className="form-label">Blog Link{renderAsterisk()}</label>
                 <input type="text" className="form-control" name="blogLink" value={form.blogLink} onChange={handleChange} />
               </div>
 
               <h3 className="text-center mt-4 mb-3">PARTICIPANTS INFORMATION</h3>
               <div className="mb-3">
-                <label className="form-label">Target Audience:</label>
+                <label className="form-label">Target Audience{renderAsterisk()}</label>
                 <input type="text" className="form-control" name="targetAudience" value={form.targetAudience} onChange={handleChange} />
               </div>
               <div className="mb-3">
-                <label className="form-label">External Members/ Agencies with Affiliation:</label>
+                <label className="form-label">External Members/ Agencies with Affiliation{renderAsterisk()}</label>
                 <input type="text" className="form-control" name="externalAgencies" value={form.externalAgencies} onChange={handleChange} />
               </div>
               <div className="mb-3">
-                <label className="form-label">Website/Contact of External Members:</label>
+                <label className="form-label">Website/Contact of External Members{renderAsterisk()}</label>
                 <input type="text" className="form-control" name="externalContacts" value={form.externalContacts} onChange={handleChange} />
               </div>
               <div className="mb-3">
-                <label className="form-label">Organizing Committee Details:</label>
+                <label className="form-label">Organizing Committee Details{renderAsterisk()}</label>
                 <input type="text" className="form-control" name="organizingCommittee" value={form.organizingCommittee} onChange={handleChange} />
               </div>
               <div className="mb-3">
-                <label className="form-label">No of Student Volunteers:</label>
+                <label className="form-label">No of Student Volunteers{renderAsterisk()}</label>
                 <input type="number" className="form-control" name="studentVolunteers" value={form.studentVolunteers} onChange={handleChange} />
               </div>
               <div className="mb-3">
-                <label className="form-label">No of Attendees/ Participants:</label>
+                <label className="form-label">No of Attendees/ Participants{renderAsterisk()}</label>
                 <input type="number" className="form-control" name="attendees" value={form.attendees} onChange={handleChange} />
               </div>
 
 
               <div className="mb-3">
-                <label className="form-label">SUMMARY OF THE OVERALL EVENT</label>
+                <label className="form-label">SUMMARY OF THE OVERALL EVENT{renderAsterisk()}</label>
                 <Editor
                   value={summary}
                   onTextChange={(e) => setSummary(e.htmlValue)}
@@ -404,7 +449,7 @@ function AddReport() {
               <h3 className="text-center mt-4 mb-3">OUTCOMES OF THE EVENT</h3>
               {form.outcomes.map((outcome, index) => (
                 <div key={index} className="mb-3">
-                  <label className="form-label">Outcome {index + 1}:</label>
+                  <label className="form-label">Outcome {index + 1}{renderAsterisk()}</label>
                   <textarea
                     className="form-control"
                     name={`outcome${index}`}
@@ -416,14 +461,29 @@ function AddReport() {
               ))}
 
               <h3 className="text-center mt-4 mb-3">SUGGESTIONS FOR IMPROVEMENT • FEEDBACK FROM IQAC</h3>
-              <div className="mb-3">
-                <label className="form-label">Upload File (PDF):</label>
-                <input type="file" className="form-control" accept=".pdf" name="suggestions" onChange={handleChange} />
+              <div>
+                <div className="mb-3">
+                  <label htmlFor="proposal" className="form-label">Upload {renderAsterisk()}</label>
+                  <div className="d-flex flex-wrap">
+                    {files.map((file, index) => (
+                      <div key={index} className="file-box p-3 me-2 mb-2 border border-primary">
+                        <span>{file.name}</span>
+                      </div>
+                    ))}
+                    <div className="file-box p-3 me-2 mb-2 border border-primary d-flex align-items-center justify-content-center" onClick={handleAddFile}>
+                      <FontAwesomeIcon icon={faPlus} />
+                    </div>
+                  </div>
+                  <input
+                    id="fileInput"
+                    type="file"
+                    accept=".pdf"
+                    onChange={handleFileChange}
+                    className="d-none"
+                  />
+                </div>
+                {error && <div className="text-danger">{error}</div>}
               </div>
-
-              <button type="submit" className="btn btn-primary">
-                Submit
-              </button>
             </form>
           </div>
         </div>

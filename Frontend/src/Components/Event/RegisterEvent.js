@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Use useNavigate instead of useHistory
 import EventSummary from './EventSummary'; // Import the EventSummary component
 import { InputText } from 'primereact/inputtext';
+import { MultiSelect } from 'primereact/multiselect';
 import { Editor } from 'primereact/editor';
 import { Dropdown } from 'primereact/dropdown';
 import AdminDashboard from '../Admin/AdminDashboard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FaTags } from 'react-icons/fa';
 
 function RegisterEvent() {
   const [department, setDepartment] = useState('');
@@ -110,11 +112,86 @@ function RegisterEvent() {
   ];
 
   const eventTypeOptions = [
-    { label: 'Seminar', value: 'Seminar' },
-    { label: 'Workshop', value: 'Workshop' },
-    { label: 'Conference', value: 'Conference' },
-    // Add more event types as needed
-  ];
+    {
+      value: 0,
+      label: 'Dance',
+      selected: true,
+    },
+    {
+      value: 1,
+      label: 'Music',
+      selected: true,
+      // disabled: true,
+    },
+    {
+      value: 2,
+      label: 'Drama',
+    },
+    {
+      value: 3,
+      label: 'Coding',
+    },
+    {
+      label: 'backend',
+      options: [
+        {
+          value: 4,
+          label: 'Django',
+        },
+        {
+          value: 5,
+          label: 'Laravel',
+          selected: true,
+        },
+        {
+          value: 6,
+          label: 'Node.js',
+        },
+      ],
+    },
+  ]
+ 
+
+  const tagOptions = [
+    {
+      value: 0,
+      label: 'Dance',
+      selected: true,
+    },
+    {
+      value: 1,
+      label: 'Music',
+      selected: true,
+      // disabled: true,
+    },
+    {
+      value: 2,
+      label: 'Drama',
+    },
+    {
+      value: 3,
+      label: 'Coding',
+    },
+    {
+      label: 'backend',
+      options: [
+        {
+          value: 4,
+          label: 'Django',
+        },
+        {
+          value: 5,
+          label: 'Laravel',
+          selected: true,
+        },
+        {
+          value: 6,
+          label: 'Node.js',
+        },
+      ],
+    },
+
+  ]
 
   const handleFileChange = (e) => {
     const newFile = e.target.files[0];
@@ -157,11 +234,6 @@ const handleAddFile = () => {
                   >
                     <option value="">Select Campus</option>
                     <option value="Christ University Bangalore Central Campus">Christ University Bangalore Central Campus</option>
-                    <option value="Christ University Bangalore Bannerghatta Road Campus">Christ University Bangalore Bannerghatta Road Campus</option>
-                    <option value="Christ University Bangalore Kengeri Campus">Christ University Bangalore Kengeri Campus</option>
-                    <option value="Christ University Bangalore Yeshwanthpur Campus">Christ University Bangalore Yeshwanthpur Campus</option>
-                    <option value="Christ University Delhi NCR Off Campus">Christ University Delhi NCR Off Campus</option>
-                    <option value="Christ University Pune Lavasa Off Campus">Christ University Pune Lavasa Off Campus</option>
                     <option value="Others">Others</option>
                   </select>
                 </div>
@@ -175,11 +247,6 @@ const handleAddFile = () => {
                   >
                     <option value="">Select Department</option>
                     <option value="Data Science">Data Science</option>
-                    <option value="Law">Law</option>
-                    <option value="BBA">BBA</option>
-                    <option value="MBA">MBA</option>
-                    <option value="Commerce">Commerce</option>
-                    <option value="Language">Language</option>
                     <option value="Others">Others</option>
                   </select>
                 </div>
@@ -197,11 +264,6 @@ const handleAddFile = () => {
                       >
                         <option value="">Select Campus</option>
                         <option value="Christ University Bangalore Central Campus">Christ University Bangalore Central Campus</option>
-                        <option value="Christ University Bangalore Bannerghatta Road Campus">Christ University Bangalore Bannerghatta Road Campus</option>
-                        <option value="Christ University Bangalore Kengeri Campus">Christ University Bangalore Kengeri Campus</option>
-                        <option value="Christ University Bangalore Yeshwanthpur Campus">Christ University Bangalore Yeshwanthpur Campus</option>
-                        <option value="Christ University Delhi NCR Off Campus">Christ University Delhi NCR Off Campus</option>
-                        <option value="Christ University Pune Lavasa Off Campus">Christ University Pune Lavasa Off Campus</option>
                         <option value="Others">Others</option>
                       </select>
                     </div>
@@ -213,18 +275,6 @@ const handleAddFile = () => {
                       >
                         <option value="">Select Department</option>
                         <option value="">MSc (Data Science)</option>
-                        <option value="">BSc (Data Science/Honours/Honours with Research)</option>
-                        <option value="">BSc (Economics and Analytics/Honours/Honours with Research)</option>
-                        <option value="">Bachelor of Computer Applications (BCA/Honours/Honours with research)</option>
-                        <option value="">LLM (Corporate & Commercial Law)</option>
-                        <option value="">LLM (Constitutional & Administrative Law)</option>
-                        <option value="">BBA LLB (Honours)</option>
-                        <option value="">BA LLB (Honours)</option>
-                        <option value="">MSc (Global Finance & Analytics)</option>
-                        <option value="">BCom (Financial Analytics/Honours/Honours with Research)</option>
-                        <option value="">BBA (Business Analytics/Honours/Honours with Research)</option>
-                        <option value="">BBA (Honours/Honours with Research)</option>
-                        <option value="">MA (English with Digital Humanities)</option>
                         <option value="">Others</option>
                       </select>
                     </div>
@@ -361,17 +411,22 @@ const handleAddFile = () => {
                 />
               </div>
 
+
               <div className="mb-3">
-                <label htmlFor="eventType" className="form-label">Event Type{renderAsterisk()}</label>
-                <Dropdown
-                  id="eventType"
-                  value={eventTypeFocus}
-                  options={eventTypeOptions}
-                  onChange={(e) => setEventTypeFocus(e.value)}
-                  placeholder="Select event type"
-                  className="w-100"
-                />
-              </div>
+  <label htmlFor="eventType" className="form-label">
+    Event Type{renderAsterisk()}
+  </label>
+  <MultiSelect
+    id="eventType"
+    value={eventType}
+    options={eventTypeOptions}
+    onChange={(e) => setEventTypeFocus(e.value)}
+    placeholder="Select event type"
+    className="w-100"
+    filter
+  />
+</div>
+
 
 
               <div>
@@ -398,16 +453,21 @@ const handleAddFile = () => {
             {error && <div className="text-danger">{error}</div>}
         </div>
 
+              
               <div className="mb-3">
-                <label htmlFor="tag" className="form-label">Tag{renderAsterisk()}</label>
-                <InputText
-                  id="tag"
-                  value={tag}
-                  onChange={(e) => setTag(e.target.value)}
-                  placeholder="Enter tag"
-                  className="w-100"
-                />
-              </div>
+  <label htmlFor="tags" className="form-label">
+Tags{renderAsterisk()}
+  </label>
+  <MultiSelect
+    id="Tags"
+    value={tag}
+    options={tagOptions}
+    onChange={(e) => setTag(e.value)}
+    placeholder="Select Tags"
+    className="w-100"
+    filter
+  />
+</div>
 
               <button type="submit" className="btn btn-primary">
                 Submit

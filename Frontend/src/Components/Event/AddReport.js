@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Use useNavigate instead of useHistory
-import EventSummary from './EventSummary'; // Import the EventSummary component
+import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Stepper } from 'primereact/stepper';
+import { StepperPanel } from 'primereact/stepperpanel';
+import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Editor } from 'primereact/editor';
 import { Dropdown } from 'primereact/dropdown';
@@ -10,6 +12,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 function AddReport() {
   // Defining state variables
+  const stepperRef = useRef(null);
   const [description, setDescription] = useState('');
   const [campus, setCampus] = useState('');
   const [department, setDepartment] = useState('');
@@ -156,335 +159,363 @@ function AddReport() {
               Event Report Form
               <hr />
             </div>
-            <form onSubmit={handleSubmit}>
-              <div className="mb-3 row">
-                <div className="col">
-                  <label htmlFor="campus" className="form-label">Campus {renderAsterisk()}</label>
-                  <select
-                    id="campus"
-                    className="form-select"
-                    value={campus}
-                    onChange={(e) => setCampus(e.target.value)}
-                  >
-                    <option value="">Select Campus</option>
-                    <option value="Christ University Bangalore Central Campus">Christ University Bangalore Central Campus</option>
-                    <option value="Christ University Bangalore Bannerghatta Road Campus">Christ University Bangalore Bannerghatta Road Campus</option>
-                    <option value="Christ University Bangalore Kengeri Campus">Christ University Bangalore Kengeri Campus</option>
-                    <option value="Christ University Bangalore Yeshwanthpur Campus">Christ University Bangalore Yeshwanthpur Campus</option>
-                    <option value="Christ University Delhi NCR Off Campus">Christ University Delhi NCR Off Campus</option>
-                    <option value="Christ University Pune Lavasa Off Campus">Christ University Pune Lavasa Off Campus</option>
-                    <option value="Others">Others</option>
-                  </select>
-                </div>
-                <div className="col">
-                  <label htmlFor="department" className="form-label">Department{renderAsterisk()}</label>
-                  <select
-                    id="department"
-                    className="form-select"
-                    value={department}
-                    onChange={(e) => setDepartment(e.target.value)}
-                  >
-                    <option value="">Select Department</option>
-                    <option value="Data Science">Data Science</option>
-                    <option value="Law">Law</option>
-                    <option value="BBA">BBA</option>
-                    <option value="MBA">MBA</option>
-                    <option value="Commerce">Commerce</option>
-                    <option value="Language">Language</option>
-                    <option value="Others">Others</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="mb-3">
-                <label className="form-label">Collaborators{renderAsterisk()}</label>
-                {form.collaborators.map((collaborator, index) => (
-                  <div key={index} className="row mb-2 align-items-center">
+            <div className="card flex justify-content-center">
+              <Stepper ref={stepperRef} style={{ flexBasis: '50rem' }}>
+                <StepperPanel header="">
+                  <div className="mb-3 row">
                     <div className="col">
+                      <label htmlFor="campus" className="form-label">Campus {renderAsterisk()}</label>
                       <select
+                        id="campus"
                         className="form-select"
-                        value={collaborator.campus}
-                        onChange={(e) => handleCollaboratorChange(index, 'campus', e.target.value)}
+                        value={campus}
+                        onChange={(e) => setCampus(e.target.value)}
                       >
                         <option value="">Select Campus</option>
-                        <option value="Christ University Bangalore">Christ University Bangalore Central Campus</option>
-                        <option value="Christ University Lavasa">Christ University Pune Lavasa Off Campus</option>
+                        <option value="Christ University Bangalore Central Campus">Christ University Bangalore Central Campus</option>
+                        <option value="Others">Others</option>
                       </select>
                     </div>
                     <div className="col">
+                      <label htmlFor="department" className="form-label">Department {renderAsterisk()}</label>
                       <select
+                        id="department"
                         className="form-select"
-                        value={collaborator.department}
-                        onChange={(e) => handleCollaboratorChange(index, 'department', e.target.value)}
+                        value={department}
+                        onChange={(e) => setDepartment(e.target.value)}
                       >
                         <option value="">Select Department</option>
                         <option value="Data Science">Data Science</option>
-                        <option value="MBA">MBA</option>
-                        <option value="Language">Language</option>
+                        <option value="Others">Others</option>
                       </select>
-                    </div>
-                    <div className="col">
-                      <select
-                        className="form-select"
-                        value={collaborator.name}
-                        onChange={(e) => handleCollaboratorChange(index, 'name', e.target.value)}
-                      >
-                        <option value="">Select Name</option>
-                        {collaboratorNames.map((name, idx) => (
-                          <option key={idx} value={name}>{name}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="col-auto">
-                      <i
-                        className="bi bi-plus-circle"
-                        style={{ cursor: 'pointer', marginRight: '10px' }}
-                        onClick={addCollaborator}
-                      ></i>
-                      {form.collaborators.length > 1 && (
-                        <i
-                          className="bi bi-trash"
-                          style={{ cursor: 'pointer' }}
-                          onClick={() => removeCollaborator(index)}
-                        ></i>
-                      )}
                     </div>
                   </div>
-                ))}
-              </div>
+                  {/* Collaborators section */}
+                  <div className="mb-3">
+                    <label className="form-label">Collaborators {renderAsterisk()}</label>
+                    {form.collaborators.map((collaborator, index) => (
+                      <div key={index} className="row mb-2 align-items-center">
+                        <div className="col">
+                          <select
+                            className="form-select"
+                            value={collaborator.campus}
+                            onChange={(e) => handleCollaboratorChange(index, 'campus', e.target.value)}
+                          >
+                            <option value="">Select Campus</option>
+                            <option value="Christ University Bangalore">Christ University Bangalore Central Campus</option>
+                            <option value="Christ University Lavasa">Christ University Pune Lavasa Off Campus</option>
+                          </select>
+                        </div>
+                        <div className="col">
+                          <select
+                            className="form-select"
+                            value={collaborator.department}
+                            onChange={(e) => handleCollaboratorChange(index, 'department', e.target.value)}
+                          >
+                            <option value="">Select Department</option>
+                            <option value="Data Science">Data Science</option>
+                          </select>
+                        </div>
+                        <div className="col">
+                          <select
+                            className="form-select"
+                            value={collaborator.name}
+                            onChange={(e) => handleCollaboratorChange(index, 'name', e.target.value)}
+                          >
+                            <option value="">Select Name</option>
+                            {collaboratorNames.map((name, idx) => (
+                              <option key={idx} value={name}>{name}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="col-auto">
+                          <i
+                            className="bi bi-plus-circle"
+                            style={{ cursor: 'pointer', marginRight: '10px' }}
+                            onClick={addCollaborator}
+                          ></i>
+                          {form.collaborators.length > 1 && (
+                            <i
+                              className="bi bi-trash"
+                              style={{ cursor: 'pointer' }}
+                              onClick={() => removeCollaborator(index)}
+                            ></i>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="eventTitle" className="form-label">Event Title{renderAsterisk()}</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="eventTitle"
+                      name="eventTitle"
+                      value={eventTitle}
+                      onChange={(e) => setEventTitle(e.target.value)}
+                      placeholder="Enter the event title"
+                      required
+                    />
+                  </div>
 
-              <div className="mb-3">
-                <label htmlFor="eventTitle" className="form-label">Event Title{renderAsterisk()}</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="eventTitle"
-                  name="eventTitle"
-                  value={eventTitle}
-                  onChange={(e) => setEventTitle(e.target.value)}
-                  placeholder="Enter the event title"
-                  required
-                />
-              </div>
+                  <div className="mb-3">
+                    <label className="form-label">Description{renderAsterisk()}</label>
+                    <Editor
+                      value={description}
+                      onTextChange={(e) => setDescription(e.htmlValue)}
+                      style={{ height: '200px' }}
+                    />
+                  </div>
 
-              <div className="mb-3">
-                <label className="form-label">Description{renderAsterisk()}</label>
-                <Editor
-                  value={description}
-                  onTextChange={(e) => setDescription(e.htmlValue)}
-                  style={{ height: '320px' }}
-                />
-              </div>
+                  <div className="mb-3">
+                    <label htmlFor="numberOfActivities" className="form-label">Number of Activities{renderAsterisk()}</label>
+                    <InputText
+                      id="numberOfActivities"
+                      type="number"
+                      value={numberOfActivities > 0 ? numberOfActivities : 1} // Ensure only positive numbers
+                      onChange={handleNumberOfActivitiesChange}
+                      className="w-100"
+                      min="1"
+                    />
+                  </div>
 
-              <div className="mb-3">
-                <label htmlFor="numberOfActivities" className="form-label">Number of Activities{renderAsterisk()}</label>
-                <InputText
-                  id="numberOfActivities"
-                  type="number"
-                  value={numberOfActivities > 0 ? numberOfActivities : 1} // Ensure only positive numbers
-                  onChange={handleNumberOfActivitiesChange}
-                  className="w-100"
-                  min="1"
-                />
-              </div>
-
-              {activities.map((activity, index) => (
-                <div key={index} className="mb-3">
-                  <label htmlFor={`activityTitle-${index}`} className="form-label">Activity {index + 1} Title {renderAsterisk()}</label>
-                  <InputText
-                    id={`activityTitle-${index}`}
-                    value={activity.title}
-                    onChange={(e) => handleActivitiesChange(index, 'title', e.target.value)}
-                    placeholder="Enter activity title"
-                    className="w-100"
-                  />
-
-                  <label htmlFor={`activityDate-${index}`} className="form-label mt-3">Date{renderAsterisk()}</label>
-                  <InputText
-                    id={`activityDate-${index}`}
-                    type="date"
-                    value={activity.date}
-                    onChange={(e) => handleActivitiesChange(index, 'date', e.target.value)}
-                    className="w-100"
-                  />
-
-                  <div className="row mt-3">
-                    <div className="col">
-                      <label htmlFor={`startTime-${index}`} className="form-label">Start Time{renderAsterisk()}</label>
+                  {activities.map((activity, index) => (
+                    <div key={index} className="mb-3">
+                      <label htmlFor={`activityTitle-${index}`} className="form-label">Activity {index + 1} Title {renderAsterisk()}</label>
                       <InputText
-                        id={`startTime-${index}`}
-                        type="time"
-                        value={activity.startTime}
-                        onChange={(e) => handleActivitiesChange(index, 'startTime', e.target.value)}
+                        id={`activityTitle-${index}`}
+                        value={activity.title}
+                        onChange={(e) => handleActivitiesChange(index, 'title', e.target.value)}
+                        placeholder="Enter activity title"
                         className="w-100"
                       />
-                    </div>
-                    <div className="col">
-                      <label htmlFor={`endTime-${index}`} className="form-label">End Time{renderAsterisk()}</label>
+
+                      <label htmlFor={`activityDate-${index}`} className="form-label mt-3">Date{renderAsterisk()}</label>
                       <InputText
-                        id={`endTime-${index}`}
-                        type="time"
-                        value={activity.endTime}
-                        onChange={(e) => handleActivitiesChange(index, 'endTime', e.target.value)}
+                        id={`activityDate-${index}`}
+                        type="date"
+                        value={activity.date}
+                        onChange={(e) => handleActivitiesChange(index, 'date', e.target.value)}
                         className="w-100"
                       />
+
+                      <div className="row mt-3">
+                        <div className="col">
+                          <label htmlFor={`startTime-${index}`} className="form-label">Start Time{renderAsterisk()}</label>
+                          <InputText
+                            id={`startTime-${index}`}
+                            type="time"
+                            value={activity.startTime}
+                            onChange={(e) => handleActivitiesChange(index, 'startTime', e.target.value)}
+                            className="w-100"
+                          />
+                        </div>
+                        <div className="col">
+                          <label htmlFor={`endTime-${index}`} className="form-label">End Time{renderAsterisk()}</label>
+                          <InputText
+                            id={`endTime-${index}`}
+                            type="time"
+                            value={activity.endTime}
+                            onChange={(e) => handleActivitiesChange(index, 'endTime', e.target.value)}
+                            className="w-100"
+                          />
+                        </div>
+                        <div className="mb-3">
+                          <label htmlFor="venue" className="form-label">Venue{renderAsterisk()}</label>
+                          <InputText
+                            id="venue"
+                            value={venue}
+                            onChange={(e) => setVenue(e.target.value)}
+                            placeholder="Enter venue"
+                            className="w-100"
+                          />
+                        </div>
+                      </div>
                     </div>
+                  ))}
+                  <div className="mb-3">
+                    <label htmlFor="academicYear" className="form-label">Academic Year{renderAsterisk()}</label>
+                    <Dropdown
+                      id="academicYear"
+                      value={academicYear}
+                      options={academicYearOptions}
+                      onChange={(e) => setAcademicYear(e.value)}
+                      placeholder="Select academic year"
+                      className="w-100"
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label htmlFor="eventType" className="form-label">Event Type{renderAsterisk()}</label>
+                    <Dropdown
+                      id="eventType"
+                      value={eventTypeFocus}
+                      options={eventTypeOptions}
+                      onChange={(e) => setEventTypeFocus(e.value)}
+                      placeholder="Select event type"
+                      className="w-100"
+                    />
+                  </div>
+
+
+                  <div>
                     <div className="mb-3">
-                      <label htmlFor="venue" className="form-label">Venue{renderAsterisk()}</label>
-                      <InputText
-                        id="venue"
-                        value={venue}
-                        onChange={(e) => setVenue(e.target.value)}
-                        placeholder="Enter venue"
-                        className="w-100"
+                      <label htmlFor="proposal" className="form-label">Upload Proposal{renderAsterisk()}</label>
+                      <div className="d-flex flex-wrap">
+                        {files.map((file, index) => (
+                          <div key={index} className="file-box p-3 me-2 mb-2 border border-primary">
+                            <span>{file.name}</span>
+                          </div>
+                        ))}
+                        <div className="file-box p-3 me-2 mb-2 border border-primary d-flex align-items-center justify-content-center" onClick={handleAddFile}>
+                          <FontAwesomeIcon icon={faPlus} />
+                        </div>
+                      </div>
+                      <input
+                        id="fileInput"
+                        type="file"
+                        accept=".pdf"
+                        onChange={handleFileChange}
+                        className="d-none"
+                      />
+                    </div>
+                    {error && <div className="text-danger">{error}</div>}
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label">Tag{renderAsterisk()}</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="tag"
+                      name="tag"
+                      value={tag}
+                      onChange={(e) => setTag(e.target.value)}
+                      placeholder="Enter a tag"
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label">Blog Link{renderAsterisk()}</label>
+                    <input type="text" className="form-control" name="blogLink" value={form.blogLink} onChange={handleChange} />
+                  </div>
+                  <div className="flex pt-4 justify-content-end">
+                    <Button label="Next" icon="pi pi-arrow-right" iconPos="right" onClick={() => stepperRef.current.nextCallback()} />
+                  </div>
+                </StepperPanel>
+
+
+                <StepperPanel header="">
+
+                  <h3 className="text-center mt-4 mb-3">PARTICIPANTS INFORMATION</h3>
+                  <div className="mb-3">
+                    <label className="form-label">Target Audience{renderAsterisk()}</label>
+                    <Editor
+                      value={description}
+                      onTextChange={(e) => setDescription(e.htmlValue)}
+                      style={{ height: '80px' }}
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label">External Members/ Agencies with Affiliation</label>
+                    <Editor
+                      value={description}
+                      onTextChange={(e) => setDescription(e.htmlValue)}
+                      style={{ height: '80px' }}
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label">Website/Contact of External Members</label>
+                    <Editor
+                      value={description}
+                      onTextChange={(e) => setDescription(e.htmlValue)}
+                      style={{ height: '80px' }}
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label">Organizing Committee Details{renderAsterisk()}</label>
+                    <Editor
+                      value={description}
+                      onTextChange={(e) => setDescription(e.htmlValue)}
+                      style={{ height: '80px' }}
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label">No of Student Volunteers{renderAsterisk()}</label>
+                    <Editor
+                      value={description}
+                      onTextChange={(e) => setDescription(e.htmlValue)}
+                      style={{ height: '80px' }}
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label">No of Attendees/ Participants{renderAsterisk()}</label>
+                    <Editor
+                      value={description}
+                      onTextChange={(e) => setDescription(e.htmlValue)}
+                      style={{ height: '80px' }}
+                    />
+                  </div>
+                  <div className="flex pt-4 justify-content-between">
+                    <Button label="Back" severity="secondary" icon="pi pi-arrow-left" onClick={() => stepperRef.current.prevCallback()} />
+                    <Button label="Next" icon="pi pi-arrow-right" iconPos="right" onClick={() => stepperRef.current.nextCallback()} />
+                  </div>
+                </StepperPanel>
+
+
+                <StepperPanel header="">
+                  <div className="mb-3">
+                    <label className="form-label">SUMMARY OF THE OVERALL EVENT{renderAsterisk()}</label>
+                    <Editor
+                      value={summary}
+                      onTextChange={(e) => setSummary(e.htmlValue)}
+                      style={{ height: '200px' }}
+                    />
+                  </div>
+
+                  <h3 className="text-center mt-4 mb-3">OUTCOMES OF THE EVENT</h3>
+                  {form.outcomes.map((outcome, index) => (
+                    <div key={index} className="mb-3">
+                      <label className="form-label">Outcome {index + 1}{renderAsterisk()}</label>
+                      <Editor
+                        value={outcome}
+                        onTextChange={(e) => handleOutcomeChange(index, e.htmlValue)}
+                        style={{ height: '200px' }}
+                      />
+                    </div>
+                  ))}
+
+                  <h3 className="text-center mt-4 mb-3">SUGGESTIONS FOR IMPROVEMENT • FEEDBACK FROM IQAC</h3>
+                  <div>
+                    <div className="mb-3">
+                      <label htmlFor="proposal" className="form-label">Upload {renderAsterisk()}</label>
+                      <div className="d-flex flex-wrap">
+                        {files.map((file, index) => (
+                          <div key={index} className="file-box p-3 me-2 mb-2 border border-primary">
+                            <span>{file.name}</span>
+                          </div>
+                        ))}
+                        <div className="file-box p-3 me-2 mb-2 border border-primary d-flex align-items-center justify-content-center" onClick={handleAddFile}>
+                          <FontAwesomeIcon icon={faPlus} />
+                        </div>
+                      </div>
+                      <input
+                        id="fileInput"
+                        type="file"
+                        accept=".pdf"
+                        onChange={handleFileChange}
+                        className="d-none"
                       />
                     </div>
                   </div>
-                </div>
-              ))}
-              <div className="mb-3">
-                <label htmlFor="academicYear" className="form-label">Academic Year{renderAsterisk()}</label>
-                <Dropdown
-                  id="academicYear"
-                  value={academicYear}
-                  options={academicYearOptions}
-                  onChange={(e) => setAcademicYear(e.value)}
-                  placeholder="Select academic year"
-                  className="w-100"
-                />
-              </div>
 
-              <div className="mb-3">
-                <label htmlFor="eventType" className="form-label">Event Type{renderAsterisk()}</label>
-                <Dropdown
-                  id="eventType"
-                  value={eventTypeFocus}
-                  options={eventTypeOptions}
-                  onChange={(e) => setEventTypeFocus(e.value)}
-                  placeholder="Select event type"
-                  className="w-100"
-                />
-              </div>
-
-
-              <div>
-                <div className="mb-3">
-                  <label htmlFor="proposal" className="form-label">Upload Proposal{renderAsterisk()}</label>
-                  <div className="d-flex flex-wrap">
-                    {files.map((file, index) => (
-                      <div key={index} className="file-box p-3 me-2 mb-2 border border-primary">
-                        <span>{file.name}</span>
-                      </div>
-                    ))}
-                    <div className="file-box p-3 me-2 mb-2 border border-primary d-flex align-items-center justify-content-center" onClick={handleAddFile}>
-                      <FontAwesomeIcon icon={faPlus} />
-                    </div>
+                  <div className="flex pt-4 justify-content-between">
+                    <Button label="Back" severity="secondary" icon="pi pi-arrow-left" onClick={() => stepperRef.current.prevCallback()} />
+                    <Button label="Submit" iconPos="right" onClick={() => stepperRef.current.nextCallback()} />
                   </div>
-                  <input
-                    id="fileInput"
-                    type="file"
-                    accept=".pdf"
-                    onChange={handleFileChange}
-                    className="d-none"
-                  />
-                </div>
-                {error && <div className="text-danger">{error}</div>}
-              </div>
-
-              <div className="mb-3">
-                <label className="form-label">Tag{renderAsterisk()}</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="tag"
-                  name="tag"
-                  value={tag}
-                  onChange={(e) => setTag(e.target.value)}
-                  placeholder="Enter a tag"
-                />
-              </div>
-
-              {/* Additional Form Fields */}
-              <div className="mb-3">
-                <label className="form-label">Blog Link{renderAsterisk()}</label>
-                <input type="text" className="form-control" name="blogLink" value={form.blogLink} onChange={handleChange} />
-              </div>
-
-              <h3 className="text-center mt-4 mb-3">PARTICIPANTS INFORMATION</h3>
-              <div className="mb-3">
-                <label className="form-label">Target Audience{renderAsterisk()}</label>
-                <input type="text" className="form-control" name="targetAudience" value={form.targetAudience} onChange={handleChange} />
-              </div>
-              <div className="mb-3">
-                <label className="form-label">External Members/ Agencies with Affiliation{renderAsterisk()}</label>
-                <input type="text" className="form-control" name="externalAgencies" value={form.externalAgencies} onChange={handleChange} />
-              </div>
-              <div className="mb-3">
-                <label className="form-label">Website/Contact of External Members{renderAsterisk()}</label>
-                <input type="text" className="form-control" name="externalContacts" value={form.externalContacts} onChange={handleChange} />
-              </div>
-              <div className="mb-3">
-                <label className="form-label">Organizing Committee Details{renderAsterisk()}</label>
-                <input type="text" className="form-control" name="organizingCommittee" value={form.organizingCommittee} onChange={handleChange} />
-              </div>
-              <div className="mb-3">
-                <label className="form-label">No of Student Volunteers{renderAsterisk()}</label>
-                <input type="number" className="form-control" name="studentVolunteers" value={form.studentVolunteers} onChange={handleChange} />
-              </div>
-              <div className="mb-3">
-                <label className="form-label">No of Attendees/ Participants{renderAsterisk()}</label>
-                <input type="number" className="form-control" name="attendees" value={form.attendees} onChange={handleChange} />
-              </div>
-
-
-              <div className="mb-3">
-                <label className="form-label">SUMMARY OF THE OVERALL EVENT{renderAsterisk()}</label>
-                <Editor
-                  value={summary}
-                  onTextChange={(e) => setSummary(e.htmlValue)}
-                  style={{ height: '320px' }}
-                />
-              </div>
-
-              <h3 className="text-center mt-4 mb-3">OUTCOMES OF THE EVENT</h3>
-              {form.outcomes.map((outcome, index) => (
-                <div key={index} className="mb-3">
-                  <label className="form-label">Outcome {index + 1}{renderAsterisk()}</label>
-                  <textarea
-                    className="form-control"
-                    name={`outcome${index}`}
-                    value={outcome}
-                    onChange={(e) => handleOutcomeChange(index, e.target.value)}
-                    maxLength="500"
-                  />
-                </div>
-              ))}
-
-              <h3 className="text-center mt-4 mb-3">SUGGESTIONS FOR IMPROVEMENT • FEEDBACK FROM IQAC</h3>
-              <div>
-                <div className="mb-3">
-                  <label htmlFor="proposal" className="form-label">Upload {renderAsterisk()}</label>
-                  <div className="d-flex flex-wrap">
-                    {files.map((file, index) => (
-                      <div key={index} className="file-box p-3 me-2 mb-2 border border-primary">
-                        <span>{file.name}</span>
-                      </div>
-                    ))}
-                    <div className="file-box p-3 me-2 mb-2 border border-primary d-flex align-items-center justify-content-center" onClick={handleAddFile}>
-                      <FontAwesomeIcon icon={faPlus} />
-                    </div>
-                  </div>
-                  <input
-                    id="fileInput"
-                    type="file"
-                    accept=".pdf"
-                    onChange={handleFileChange}
-                    className="d-none"
-                  />
-                </div>
-                {error && <div className="text-danger">{error}</div>}
-              </div>
-            </form>
+                </StepperPanel>
+              </Stepper>
+            </div>
           </div>
         </div>
       </div>

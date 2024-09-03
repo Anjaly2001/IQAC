@@ -51,8 +51,14 @@ function Sidebar() {
   const isActive = (path) => location.pathname === path; // Check if the current path matches the link path
 
   const handleLogout = () => {
+    // Clear any stored user session or token data
+    localStorage.removeItem('userToken'); // Clear stored token (example)
+    
     console.log('User logged out');
     navigate('/login'); // Navigate to the login page
+
+    // Refresh the page to ensure the user is completely logged out
+    window.location.reload(); // This forces the page to reload and prevents access without login
   };
 
   return (

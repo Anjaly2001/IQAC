@@ -166,3 +166,35 @@ export const user_delete = async (department_id) => {
     toast.error('Failed to delete user. Please try again.');
   }
 };
+
+export const academic_register = async (form) => {
+  try {
+    const res = await axiosInstance.post('department_and_events/create_academic_year/', form);
+    return res.data;
+  }
+  catch (error) {
+    console.log(error);
+    toast.error('Failed to create department. Please try again.');
+  }
+};
+
+export const academic_list= async (form) => {
+  try {
+    const res = await axiosInstance.get('department_and_events/list_academic_year/', form);
+    return res.data;
+  }
+  catch (error) {
+    console.log(error);
+    toast.error('Failed to create department. Please try again.');
+  }
+};
+
+export const academic_delete = async (academicYearId) => {
+  try {
+    const res = await axiosInstance.delete(`department_and_events/delete_academic_year/${academicYearId}/`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    toast.error('Failed to delete department. Please try again.');
+  }
+};

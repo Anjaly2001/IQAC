@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import AdminDashboard from '../Admin/AdminDashboard';
-import { useNavigate } from 'react-router-dom'; // Assuming you use react-router
+import { useNavigate } from 'react-router-dom';
 import { Dropdown } from 'primereact/dropdown';
+import axios from 'axios';
+import { campus_list, academic_register} from '../../axios/api';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CreateAcademicYear = () => {
     const [campus, setCampus] = useState('');
@@ -13,14 +17,23 @@ const CreateAcademicYear = () => {
     const history = useNavigate();
 
     useEffect(() => {
-        // Fetch campuses from backend (dummy data for now)
-        setCampuses([
-            { id: 1, name: 'Campus A' },
-            { id: 2, name: 'Campus B' }
-        ]);
+        const fetchCampuses= async () => {
+            try {
+                const response = await campus_list();
+                if (response && Array.isArray(response)) {
+                    setCampuses(response);
+                } else {
+                    console.error('Unexpected response format:', response);
+                }
+            } catch (error) {
+                console.error('Failed to fetch locations:', error);
+                toast.error('Failed to fetch locations.');
+            }
+        };
+        fetchCampuses();
     }, []);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!campus || !label || !startDate || !endDate) {
@@ -30,22 +43,27 @@ const CreateAcademicYear = () => {
 
         const newAcademicYear = { campus, label, start_date: startDate, end_date: endDate };
 
-        // Post the new academic year to the backend (skipping for now)
-        console.log(newAcademicYear);
+        try {
+            const response = await academic_register() // Update the URL with your backend endpoint
+            console.log('Academic Year created:', response);
 
-        // Reset the form
-        setCampus('');
-        setLabel('');
-        setStartDate('');
-        setEndDate('');
-        setError('');
+            // Reset the form
+            setCampus('');
+            setLabel('');
+            setStartDate('');
+            setEndDate('');
+            setError('');
 
-        // Navigate to ListAcademicYear page
-        history.push('/list-academic-year');
+            // Navigate to ListAcademicYear page
+            history('/list-academic-year');
+        } catch (error) {
+            console.error('Error creating academic year:', error);
+            setError('Failed to create academic year.');
+        }
     };
-
     return (
         <div className="container-fluid">
+            <ToastContainer />
             <div className="row">
                 <div className="col-md-2 p-0">
                     <AdminDashboard />
@@ -56,21 +74,32 @@ const CreateAcademicYear = () => {
                             <h2>Create Academic Year</h2>
                             <form onSubmit={handleSubmit} className="w-100">
                                 <div className="row mb-4">
-                                    <div className="col-md-6 mt-4">
-                                        <label htmlFor="campus">
-                                            Campus: <span className="text-danger">*</span>
-                                        </label>
-                                        <Dropdown
-                                            id="campus"
-                                            value={campus}
-                                            options={campuses.map(c => ({ label: c.name, value: c.name }))}
-                                            onChange={(e) => setCampus(e.value)}
-                                            placeholder="Select Campus"
-                                            className="w-100"
-                                            required
-                                        />
-                                        <small className="form-text text-muted">Select the campus for this academic year.</small>
-                                    </div>
+                                <div className="col-md-6 mt-4">
+                                    <label htmlFor="location">
+                                        Campus: <span className="text-danger">*</span>
+                                    </label>
+                                    <select
+                                        id="location"
+                                        className="form-select"
+                                        value={campus}
+                                        onChange={(e) => setCampus(e.target.value)}
+                                        required
+                                    >
+                                        <option value="">Choose Location</option>
+                                        {campuses.length > 0 ? (
+                                            campuses.map(loc => (
+                                                <option key={loc.id} value={loc.id}>
+                                                    {loc.campus}
+                                                </option>
+                                            ))
+                                        ) : (
+                                            <option value="">No locations available</option>
+                                        )}
+                                        {/* <option value="Others">Others</option> */}
+                                    </select>
+                                    <small className="form-text text-muted">Select the campus for this academic year.</small>
+                                </div>
+
 
                                     <div className="col-md-6 mt-4 mb-4">
                                         <label htmlFor="label">

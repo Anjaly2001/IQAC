@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AdminDashboard from '../Admin/AdminDashboard';
 import { OverlayTrigger, Tooltip, ToastContainer, Toast } from 'react-bootstrap'; // Assuming you use react-bootstrap
+import { user_register, campus_list, department_list } from '../../axios/api';
 
 const RegisterSingleUser = () => {
     const [userName, setUserName] = useState('');
@@ -19,12 +20,33 @@ const RegisterSingleUser = () => {
         { id: 'campus2', campus: 'North Campus' },
         { id: 'campus3', campus: 'South Campus' }
     ];
+    
+    useEffect(() => {
+        const fetchCampuses = async () => {
+            try {
+                const response = await campus_list();
+                setUserCampus(response);
+            } catch (error) {
+                console.error('Failed to fetch campuses:', error);
+                toastMessage.error('Failed to load campus options.');
+            }
+        };
+        fetchCampuses();
+    }, []);
 
-    const departments = [
-        { id: 'dept1', department: 'Computer Science' },
-        { id: 'dept2', department: 'Electronics' },
-        { id: 'dept3', department: 'Mathematics' }
-    ];
+    useEffect(() => {
+        const fetchDepartments = async () => {
+            try {
+                const response = await department_list();
+                setUserDepartment(response);
+            } catch (error) {
+                console.error('Failed to fetch departments:', error);
+                toastMessage.error('Failed to load department options.');
+            }
+        };
+        fetchDepartments();
+    }, []);
+
 
     const validateFields = () => {
         if (!userName || !userEmpId || !userEmail || !userPhoneNumber || !userCampus || !userDepartment) {
@@ -96,6 +118,7 @@ const RegisterSingleUser = () => {
             setShowToast(true);
         }
     };
+
 
     const renderAsterisk = () => (
         <span style={{ color: 'red' }}>*</span>
@@ -230,8 +253,8 @@ const RegisterSingleUser = () => {
                                                 onChange={(e) => setUserDepartment(e.target.value)}
                                             >
                                                 <option value="">Choose Department</option>
-                                                {departments && departments.length > 0 ? (
-                                                    departments.map(dep => (
+                                                {userDepartment && userDepartment.length > 0 ? (
+                                                    userDepartment.map(dep => (
                                                         <option key={dep.id} value={dep.id}>
                                                             {dep.department}
                                                         </option>
@@ -239,9 +262,9 @@ const RegisterSingleUser = () => {
                                                 ) : (
                                                     <option value="">No departments available</option>
                                                 )}
-                                                <option value="Others">Others</option>
+                                                
                                             </select>
-                                            {userDepartment === 'Others' && (
+                                            {/* {userDepartment === 'Others' && (
                                                 <input
                                                     type="text"
                                                     className="form-control mt-2"
@@ -250,7 +273,7 @@ const RegisterSingleUser = () => {
                                                     value={customDepartment}
                                                     onChange={(e) => setCustomDepartment(e.target.value)}
                                                 />
-                                            )}
+                                            )} */}
                                         </div>
                                     </div>
                                 </div>

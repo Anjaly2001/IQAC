@@ -14,7 +14,7 @@ const CreateCampus = () => {
     const [logoName, setLogoName] = useState('');
     const [logoPreview, setLogoPreview] = useState(''); // State for image preview
     const [campuses, setCampuses] = useState([]);
-    const [isEdit, setIsEdit] = useState(false); 
+    const [isEdit, setIsEdit] = useState(false);
 
     const token = localStorage.getItem('access_token');
 

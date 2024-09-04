@@ -1,30 +1,55 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import AdminDashboard from '../Admin/AdminDashboard';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios'; // For API requests
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { academic_list, academic_delete} from '../../axios/api';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const ListAcademicYear = () => {
-    const [academicYears, setAcademicYears] = useState([
-        { id: 1, campus: 'Campus A', start_date: '2023-08-01', end_date: '2024-07-31', label: '2023-2024' },
-        { id: 2, campus: 'Campus B', start_date: '2022-08-01', end_date: '2023-07-31', label: '2022-2023' }
-    ]);
+    const [academicYears, setAcademicYears] = useState([]);
+    const [error, setError] = useState(null);
     const history = useNavigate();
+
+    // Fetch academic years from the backend API
+    useEffect(() => {
+        const fetchAcademicYears = async () => {
+            try {
+                const response = await academic_list() ; // Update with your API endpoint
+                setAcademicYears(response.data);
+            } catch (error) {
+                console.error('Error fetching academic years:', error);
+                setError('Failed to load academic years');
+            }
+        };
+
+        fetchAcademicYears();
+    }, []);
 
     const handleEdit = (year) => {
         // Navigate to CreateAcademicYear page with pre-filled details
-        history.push({
-            pathname: '/create-academic-year',
-            state: { academicYear: year }
-        });
+        history('/create-academic-year', { state: { academicYear: year } });
     };
 
-    const handleDelete = (id) => {
-        setAcademicYears(academicYears.filter(year => year.id !== id));
+    const handleDelete = async (id) => {
+        try {
+            const response = await academic_delete(id); 
+            setAcademicYears(academicYears.filter(year => year.id !== id));
+            console.log(response);
+            toast.success('User deleted successfully!');
+        } catch (error) {
+            console.error('Error deleting academic year:', error);
+            console.log(error)
+            setError('Failed to delete academic year');
+        }
     };
 
     return (
         <div className="container-fluid">
+            <ToastContainer />
             <div className="row">
                 <div className="col-md-2 p-0">
                     <AdminDashboard />
@@ -45,7 +70,7 @@ const ListAcademicYear = () => {
                             <tbody>
                                 {academicYears.map((year) => (
                                     <tr key={year.id}>
-                                        <td>{year.campus}</td>
+                                        <td>{year.location ? year.location.campus : 'No Campus Info'}</td> {/* Accessing nested campus */}
                                         <td>{year.label}</td>
                                         <td>{year.start_date}</td>
                                         <td>{year.end_date}</td>

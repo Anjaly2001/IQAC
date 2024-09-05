@@ -174,7 +174,7 @@ export const academic_register = async (form) => {
   }
   catch (error) {
     console.log(error);
-    toast.error('Failed to create department. Please try again.');
+    toast.error('Failed to create academic year. Please try again.');
   }
 };
 
@@ -185,7 +185,7 @@ export const academic_list= async (form) => {
   }
   catch (error) {
     console.log(error);
-    toast.error('Failed to create department. Please try again.');
+    toast.error('Failed to create academic year. Please try again.');
   }
 };
 
@@ -195,6 +195,17 @@ export const academic_delete = async (academicYearId) => {
     return res.data;
   } catch (error) {
     console.log(error);
-    toast.error('Failed to delete department. Please try again.');
+    toast.error('Failed to delete academic year. Please try again.');
+  }
+};
+
+export const event_type_register = async (form) => {
+  try {
+    const res = await axiosInstance.post('department_and_events/create_academic_year/', form);
+    return res.data;
+  }
+  catch (error) {
+    console.log(error);
+    toast.error('Failed to create academic year. Please try again.');
   }
 };

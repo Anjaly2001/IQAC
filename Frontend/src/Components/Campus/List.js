@@ -83,7 +83,7 @@ const ListCampus = () => {
 
     const editCampus = (campusId) => {
         const selectedCampus = campuses.find(campus => campus.id === campusId);
-        navigate('/create-campus', { state: { campus: selectedCampus } });
+        navigate('/createCampus', { state: { campus: selectedCampus } });
     };
 
     const deleteCampus = async (id) => {

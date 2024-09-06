@@ -46,7 +46,7 @@ const DepartmentList = () => {
     };
 
     const startEditing = (user) => {
-        navigate(`/update-user/${user.id}`);
+        navigate(`/createdepartments/${user.id}`);
     };
 
     const toggleStatus = async (user) => {

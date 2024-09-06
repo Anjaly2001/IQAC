@@ -23,6 +23,7 @@ import EventType from './Components/Event/EventType';
 import EventSummary from './Components/Event/EventSummary';
 import EventTypeList from './Components/Event/EventTypeList';
 import ListAcademicYear from './Components/AcademicYear/ListAcademicYear';
+import AddRole from './Components/Role/AddRole';
 
 
 const App = () => {
@@ -40,6 +41,8 @@ const App = () => {
                             <Route path="/registerSingleuser" element={<RegisterSingleUser />} />
                             <Route path="/registerMultipleUser" element={<RegisterMultipleUser />} />
                             <Route path="/listUser" element={<ListUser />} />
+
+                            <Route path="/addrole" element={<AddRole />} />
                             <Route path="/map" element={<Map />} />
                             <Route path="/dashboard" element={<Dashboard />} />
                             <Route path="/listCampus/*" element={<ListCampus />} />

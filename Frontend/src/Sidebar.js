@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'; // Import use
 import { Nav } from 'react-bootstrap';
 import './Sidebar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUsers, faCalendar, faCog, faHome, faGears, faEye, faPlus, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faUsers, faCalendar, faCog, faHome, faGears, faEye, faPlus, faSignOutAlt,faHandshake } from '@fortawesome/free-solid-svg-icons';
 
 function Sidebar() {
   const location = useLocation(); // Hook to get the current path
@@ -15,6 +15,9 @@ function Sidebar() {
     const path = location.pathname;
     if (path.includes('/registerSingleuser') || path.includes('/registerMultipleUser') || path.includes('/listuser') || path.includes('/map')) {
       setOpenSections((prevState) => ({ ...prevState, accounts: true }));
+    }
+    if (path.includes('/addrole')) {
+      setOpenSections((prevState) => ({ ...prevState, role: true}));
     }
     if (path.includes('/createCampus') || path.includes('/listCampus')) {
       setOpenSections((prevState) => ({ ...prevState, settings: true, campus: true }));
@@ -130,6 +133,41 @@ function Sidebar() {
               </Nav>
             )}
           </Nav.Item>
+  {/* Role Settings Section */}
+
+           <Nav.Item>
+                  <Nav.Link
+                    className="text-light fw-bold "
+                    onClick={() => toggleSection('role')}
+                  >
+                    <FontAwesomeIcon icon={faHandshake} className="me-2" />
+                   Roles
+                  </Nav.Link>
+                  {openSections.role && (
+                    <Nav className="flex-column ms-3">
+                      <Nav.Item>
+                        <Nav.Link
+                          as={Link}
+                          to="/addrole"
+                          className={`text-light ${isActive('/addrole') ? 'active' : ''}`}
+                        >
+                          <FontAwesomeIcon icon={faPlus} className="me-2" />
+                          Add Role
+                        </Nav.Link>
+                      </Nav.Item>
+                      </Nav>
+                  )}
+                </Nav.Item>
+
+
+
+
+
+
+
+
+
+
 
           {/* Settings Section */}
           <Nav.Item>

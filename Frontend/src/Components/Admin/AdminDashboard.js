@@ -16,6 +16,7 @@ import Map from '../Accounts/Map';
 import TagManager from '../Tag/TagManager';
 import CreateTag from '../Tag/CreateTag';
 import ListTag from '../Tag/ListTag';
+import AddRole from '../Role/AddRole';
 
 function AdminDashboard(){
     return (
@@ -29,6 +30,8 @@ function AdminDashboard(){
                     <Route path="/registerSingleuser" element={<RegisterSingleUser />} />
                     <Route path="/registerMultipleUser" element={<RegisterMultipleUser />} />
                     <Route path="/listUser" element={<ListUser />} />
+                    <Route path="/addrole" element={<AddRole />} />
+
                     <Route path="/map" element={<Map />} />
                     <Route path="/createCampus/*" element={<CreateCampus />} />
                     <Route path="/listCampus/*" element={<ListCampus />} />

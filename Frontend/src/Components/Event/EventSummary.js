@@ -1,4 +1,5 @@
 import React from 'react';
+import AdminDashboard from '../Admin/AdminDashboard';
 
 function EventSummary({ formData }) {
   const {
@@ -22,7 +23,8 @@ function EventSummary({ formData }) {
 
   return (
     <div className="container mt-5">
-      <h3>Event Summary</h3>
+      <AdminDashboard/>
+      <h3>Event Registered successfully</h3>
       <hr />
       <div className="mb-3">
         <strong>Campus:</strong> {campus}

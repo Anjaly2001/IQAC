@@ -9,7 +9,16 @@ function Sidebar() {
   const location = useLocation(); // Hook to get the current path
   const navigate = useNavigate(); // Hook to navigate programmatically
   const [openSections, setOpenSections] = useState({});
-  const [userName, setUserName] = useState('Admin'); // Replace with the actual user name logic
+  const [userName, setUserName] = useState('Admin'); //  {role} Replace with the actual user name logic
+  const [role, setRole] = useState('');
+
+
+  useEffect(() => {
+    // Example: fetching role from API or context and updating state
+    // Replace this with your actual logic to fetch role data
+    const userRole = 'Admin'; // Simulating the role. Replace this with actual role data.
+    setRole(userRole);
+  }, []);
 
   useEffect(() => {
     const path = location.pathname;
@@ -77,17 +86,25 @@ function Sidebar() {
           Logged in as: <strong>{userName}</strong>
         </div> */}
         <Nav className="flex-column p-0 mt-5">
+          
           {/* Dashboard */}
           <Nav.Item>
-            <Nav.Link
-              as={Link}
-              to="/dashboard"
-              className={`text-light  fw-bold ${isActive('/dashboard') ? 'active' : ''}`} // Apply active class
-            >
-              <FontAwesomeIcon icon={faHome} className="me-2" />
-              Admin
-            </Nav.Link>
-          </Nav.Item>
+        <Nav.Link
+          as={Link}
+          to="/dashboard"
+          className={`text-light fw-bold ${isActive('/dashboard') ? 'active' : ''}`}
+        >
+          <FontAwesomeIcon icon={faHome} className="me-2" />
+
+          {/* Conditional check based on role */}
+          {role === 'Admin' && 'Admin'}
+          {role === 'HOD' && 'HOD'}
+          {role === 'User' && 'User'}
+          
+          {/* Alternatively, if no role matches, you can set a default value */}
+          {role !== 'Admin' && role !== 'HOD' && role !== 'User' && 'Guest'} 
+        </Nav.Link>
+      </Nav.Item>
 
           {/* Accounts Section */}
           <Nav.Item>
@@ -158,14 +175,6 @@ function Sidebar() {
                       </Nav>
                   )}
                 </Nav.Item>
-
-
-
-
-
-
-
-
 
 
 

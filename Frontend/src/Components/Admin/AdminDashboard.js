@@ -17,6 +17,7 @@ import TagManager from '../Tag/TagManager';
 import CreateTag from '../Tag/CreateTag';
 import ListTag from '../Tag/ListTag';
 import AddRole from '../Role/AddRole';
+import EventSummary from '../Event/EventSummary';
 
 function AdminDashboard(){
     return (
@@ -42,6 +43,9 @@ function AdminDashboard(){
                     <Route path="/tagmanager" element={<TagManager />} />
                     <Route path="/createtag" element={<CreateTag />} />
                     <Route path="/listtag" element={<ListTag />} />
+
+                    <Route path="/eventsummary" element={<EventSummary />} />
+
                 </Routes>
             </div>
         </div>

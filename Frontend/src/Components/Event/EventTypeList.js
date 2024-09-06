@@ -1,36 +1,64 @@
 import React, { useState, useEffect } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { InputText } from 'primereact/inputtext';
+// import { InputText } from 'primereact/inputtext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import AdminDashboard from '../Admin/AdminDashboard';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import {event_type_list, event_type_delete} from '../../axios/api';
 
 export default function EventTypeList() {
     const [eventTypes, setEventTypes] = useState([]);
     const [globalFilter, setGlobalFilter] = useState(null);
 
     useEffect(() => {
-        // Fetch event types data from backend or use dummy data
-        const dummyData = [
-            { id: 1, eventTypeName: 'Conference', description: 'Annual conference event' },
-            { id: 2, eventTypeName: 'Workshop', description: 'Technical workshop' },
-            // Add more dummy data here
-        ];
-        setEventTypes(dummyData);
+        const fetchEventTypeList = async () => {
+            try {
+                const response = await event_type_list();
+    
+                const eventTypeData = response.map(eventType => ({
+                    id: eventType.id,
+                    title: eventType.title,
+                    description: eventType.description // Corrected the typo here
+                }));
+    
+                setEventTypes(eventTypeData);
+            } catch (error) {
+                console.error('Error fetching event types:', error); // Updated error message
+            }
+        };
+    
+        fetchEventTypeList();
     }, []);
-
+    
     const handleSearchChange = (e) => {
         setGlobalFilter(e.target.value);
     };
 
+    const handleDeleteEventType = async (id) => {
+        // const token = localStorage.getItem('access_token');
+        try {
+            const response = await event_type_delete(id);
+            setEventTypes(eventTypes.filter(eventType => eventType.id !== id));
+            console.log(response)
+        
+            toast.success('Event type deleted successfully!');
+        } catch (error) {
+            console.error('Error deleting event type:', error);
+            console.log(error)
+            toast.error('Error deleting event type.');
+        }
+    };
+    
     const actionBodyTemplate = (rowData) => {
         return (
             <div>
                 <button className="btn btn-link">
                     <FontAwesomeIcon icon={faEdit} />
                 </button>
-                <button className="btn btn-link text-danger">
+                <button className="btn btn-link text-danger" onClick={() => handleDeleteEventType(rowData.id)}>
                     <FontAwesomeIcon icon={faTrash} />
                 </button>
             </div>
@@ -39,6 +67,7 @@ export default function EventTypeList() {
 
     return (
         <div className="container-fluid">
+            <ToastContainer />
             <div className="row">
                 <div className="col-md-2 p-0">
                     <AdminDashboard />
@@ -71,7 +100,8 @@ export default function EventTypeList() {
                                 globalFilter={globalFilter}
                                 emptyMessage="No event types found."
                             >
-                                <Column field="eventTypeName" header="Event Type Name" sortable />
+                                {/* <Column field="eventTypeName" header="Event Type Name" sortable /> */}
+                                <Column field="title" header="Event Type Name" sortable />
                                 <Column field="description" header="Description" sortable />
                                 <Column header="Actions" body={actionBodyTemplate} />
                             </DataTable>

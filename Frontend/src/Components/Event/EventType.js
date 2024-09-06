@@ -2,6 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Editor } from "primereact/editor";
 import AdminDashboard from '../Admin/AdminDashboard';
+// import axios from 'axios'; 
+import { ToastContainer, toast } from 'react-toastify';
+// import 'react-toastify/dist/ReactToastify.css';
+import { event_type_register} from '../../axios/api';
+
 
 const EventType = () => {
     const [title, setTitle] = useState('');
@@ -12,7 +17,9 @@ const EventType = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
-   
+    const isTitleCase = (str) => {
+        return str === str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+    };
     
 
     useEffect(() => {
@@ -24,30 +31,36 @@ const EventType = () => {
         }
     }, [location.state]);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        const newEventType = { title, description };
-
-        if (editIndex !== null) {
-            const updatedEventTypes = [...eventTypes];
-            updatedEventTypes[editIndex] = newEventType;
-            setEventTypes(updatedEventTypes);
-        } else {
-            setEventTypes([...eventTypes, newEventType]);
+    const handleSubmit = async (e) => {
+        if (!isTitleCase(title)) {
+            toast.error('Department name must be in title case.');
+            return;  // Stop further execution if validation fails
         }
 
-        setTitle('');
-        setDescription('');
-        setEditIndex(null);
-        navigate('/eventtypelist');
-    };
+        e.preventDefault();
+        
+        const newEventType = { title, description };
+    
+        try {
+            const response = await event_type_register(newEventType); 
+            console.log('Event Type registered:', response.data);
+            setEventTypes([...eventTypes, response.data]); 
 
+            setTitle('');
+            setDescription('');
+            navigate('/eventtypelist');
+        } catch (error) {
+            console.error('Error registering event type:', error.response?.data || error.message);
+            toast.error('Error registering event type. Please try again.');
+        }
+    };
+    
     const renderAsterisk = () => (
         <span style={{ color: 'red' }}>*</span>
     );
     return (
         <div className="container-fluid">
+                <ToastContainer />
             <div className="row">
                 <div className="col-md-2 p-0">
                     <AdminDashboard />

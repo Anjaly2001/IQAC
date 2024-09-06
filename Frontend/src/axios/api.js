@@ -201,11 +201,33 @@ export const academic_delete = async (academicYearId) => {
 
 export const event_type_register = async (form) => {
   try {
-    const res = await axiosInstance.post('department_and_events/create_academic_year/', form);
+    const res = await axiosInstance.post('department_and_events/create_event_type/', form);
     return res.data;
   }
   catch (error) {
     console.log(error);
     toast.error('Failed to create academic year. Please try again.');
+  }
+};
+
+
+export const event_type_list= async (form) => {
+  try {
+    const res = await axiosInstance.get('department_and_events/list_event_type/', form);
+    return res.data;
+  }
+  catch (error) {
+    console.log(error);
+    toast.error('Failed to list event types. Please try again.');
+  }
+};
+
+export const event_type_delete = async (eventType) => {
+  try {
+    const res = await axiosInstance.delete(`department_and_events/delete_event_type/${eventType}/`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    // toast.error('Failed to delete user. Please try again.');
   }
 };

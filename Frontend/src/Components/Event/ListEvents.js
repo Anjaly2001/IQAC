@@ -83,7 +83,7 @@ const ListEvents = () => {
         <div className="col-md-2 p-0">
           <AdminDashboard />
         </div>
-        <div className="col-md-10 mt-5 pt-5">
+        <div className="col-md-10 mt-5 pt-5 p-6">
           <div className="container mt-3">
             <div className="d-flex justify-content-center mb-4">
               <h4 className="fw-bold text-center">Event List</h4>

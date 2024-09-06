@@ -9,7 +9,7 @@ import { InputIcon } from 'primereact/inputicon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import homeURL from '../../axios/homeurl';
-import { campus_list, campus_delete } from '../../axios/api';
+import { campus_list,campus_update, campus_delete } from '../../axios/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -86,6 +86,37 @@ const ListCampus = () => {
         navigate('/createCampus', { state: { campus: selectedCampus } });
     };
 
+//     try {
+//         if (isEdit) {
+//             // Update campus if in edit mode
+//             const response = await campus_update(location.state.campus.id, campusData);
+//             toast.success('Campus updated successfully!');
+//         } else {
+//             // Create new campus if not in edit mode
+//             const response = await campus_create(campusData);
+//             toast.success('Campus created successfully!');
+//         }
+//         navigate('/listCampus'); // Redirect after success
+//     } catch (error) {
+//         toast.error('Failed to save campus. Please try again.');
+//         console.error('Error saving campus:', error);
+//     }
+// };
+
+    // const editCampus = async (id) => {
+    //     const token = localStorage.getItem('access_token');
+    //     try {
+    //         const response = await campus_update(id, updatedCampusData);
+    //         setCampuses(campuses.filter(campus => campus.id !== id));
+    //         toast.success('Campus upadated successfully!');
+    //         // setDepartments(response)
+    //     } catch (error) {
+    //         console.error('Error in updating Campus:', error);
+    //         console.log(error)
+    //         // toast.success('Department deleted successfully!');
+    //     }
+    // };
+
     const deleteCampus = async (id) => {
         const token = localStorage.getItem('access_token');
         try {
@@ -100,13 +131,7 @@ const ListCampus = () => {
         }
     };
 
-    // const deleteCampus = (campusId) => {
-    //     const updatedCampuses = campuses.filter(campus => campus.id !== campusId);
-    //     setCampuses(updatedCampuses);
-
-    //     // Optionally, make an API call to delete the campus from the server
-    //     // await deleteCampusAPI(campusId);
-    // };
+    
 
     const header = renderHeader();
 

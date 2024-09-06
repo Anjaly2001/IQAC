@@ -24,7 +24,6 @@ function RegisterEvent() {
   const [endTime, setEndTime] = useState('');
   const [venue, setVenue] = useState('');
   const [academicYear, setAcademicYear] = useState('');
-  const [eventTypeFocus, setEventTypeFocus] = useState('');
   const [proposal, setProposal] = useState(null);
   const [collaborators, setCollaborators] = useState([{ name: '', department: '', campus: '' }]);
   const [tag, setTag] = useState('');
@@ -89,7 +88,6 @@ function RegisterEvent() {
       endTime,
       venue,
       academicYear,
-      eventTypeFocus,
       proposal,
       collaborators,
       tag,
@@ -99,7 +97,7 @@ function RegisterEvent() {
   };
 
   if (submitted) {
-    return <EventSummary formData={{ department, eventType, description, campus, eventTitle, activities, startDate, endDate, startTime, endTime, venue, academicYear, eventTypeFocus, proposal, collaborators, tag }} />;
+    return <EventSummary formData={{ department, eventType, description, campus, eventTitle, activities, startDate, endDate, startTime, endTime, venue, academicYear, proposal, collaborators, tag }} />;
   }
   const renderAsterisk = () => (
     <span style={{ color: 'red' }}>*</span>
@@ -150,7 +148,6 @@ function RegisterEvent() {
       ],
     },
   ]
- 
 
   const tagOptions = [
     {
@@ -198,17 +195,17 @@ function RegisterEvent() {
 
     // Validate if the file is a PDF
     if (newFile && newFile.type !== "application/pdf") {
-        setError("Only PDF files are allowed.");
-        return;
+      setError("Only PDF files are allowed.");
+      return;
     }
 
     setFiles([...files, newFile]);
     setError(null); // Reset error if the file is valid
-};
+  };
 
-const handleAddFile = () => {
+  const handleAddFile = () => {
     document.getElementById('fileInput').click();
-};
+  };
 
   return (
     <div className="container-fluid">
@@ -384,20 +381,18 @@ const handleAddFile = () => {
                       />
                     </div>
                     <div className="mb-3">
-                <label htmlFor="venue" className="form-label">Venue{renderAsterisk()}</label>
-                <InputText
-                  id="venue"
-                  value={venue}
-                  onChange={(e) => setVenue(e.target.value)}
-                  placeholder="Enter venue"
-                  className="w-100"
-                />
-              </div>
+                      <label htmlFor="venue" className="form-label">Venue{renderAsterisk()}</label>
+                      <InputText
+                        id="venue"
+                        value={venue}
+                        onChange={(e) => setVenue(e.target.value)}
+                        placeholder="Enter venue"
+                        className="w-100"
+                      />
+                    </div>
                   </div>
                 </div>
               ))}
-
-              
 
               <div className="mb-3">
                 <label htmlFor="academicYear" className="form-label">Academic Year{renderAsterisk()}</label>
@@ -411,63 +406,60 @@ const handleAddFile = () => {
                 />
               </div>
 
-
               <div className="mb-3">
-  <label htmlFor="eventType" className="form-label">
-    Event Type{renderAsterisk()}
-  </label>
-  <MultiSelect
-    id="eventType"
-    value={eventType}
-    options={eventTypeOptions}
-    onChange={(e) => setEventTypeFocus(e.value)}
-    placeholder="Select event type"
-    className="w-100"
-    filter
-  />
-</div>
-
-
+                <label htmlFor="eventType" className="form-label">
+                  Event Type{renderAsterisk()}
+                </label>
+                <MultiSelect
+                  id="eventType"
+                  value={eventType}
+                  options={eventTypeOptions}
+                  onChange={(e) => setEventType(e.value)}
+                  placeholder="Select event type"
+                  className="w-100"
+                  filter
+                />
+              </div>
 
               <div>
-            <div className="mb-3">
-                <label htmlFor="proposal" className="form-label">Upload Proposal{renderAsterisk()}</label>
-                <div className="d-flex flex-wrap">
+                <div className="mb-3">
+                  <label htmlFor="proposal" className="form-label">Upload Proposal{renderAsterisk()}</label>
+                  <div className="d-flex flex-wrap">
                     {files.map((file, index) => (
-                        <div key={index} className="file-box p-3 me-2 mb-2 border border-primary">
-                            <span>{file.name}</span>
-                        </div>
+                      <div key={index} className="file-box p-3 me-2 mb-2 border border-primary">
+                        <span>{file.name}</span>
+                      </div>
                     ))}
                     <div className="file-box p-3 me-2 mb-2 border border-primary d-flex align-items-center justify-content-center" onClick={handleAddFile}>
-                        <FontAwesomeIcon icon={faPlus} />
+                      <FontAwesomeIcon icon={faPlus} />
                     </div>
-                </div>
-                <input
+                  </div>
+                  <input
                     id="fileInput"
                     type="file"
                     accept=".pdf"
                     onChange={handleFileChange}
                     className="d-none"
-                />
-            </div>
-            {error && <div className="text-danger">{error}</div>}
-        </div>
+                  />
+                </div>
+                {error && <div className="text-danger">{error}</div>}
+              </div>
 
-              
+
               <div className="mb-3">
-  <label htmlFor="tags" className="form-label">
-Tags{renderAsterisk()}
-  </label>
-  <MultiSelect
-    id="Tags"
-    value={tag}
-    options={tagOptions}
-    onChange={(e) => setTag(e.value)}
-    placeholder="Select Tags"
-    className="w-100"
-    filter
-  />
-</div>
+                <label htmlFor="tags" className="form-label">
+                  Tags{renderAsterisk()}
+                </label>
+                <MultiSelect
+                  id="Tags"
+                  value={tag}
+                  options={tagOptions}
+                  onChange={(e) => setTag(e.value)}
+                  placeholder="Select Tags"
+                  className="w-100"
+                  filter
+                />
+              </div>
 
               <button type="submit" className="btn btn-primary">
                 Submit

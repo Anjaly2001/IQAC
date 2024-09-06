@@ -6,6 +6,7 @@ import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Editor } from 'primereact/editor';
 import { Dropdown } from 'primereact/dropdown';
+import { MultiSelect } from 'primereact/multiselect';
 import AdminDashboard from '../Admin/AdminDashboard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -20,7 +21,7 @@ function AddReport() {
   const [numberOfActivities, setNumberOfActivities] = useState(1);
   const [venue, setVenue] = useState('');
   const [academicYear, setAcademicYear] = useState('');
-  const [eventTypeFocus, setEventTypeFocus] = useState('');
+  const [eventType, setEventType] = useState('');
   const [proposal, setProposal] = useState(null);
   const [tag, setTag] = useState('');
   const [collaboratorNames, setCollaboratorNames] = useState(['John Doe', 'Jane Smith']); // Dummy names
@@ -76,12 +77,88 @@ function AddReport() {
     // Add more academic years as needed
   ];
 
+
   const eventTypeOptions = [
-    { label: 'Seminar', value: 'Seminar' },
-    { label: 'Workshop', value: 'Workshop' },
-    { label: 'Conference', value: 'Conference' },
-    // Add more event types as needed
-  ];
+    {
+      value: 0,
+      label: 'Dance',
+      selected: true,
+    },
+    {
+      value: 1,
+      label: 'Music',
+      selected: true,
+      // disabled: true,
+    },
+    {
+      value: 2,
+      label: 'Drama',
+    },
+    {
+      value: 3,
+      label: 'Coding',
+    },
+    {
+      label: 'backend',
+      options: [
+        {
+          value: 4,
+          label: 'Django',
+        },
+        {
+          value: 5,
+          label: 'Laravel',
+          selected: true,
+        },
+        {
+          value: 6,
+          label: 'Node.js',
+        },
+      ],
+    },
+  ]
+
+
+  const tagOptions = [
+    {
+      value: 0,
+      label: 'Dance',
+      selected: true,
+    },
+    {
+      value: 1,
+      label: 'Music',
+      selected: true,
+      // disabled: true,
+    },
+    {
+      value: 2,
+      label: 'Drama',
+    },
+    {
+      value: 3,
+      label: 'Coding',
+    },
+    {
+      label: 'backend',
+      options: [
+        {
+          value: 4,
+          label: 'Django',
+        },
+        {
+          value: 5,
+          label: 'Laravel',
+          selected: true,
+        },
+        {
+          value: 6,
+          label: 'Node.js',
+        },
+      ],
+    },
+
+  ]
   const handleCollaboratorChange = (index, field, value) => {
     const updatedCollaborators = [...form.collaborators];
     updatedCollaborators[index][field] = value;
@@ -347,14 +424,17 @@ function AddReport() {
                   </div>
 
                   <div className="mb-3">
-                    <label htmlFor="eventType" className="form-label">Event Type{renderAsterisk()}</label>
-                    <Dropdown
+                    <label htmlFor="eventType" className="form-label">
+                      Event Type{renderAsterisk()}
+                    </label>
+                    <MultiSelect
                       id="eventType"
-                      value={eventTypeFocus}
+                      value={eventType}
                       options={eventTypeOptions}
-                      onChange={(e) => setEventTypeFocus(e.value)}
+                      onChange={(e) => setEventType(e.value)}
                       placeholder="Select event type"
                       className="w-100"
+                      filter
                     />
                   </div>
 
@@ -384,15 +464,17 @@ function AddReport() {
                   </div>
 
                   <div className="mb-3">
-                    <label className="form-label">Tag{renderAsterisk()}</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="tag"
-                      name="tag"
+                    <label htmlFor="tags" className="form-label">
+                      Tags{renderAsterisk()}
+                    </label>
+                    <MultiSelect
+                      id="Tags"
                       value={tag}
-                      onChange={(e) => setTag(e.target.value)}
-                      placeholder="Enter a tag"
+                      options={tagOptions}
+                      onChange={(e) => setTag(e.value)}
+                      placeholder="Select Tags"
+                      className="w-100"
+                      filter
                     />
                   </div>
                   <div className="mb-3">
@@ -514,6 +596,61 @@ function AddReport() {
                     <Button label="Submit" iconPos="right" onClick={() => stepperRef.current.nextCallback()} />
                   </div>
                 </StepperPanel>
+
+                <StepperPanel header="">
+                <div className="row">
+                <div className="col-lg-6">
+                <h4 className="text-center mb-4 mt-2">Registered Event Details</h4>
+
+                            <p><strong>Campus :</strong> {}</p>
+                            <p><strong>Department :</strong> {}</p>
+                            <p><strong>C_Campus :</strong> {}</p>
+                            <p><strong>C_Department :</strong> {}</p>
+                            <p><strong>C_Name :</strong> {}</p>
+                            <p><strong>Event Title :</strong> {}</p>
+                            <p><strong>Description :</strong> {}</p>
+                            <p><strong>NO.Of_Activities :</strong> {}</p>
+                            <p><strong>Title :</strong> {}</p>
+                            <p><strong>Date :</strong> {}</p>
+                            <p><strong>Time :</strong> {}</p>
+                            <p><strong>Venue :</strong> {}</p>
+                            <p><strong>Academic Year :</strong> {}</p>
+                            <p><strong>Event_Type :</strong> {}</p>
+                            <p><strong>proposal :</strong> {}</p>
+                            <p><strong>Tags :</strong> {}</p>
+                            <p><strong>Blog Link :</strong> {}</p>
+                            <p><strong>Target Audience :</strong> {}</p>
+                            <p><strong>External Members :</strong> {}</p>
+                            <p><strong>Organizing Committee :</strong> {}</p>
+                            <p><strong>No.Of_Student_Volunteers :</strong> {}</p>
+                            <p><strong>No.Of_Attendees :</strong> {}</p>
+                            <p><strong>Summary :</strong> {}</p>
+                            <p><strong>Outcome :</strong> {}</p>
+                            <p><strong>feedBack :</strong> {}</p>
+
+
+
+                            {/* {[
+                                { label: ":", value:1 },
+                                { label: ":", value:2 },
+                                { label: ":", value:3 },
+                                { label: ":", value:4  },
+                                { label: ":", value:5  },
+                                { label: ":", value:6  },
+                                { label: ":", value:7  },
+                         
+                              ]} */}
+
+        
+                   </div>
+                  </div>
+
+
+                </StepperPanel>
+
+
+
+                
               </Stepper>
             </div>
           </div>

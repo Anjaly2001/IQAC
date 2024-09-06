@@ -44,7 +44,7 @@ const ListUser = () => {
 
 
     const startEditing = (user) => {
-        navigate(`/update-user/${user.id}`);
+        navigate(`/registerSingleuser/${user.id}`);
     };
 
     

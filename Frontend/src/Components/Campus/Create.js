@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom'; // Import useNavigate
-import Axios from 'axios';
-import AdminDashboard from '../Admin/AdminDashboard';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
+import AdminDashboard from '../Admin/AdminDashboard';
 import 'react-toastify/dist/ReactToastify.css';
-import { campus_register } from '../../axios/api';
+import { campus_register, campus_update } from '../../axios/api'; // Import the update API function
 
 const CreateCampus = () => {
-    const location = useLocation(); 
-    const navigate = useNavigate(); // Initialize navigate function
+    const location = useLocation();
+    const navigate = useNavigate();
     const [campusName, setCampusName] = useState('');
     const [logo, setLogo] = useState(null);
     const [logoName, setLogoName] = useState('');
-    const [logoPreview, setLogoPreview] = useState(''); // State for image preview
+    const [logoPreview, setLogoPreview] = useState('');
     const [campuses, setCampuses] = useState([]);
     const [isEdit, setIsEdit] = useState(false);
+    const [campusId, setCampusId] = useState(null); // State to hold campus ID when editing
 
     const token = localStorage.getItem('access_token');
 
@@ -23,7 +23,8 @@ const CreateCampus = () => {
             const { campus } = location.state;
             setCampusName(campus.name);
             setLogoName(campus.logo);
-            setIsEdit(true); 
+            setIsEdit(true);
+            setCampusId(campus.id); // Store the campus ID when editing
         }
     }, [location.state]);
 
@@ -31,35 +32,50 @@ const CreateCampus = () => {
         return str === str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
     };
 
-    const handleCreateCampus = async () => {
+    const handleCreateOrUpdateCampus = async () => {
         if (!isTitleCase(campusName)) {
             toast.error('Campus name must be in title case.');
-            return;  // Stop further execution if validation fails
+            return;
         }
 
         if (campusName && (logo || isEdit)) {
             const formData = new FormData();
             formData.append('campus', campusName);
-            if (logo) formData.append('logo', logo); 
+            if (logo) formData.append('logo', logo);
 
             try {
-                const response = await campus_register(formData);
+                let response;
+                if (isEdit && campusId) {
+                    // If in edit mode, call the update API
+                    response = await campus_update(campusId, formData);
+                } else {
+                    // If not in edit mode, call the create API
+                    response = await campus_register(formData);
+                }
 
                 if (response && response.exist) {
                     toast.error('Campus name already exists!');
                 } else {
-                    const newCampus = response;
-                    setCampuses([...campuses, newCampus]);
+                    if (isEdit) {
+                        toast.success('Campus updated successfully!');
+                    } else {
+                        const newCampus = response;
+                        setCampuses([...campuses, newCampus]);
+                        toast.success('Campus created successfully!');
+                    }
+
+                    // Clear form and reset states
                     setCampusName('');
                     setLogo(null);
                     setLogoName('');
-                    setLogoPreview(''); // Clear the image preview
-                    toast.success(isEdit ? 'Campus updated successfully!' : 'Campus created successfully!');
-                    
-                    // Navigate to ListCampus page
+                    setLogoPreview('');
+                    setIsEdit(false);
+                    setCampusId(null);
+
+                    // Navigate to ListCampus page after a delay
                     setTimeout(() => {
                         navigate('/listCampus');
-                    }, 2000); // Add delay if you want to show the toast message before redirect
+                    }, 2000);
                 }
             } catch (error) {
                 if (error.response) {
@@ -93,10 +109,10 @@ const CreateCampus = () => {
             setLogoPreview('');
         }
     };
+
     const renderAsterisk = () => (
         <span style={{ color: 'red' }}>*</span>
     );
-
     return (
         <div>
             <ToastContainer />
@@ -148,7 +164,7 @@ const CreateCampus = () => {
                                     </div>
                                     <button
                                         className="btn btn-primary mt-3"
-                                        onClick={handleCreateCampus}
+                                        onClick={handleCreateOrUpdateCampus}
                                     >
                                         {isEdit ? 'Update Campus' : 'Create'}
                                     </button>

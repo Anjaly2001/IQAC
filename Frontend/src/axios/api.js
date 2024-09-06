@@ -1,5 +1,5 @@
 import axiosInstance from './index'; // Your Axios instance
-import { postMultipartData } from './utils';
+import { postMultipartData, updateMultipartData } from './utils';
 import { toast } from 'react-toastify';
 
 
@@ -49,9 +49,22 @@ export const campus_list = async (form) => {
   }
 };
 
+export const campus_update = async (campus_id, updatedCampusData) => {
+  try {
+    const res = await updateMultipartData(`department_and_events/campus_update/${campus_id}/`, updatedCampusData);
+    // toast.success('campus created Successfully')
+    return res.data;
+    
+  }
+  catch (error) {
+    console.log(error);
+    toast.error('campus already exist.');
+  }
+};
+
 export const campus_delete = async (campus_id) => {
   try {
-    const res = await axiosInstance.delete(`authentication/user_delete/${campus_id}/`);
+    const res = await axiosInstance.delete(`department_and_events/campus_delete/${campus_id}/`);
     return res.data;
   } catch (error) {
     console.log(error);

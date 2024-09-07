@@ -1,88 +1,72 @@
 import React from 'react';
-import AdminDashboard from '../Admin/AdminDashboard';
+import { useLocation } from 'react-router-dom';
 
-function EventSummary({ formData }) {
-  const {
-    department,
-    eventType,
-    description,
-    campus,
-    eventTitle,
-    activities,
-    startDate,
-    endDate,
-    startTime,
-    endTime,
-    venue,
-    academicYear,
-    eventTypeFocus,
-    proposal,
-    collaborators,
-    tag,
-  } = formData;
+const EventSummary = () => {
+  const { state } = useLocation(); // Get the passed form data from the location state
+  const { formData } = state; // Destructure formData
 
   return (
-    <div className="container mt-5">
-      <AdminDashboard/>
-      <h3>Event Registered successfully</h3>
-      <hr />
+    <div className="container mt-4">
+      <h2 className="text-center mb-4">Event Summary</h2>
       <div className="mb-3">
-        <strong>Campus:</strong> {campus}
+        <strong>Campus:</strong> {formData.campus}
       </div>
       <div className="mb-3">
-        <strong>Department:</strong> {department}
+        <strong>Department:</strong> {formData.department}
       </div>
       <div className="mb-3">
-        <strong>Event Title:</strong> {eventTitle}
+        <strong>Event Title:</strong> {formData.eventTitle}
       </div>
       <div className="mb-3">
         <strong>Description:</strong>
-        <div dangerouslySetInnerHTML={{ __html: description }} />
+        <div dangerouslySetInnerHTML={{ __html: formData.description }} />
       </div>
       <div className="mb-3">
-        <strong>Venue:</strong> {venue}
+        <strong>Academic Year:</strong> {formData.academicYear}
       </div>
       <div className="mb-3">
-        <strong>Academic Year:</strong> {academicYear}
-      </div>
+  <strong>Event Type:</strong> {Array.isArray(formData.eventType) ? formData.eventType.join(', ') : formData.eventType}
+</div>
+
       <div className="mb-3">
-        <strong>Event Type Focus:</strong> {eventTypeFocus}
+        <strong>Tags:</strong> {formData.tag.join(', ')}
       </div>
+
+      {/* Render Activities */}
       <div className="mb-3">
-        <strong>Tag:</strong> {tag}
-      </div>
-      <div className="mb-3">
-        <strong>Number of Activities:</strong> {activities.length}
-      </div>
-      {activities.map((activity, index) => (
-        <div key={index} className="mb-3">
-          <strong>Activity {index + 1}:</strong>
-          <div>Title: {activity.title}</div>
-          <div>Date: {activity.date}</div>
-          <div>Start Time: {activity.startTime}</div>
-          <div>End Time: {activity.endTime}</div>
-        </div>
-      ))}
-      <div className="mb-3">
-        <strong>Collaborators:</strong>
-        {collaborators.map((collaborator, index) => (
-          <div key={index}>
-            <div>Name: {collaborator.name}</div>
-            <div>Department: {collaborator.department}</div>
-            <div>Campus: {collaborator.campus}</div>
+        <strong>Activities:</strong>
+        {formData.activities.map((activity, index) => (
+          <div key={index} className="mb-2">
+            <p><strong>Title:</strong> {activity.title}</p>
+            <p><strong>Date:</strong> {activity.date}</p>
+            <p><strong>Start Time:</strong> {activity.startTime}</p>
+            <p><strong>End Time:</strong> {activity.endTime}</p>
           </div>
         ))}
       </div>
-      {proposal && (
-        <div className="mb-3">
-          <strong>Uploaded Proposal:</strong> {proposal.name}
-        </div>
-      )}
-      <button className="btn btn-primary" onClick={() => window.history.back()}>
-        Go Back
-      </button>
+
+      {/* Render Collaborators */}
+      <div className="mb-3">
+        <strong>Collaborators:</strong>
+        {formData.collaborators.map((collaborator, index) => (
+          <div key={index} className="mb-2">
+            <p><strong>Name:</strong> {collaborator.name}</p>
+            <p><strong>Department:</strong> {collaborator.department}</p>
+            <p><strong>Campus:</strong> {collaborator.campus}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="mb-3">
+        <strong>Venue:</strong> {formData.venue}
+      </div>
+
+      <div className="mb-3">
+        <strong>Proposal:</strong>
+        {formData.proposal ? <span>{formData.proposal.name}</span> : 'No proposal uploaded'}
+      </div>
     </div>
   );
-}
+};
 
 export default EventSummary;

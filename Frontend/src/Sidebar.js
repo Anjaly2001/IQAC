@@ -87,8 +87,8 @@ function Sidebar() {
         </div> */}
         <Nav className="flex-column p-0 mt-5">
           
-          {/* Dashboard */}
-          <Nav.Item>
+        {/* Dashboard */}
+      <Nav.Item>
         <Nav.Link
           as={Link}
           to="/dashboard"
@@ -106,7 +106,7 @@ function Sidebar() {
         </Nav.Link>
       </Nav.Item>
 
-          {/* Accounts Section */}
+        {/* Accounts Section */}
           <Nav.Item>
             <Nav.Link
               className="text-light fw-bold"
@@ -150,8 +150,8 @@ function Sidebar() {
               </Nav>
             )}
           </Nav.Item>
-  {/* Role Settings Section */}
 
+          {/* Role Settings Section */}
            <Nav.Item>
                   <Nav.Link
                     className="text-light fw-bold "

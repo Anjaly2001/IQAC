@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import campus_delete, campus_update, create_academic_year, create_event_type, delete_academic_year,  department_register,campus_register, campus_list, department_list, department_activation,department_update,department_delete, event_register, list_academic_year, list_event_type, update_academic_year
+from .views import assign_roles, campus_delete, campus_name_list, campus_update, create_academic_year, create_event_type, delete_academic_year, delete_event_type, department_list_by_campus, department_list_by_user,  department_register,campus_register, campus_list, department_list, department_activation,department_update,department_delete, event_list, event_register, event_register_status, list_academic_year, list_event_type, list_events_in_each_department, update_academic_year
 
 
 urlpatterns = [
@@ -9,10 +9,16 @@ urlpatterns = [
     path('department_update/<int:id>/',department_update,name = 'department_update'),
     path('department_delete/<str:id>/',department_delete, name= 'department_delete'),
 
+    path('department_list_by_user/<int:id>/',department_list_by_user, name = 'department_list_by_user'),
+    path('list_events_in_each_department/<int:id>/',list_events_in_each_department, name = 'list_events_in_each_department'),
+    path('department_list_by_campus/<int:id>/',department_list_by_campus, name = 'department_list_by_campus'),
+
     path('campus_register/',campus_register, name = 'campus_register'),
     path('campus_list/',campus_list, name = 'campus_list'),
     path('campus_delete/<int:id>/',campus_delete, name = 'campus_delete'),
     path('campus_update/<int:id>/',campus_update, name = 'campus_update'),
+
+    path('campus_name_list/',campus_name_list,name = 'campus_name_list'),
 
     path('create_academic_year/',create_academic_year, name = 'create_academic_year'),
     path('list_academic_year/',list_academic_year, name = 'list_academic_year'),
@@ -21,8 +27,15 @@ urlpatterns = [
     
     path('create_event_type/',create_event_type, name = 'create_event_type'),
     path('list_event_type/',list_event_type, name = 'list_event_type'),
+    path('delete_event_type/<int:id>/',delete_event_type, name = 'delete_event_type'),
 
     path('event_register/',event_register,name ='event_register'),
+    path('event_list/',event_list, name ='event_list'),
+    path('event_register_status/<int:id>/',event_register_status, name = 'event_register_status'),
+
+    path('assign_role/',assign_roles, name ='assign_role'),
+    # path('role_list/',role_list,name = 'role_list'),
+
 ]
 
 

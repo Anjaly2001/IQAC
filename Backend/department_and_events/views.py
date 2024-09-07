@@ -4,10 +4,13 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework import status
+from authentication.emails import send_event_register
+from authentication.models import CustomUser, User_profile
+from authentication.serializers import UserRegistrationSerializer
 
-from .models import Academic_year, Event_type, Location,Department
+from .models import Academic_year, Event_Register, Event_type, EventStatus, Location,Department, Role
 
-from .serializers import AcademicyearSerializer, DepartmentSerializer,  DepartmentSerializer, EventRegisterSerializer, EventTypeSerializer, LocationSerializer
+from .serializers import AcademicyearSerializer, DepartmentSerializer,  DepartmentSerializer, EventRegisterSerializer, EventStatusSerializer, EventTypeSerializer, LocationSerializer, MultiRoleSerializer
 from django.contrib.auth.models import User
 
 
@@ -19,6 +22,7 @@ from django.contrib.auth.models import User
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def department_register(request):
+    print(request.data)
     if request.method == 'POST':
         if not request.user.is_superuser and not request.user.is_staff:
             return Response({"error": "Only admin can create departments"})
@@ -47,14 +51,6 @@ def department_list(request):
     if request.method == 'GET':
         obj = Department.objects.all()
         serializer = DepartmentSerializer(obj, many=True)
-        # lst=[]
-        # for department in serializer.data:
-        #     c=(department['location'])
-        #     c= Location.objects.get(c=id)
-        #     lst.append(c)
-        # print(lst)
-
-
         return Response(serializer.data)
     
 @api_view(['POST'])
@@ -96,6 +92,45 @@ def department_delete(request, id):
         obj.delete()
         return Response({'message': 'Deleted Successfully'})
     
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def department_list_by_user(request, id):
+    try:
+        user = CustomUser.objects.get(id=id)
+        user_profile_department = None
+        if hasattr(user, 'user_profile'):
+            user_profile_department = user.user_profile.department
+        
+        role_departments = Department.objects.filter(role__user=user).distinct()
+        departments = set(role_departments)
+        if user_profile_department:
+            departments.add(user_profile_department)
+        department_names = [dept.name for dept in departments]
+        
+        return Response({
+            "department_names": department_names
+        }, status=status.HTTP_200_OK)
+    
+    except CustomUser.DoesNotExist:
+        return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+    
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def department_list_by_campus(request, id):
+    try:
+        campus = Location.objects.get(id=id)
+    except Location.DoesNotExist:
+        return Response({'error': 'Campus not found'}, status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'GET':
+        departments = Department.objects.filter(location=campus)
+        serializer = DepartmentSerializer(departments, many=True)
+        department_data = [{'id': department['id'], 'name': department['name']} for department in serializer.data]
+        return Response(department_data, status=status.HTTP_200_OK)
+    
+    
 #________________CAMPUS API____________
 
 @api_view(['POST'])
@@ -120,6 +155,19 @@ def campus_list(request):
         serializer = LocationSerializer(obj, many=True)
         return Response(serializer.data)
     
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def campus_name_list(request):
+    if request.method == 'GET':
+        campus = Location.objects.all()
+        serializer = LocationSerializer(campus, many = True)
+        # campus_names = [campus['campus'] for campus in serializer.data]
+        campus_names = [{'id': campus['id'],'name':campus['campus']} for campus in serializer.data]
+        return Response(campus_names,status=status.HTTP_200_OK)
+
+        
+
+    
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def campus_delete(request,id):
@@ -131,6 +179,7 @@ def campus_delete(request,id):
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def campus_update(request,id):
+    print(request.data)
     if request.method == 'PUT':
         campus = Location.objects.get(id = id)
         serializer = LocationSerializer(campus,data = request.data, partial = True)
@@ -145,6 +194,7 @@ def campus_update(request,id):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_academic_year(request):
+    print(request.data)
     location_ids = request.data.get('location_id')
     if not location_ids:
         return Response({'error': 'location_id field is required'}, status=status.HTTP_400_BAD_REQUEST)
@@ -174,6 +224,7 @@ def list_academic_year(request):
         serializer = AcademicyearSerializer(year,many = True)
         return Response({'data': serializer.data,}, status=status.HTTP_200_OK)
     
+
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def update_academic_year(request,id):
@@ -185,7 +236,6 @@ def update_academic_year(request,id):
             return Response({'data':serializer.data,'message':'Successfully updated the data'},status=status.HTTP_200_OK)
         return Response(serializer.errors)
 
-
     
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
@@ -195,6 +245,7 @@ def delete_academic_year(request,id):
         year.delete()
         return Response("Year deleted successfully")
     
+
 
 #________EVENT TYPE API__________
 @api_view(['POST'])
@@ -206,6 +257,9 @@ def create_event_type(request):
             serializer.save(created_by=request.user)
             return Response({'data':serializer.data,'message':'Successfully created event type'}, status=status.HTTP_200_OK)
         return Response(serializer.errors)
+
+
+
     
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -214,25 +268,152 @@ def list_event_type(request):
         event_type = Event_type.objects.all()
         serializer = EventTypeSerializer(event_type, many = True)
         return Response(serializer.data ,status=status.HTTP_200_OK)
+    
+
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_event_type(request, id):
+    if request. method == 'DELETE':
+        event_type = Event_type.objects.get(id = id)
+        event_type.delete()
+        return Response("Event type deleted successfully")
+
 
 
 #_______EVENT REGISTER API_______________
+
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+# def event_register(request):
+#     if request.method == 'POST':
+#         serializer = EventRegisterSerializer(data=request.data, context={'request': request})
+#         if serializer.is_valid():
+#             serializer.save()
+#             email = request.data.get('email')
+#             if email:
+#                 try:
+#                     user = CustomUser.objects.get(email=email)
+#                     print(user.role)  # For debugging
+#                     send_event_register(email)  # Send the email
+#                 except CustomUser.DoesNotExist:
+#                     return Response({"error": "User with this email does not exist."}, status=status.HTTP_400_BAD_REQUEST)
+#             return Response({'data': serializer.data, 'message': 'Event Registered Successfully'}, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def event_register(request):
     if request.method == 'POST':
-        serializer = EventRegisterSerializer(data = request.data)
-        if serializer.is_valid(created_by= request.user):
-            serializer.save()
-            return Response({'data':serializer.data,'message':'Event Registered Successfully'})
-        return Response(serializer.errors)
+        serializer = EventRegisterSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            event = serializer.save()
+            user = request.user
+            department = request.data.get('department_id')
+            print(department)
+            
+            hods_and_iqacs = Role.objects.filter(department=department, role__in=['departmentHOD', 'IQACuser'])
+            print(f"HOD and IQAC roles found: {hods_and_iqacs}")
+
+            user_ids = hods_and_iqacs.values_list('user_id', flat=True)
+            print(f"User IDs with roles: {list(user_ids)}")
+
+            users_with_roles = CustomUser.objects.filter(id__in=user_ids)
+            email_list = [user.email for user in users_with_roles if user.email]
+            print(f"Users with roles: {users_with_roles}")
+            print(f"Email list: {email_list}")
+        
+            if email_list:
+                try:
+                    send_event_register(email_list)  # Send the email
+                except Exception as e:
+                    return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)  
+            try:
+                send_event_register([user.email])  # Send the email to the event creator
+            except Exception as e:
+                return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)    
+            return Response({'data': serializer.data, 'message': 'Event Registered Successfully'}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def event_list(request):
+    if request.method == 'GET':
+        event_list = Event_Register.objects.all()
+        serializer = EventRegisterSerializer(event_list,many = True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_events_in_each_department(request, id):
+    if request.method == 'GET':
+        department = Department.objects.get(id = id)
+        events = Event_Register.objects.filter(department = department)
+        serializer = EventRegisterSerializer(events, many = True)
+        return Response(serializer.data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def event_register_status(request, id):
+    if request.method == 'POST': 
+        data = request.data.copy()
+        data['event'] = id
+        data['created_by'] = request.user.id
+        print(data)
+        serializer = EventStatusSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()  
+            return Response({'data': serializer.data})
+        return Response(serializer.errors, status=400)
+    
+
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+# def event_list_of_particular_department(request):
+#     if request.method == 'GET':
+
+
+#________ROLE API___________
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def assign_roles(request):
+    if request.method == 'POST':
+        serializer = MultiRoleSerializer(data=request.data)
+        if serializer.is_valid():
+            users = serializer.validated_data['users']
+            departments = serializer.validated_data['departments']
+            role = serializer.validated_data['role']
+            for user in users:
+                for department in departments:
+                    Role.objects.create(user=user, role=role, department=department)            
+            return Response({'message': 'Roles assigned successfully'}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+# def role_list(request):
+#     if request.method == 'GET':
+#         role = Role.objects.all()
+#         serializer = RoleSerializer(role, many = True)
+#         return Response(serializer.data)
+    
 
 
 
 
+#____________COLLABORATORS API________
 
-
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+# def collaborators_list(request):
+#     if request.method == 'GET':
 
 
 

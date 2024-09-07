@@ -3,12 +3,12 @@ import AdminDashboard from '../Admin/AdminDashboard';
 import { useNavigate } from 'react-router-dom';
 import { Dropdown } from 'primereact/dropdown';
 import axios from 'axios';
-import { campus_list, academic_register} from '../../axios/api';
+import { campus_list, academic_register } from '../../axios/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const CreateAcademicYear = () => {
-    const [campus, setCampus] = useState('');
+    const [location_id, setCampus] = useState([]);
     const [label, setLabel] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
@@ -17,7 +17,7 @@ const CreateAcademicYear = () => {
     const history = useNavigate();
 
     useEffect(() => {
-        const fetchCampuses= async () => {
+        const fetchCampuses = async () => {
             try {
                 const response = await campus_list();
                 if (response && Array.isArray(response)) {
@@ -36,15 +36,20 @@ const CreateAcademicYear = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!campus || !label || !startDate || !endDate) {
+        if (!location_id.length || !label || !startDate || !endDate) {
             setError('Please fill all fields');
             return;
         }
 
-        const newAcademicYear = { campus, label, start_date: startDate, end_date: endDate };
+        const newAcademicYear = {
+            location_id: [location_id], // Sending location_id as an array
+            label,
+            start_date: startDate,
+            end_date: endDate
+        };
 
         try {
-            const response = await academic_register() // Update the URL with your backend endpoint
+            const response = await academic_register(newAcademicYear); // Pass the payload to the API function
             console.log('Academic Year created:', response);
 
             // Reset the form
@@ -55,10 +60,11 @@ const CreateAcademicYear = () => {
             setError('');
 
             // Navigate to ListAcademicYear page
-            history('/list-academic-year');
+            history('/listacademicyear');
         } catch (error) {
             console.error('Error creating academic year:', error);
             setError('Failed to create academic year.');
+            toast.error('Failed to create academic year.');
         }
     };
     return (
@@ -81,7 +87,7 @@ const CreateAcademicYear = () => {
                                     <select
                                         id="location"
                                         className="form-select"
-                                        value={campus}
+                                        value={location_id}
                                         onChange={(e) => setCampus(e.target.value)}
                                         required
                                     >

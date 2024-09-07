@@ -18,6 +18,15 @@ const CreateCampus = () => {
 
     const token = localStorage.getItem('access_token');
 
+    const toTitleCase = (str) => {
+        return str
+            .toLowerCase()
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    };
+
+
     useEffect(() => {
         if (location.state && location.state.campus) {
             const { campus } = location.state;
@@ -28,19 +37,19 @@ const CreateCampus = () => {
         }
     }, [location.state]);
 
-    const isTitleCase = (str) => {
-        return str === str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
-    };
+    // const isTitleCase = (str) => {
+    //     return str === str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+    // };
 
     const handleCreateOrUpdateCampus = async () => {
-        if (!isTitleCase(campusName)) {
-            toast.error('Campus name must be in title case.');
-            return;
-        }
+        // if (!isTitleCase(campusName)) {
+        //     toast.error('Campus name must be in title case.');
+        //     return;
+        // }
 
         if (campusName && (logo || isEdit)) {
             const formData = new FormData();
-            formData.append('campus', campusName);
+            formData.append('campus', toTitleCase(campusName));
             if (logo) formData.append('logo', logo);
 
             try {

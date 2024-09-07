@@ -31,7 +31,7 @@ const ListAcademicYear = () => {
 
     const handleEdit = (year) => {
         // Navigate to CreateAcademicYear page with pre-filled details
-        history('/create-academic-year', { state: { academicYear: year } });
+        history('/academicyear', { state: { academicYear: year } });
     };
 
     const handleDelete = async (id) => {

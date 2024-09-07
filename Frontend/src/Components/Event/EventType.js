@@ -17,10 +17,14 @@ const EventType = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const isTitleCase = (str) => {
-        return str === str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+    const toTitleCase = (str) => {
+        return str
+            .toLowerCase()
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
     };
-    
+
 
     useEffect(() => {
         if (location.state) {
@@ -32,10 +36,7 @@ const EventType = () => {
     }, [location.state]);
 
     const handleSubmit = async (e) => {
-        if (!isTitleCase(title)) {
-            toast.error('Department name must be in title case.');
-            return;  // Stop further execution if validation fails
-        }
+        
 
         e.preventDefault();
         
@@ -76,7 +77,7 @@ const EventType = () => {
                                         type="text"
                                         id="title"
                                         className="form-control"
-                                        value={title}
+                                        value={toTitleCase(title)}
                                         placeholder="enter title"
                                         onChange={(e) => setTitle(e.target.value)}
                                         required

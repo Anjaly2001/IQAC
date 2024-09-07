@@ -30,15 +30,33 @@ const RegisterMultipleUser = () => {
         setSuccessCount(0);
         setErrorCount(0);
 
+        const toTitleCase = (str) => {
+            if (typeof str !== 'string') return str; 
+            return str
+                .toLowerCase()
+                .split(' ')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+        };
+
         if (selectedFile) {
             const reader = new FileReader();
             reader.onload = function(event) {
                 const text = event.target.result;
                 const rows = text.split('\n').map(row => row.split(','));
-                setPreviewData(rows); // Update preview data
+
+                // Apply title case to specific columns (e.g., assuming first and last name are columns 0 and 1)
+                const transformedRows = rows.map(row => {
+                    // row[0] = toTitleCase(row[0]); // Apply title case to the first column (e.g., first name)
+                    row[1] = toTitleCase(row[1]); // Apply title case to the second column (e.g., last name)
+                    console.log(row)
+                    return row;
+                });
+
+                setPreviewData(transformedRows); // Update preview data with transformed rows
             };
             reader.readAsText(selectedFile);
-        }
+        }   
     };
 
     const handleFileUpload = async () => {

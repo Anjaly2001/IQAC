@@ -85,9 +85,20 @@ export const department_register = async (form) => {
 };
 
 
+export const department_list_by_campus = async (campus_id) => {
+  try {
+    const res = await axiosInstance.get(`department_and_events/department_list_by_campus/${campus_id}/`);
+    return res.data;
+  }
+  catch (error) {
+    console.log(error);
+    toast.error('Failed to create department. Please try again.');
+  }
+};
+
 export const department_list = async (form) => {
   try {
-    const res = await axiosInstance.get('department_and_events/department_list/', form);
+    const res = await axiosInstance.get(`department_and_events/department_list/`,form);
     return res.data;
   }
   catch (error) {
@@ -244,3 +255,19 @@ export const event_type_delete = async (eventType) => {
     // toast.error('Failed to delete user. Please try again.');
   }
 };
+
+// role 
+
+export const campus_name_list= async (form) => {
+  try {
+    const res = await axiosInstance.get('department_and_events/campus_name_list/', form);
+    return res.data;
+  }
+  catch (error) {
+    console.log(error);
+    toast.error('Failed to list event types. Please try again.');
+  }
+};
+
+
+

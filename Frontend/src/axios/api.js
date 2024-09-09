@@ -191,6 +191,17 @@ export const user_delete = async (department_id) => {
   }
 };
 
+// export const user_update = async (user_id) => {
+//   try {
+//     const res = await axiosInstance.put(`authentication/user_deactivate/${user_id}/`);
+//     return res.data;
+//   } catch (error) {
+//     console.log(error);
+//     toast.error('Failed to activate user. Please try again.');
+//   }
+// };
+
+
 export const academic_register = async (form) => {
   try {
     const res = await axiosInstance.post('department_and_events/create_academic_year/', form);

@@ -401,16 +401,9 @@ const RegisterSingleUser = () => {
             department: department,
             location: userCampus,
         };
-        // const isTitleCase = (str) => {
-        //     return str === str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
-        // };
 
         try {
-            // if (!isTitleCase(userName)) {
-            //     toast.error('Username name must be in title case.');
-            //     return;  // Stop further execution if validation fails
-            // }
-
+            
             const response = await user_register(newUser);
             console.log('User created successfully:', response);
             toast.success('User created successfully!');
@@ -609,3 +602,14 @@ export default RegisterSingleUser;
 
 
 
+// if (userId) {
+//     // If userId exists, we're in edit mode, so update the user
+//     response = await user_update(userId, userPayload);  // Replace `user_update` with your actual update API function
+//     toast.success('User updated successfully!');}
+
+// else{
+
+//     const response = await user_register(newUser);
+//     console.log('User created successfully:', response);
+//     toast.success('User created successfully!');
+// }

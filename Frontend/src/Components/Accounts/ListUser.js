@@ -43,9 +43,11 @@ const ListUser = () => {
  
 
 
-    const startEditing = (user) => {
-        navigate(`/registerSingleuser/${user.id}`);
+    const startEditing = (userId) => {
+        const selectedUser = users.find(user => user.id === userId);
+        navigate('/registerSingleuser', { state: { user: selectedUser } });
     };
+    
 
     
     const handleDeleteUser = async (id) => {

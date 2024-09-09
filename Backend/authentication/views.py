@@ -764,8 +764,17 @@ def user_delete(request,id):
     
 
     
-# @api_view(['PUT'])
-# @permission_classes([IsAuthenticated])  
-# def user_update(request,id):
-#     if request.method == 'PUT':
-#         user = CustomUser
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])  
+def user_update(request,id):
+    try:
+        profile = User_profile.objects.get(user=id)
+    except User_profile.DoesNotExist:
+        return Response({"detail": "User profile not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    serializer = USerProfileSerializer(profile, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -1,3 +1,16 @@
+<<<<<<< HEAD
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Use useNavigate instead of useHistory
+import EventSummary from './EventSummary'; // Import the EventSummary component
+import { InputText } from 'primereact/inputtext';
+import { MultiSelect } from 'primereact/multiselect';
+import { Editor } from 'primereact/editor';
+import { Dropdown } from 'primereact/dropdown';
+import AdminDashboard from '../Admin/AdminDashboard';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+//import { FaTags } from 'react-icons/fa';
+=======
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // Use useNavigate instead of useHistory
 import EventSummary from "./EventSummary"; // Import the EventSummary component
@@ -19,6 +32,7 @@ import {
   register_event,
   proposal_file_upload,
 } from "../../axios/api";
+>>>>>>> dde8ef404e6d82e622bb5aecf475725f6da1b58f
 
 function RegisterEvent() {
   const [campus, setCampus] = useState(""); // Holds the selected campus ID

@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
+<<<<<<< HEAD
+//import { InputText } from 'primereact/inputtext';
+=======
+>>>>>>> dde8ef404e6d82e622bb5aecf475725f6da1b58f
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import Sidebar from '../../Sidebar';

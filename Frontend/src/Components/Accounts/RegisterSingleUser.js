@@ -554,6 +554,7 @@ const RegisterSingleUser = () => {
                                                 className="form-select"
                                                 value={userDepartment}
                                                 onChange={(e) => setUserDepartment(e.target.value)}
+                                                disabled={!userCampus}
                                             >
                                                 <option value="">Select Department</option>
                                                 {departments && departments.length > 0 ? (

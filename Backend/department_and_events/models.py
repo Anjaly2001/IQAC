@@ -22,11 +22,9 @@ class Department(models.Model):
         ('Others', 'others'),
     ]
     name = models.CharField(unique=True, max_length=250)
-    type = models.CharField(
-        max_length=20, choices=TYPE_CHOICES, default='others')
+    type = models.CharField(max_length=20, choices=TYPE_CHOICES, default='others')
     description = models.CharField(max_length=250, null=True)
-    location = models.ForeignKey(
-        Location, on_delete=models.CASCADE, related_name='loc')
+    location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='loc')
     is_active = models.BooleanField(default=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
@@ -51,8 +49,7 @@ class Tag(models.Model):
 class Event_type(models.Model):
     title = models.CharField(max_length=250)
     description = models.TextField()
-    created_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='created')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='created')
     created_on = models.DateTimeField(auto_now_add=True)
 
 
@@ -104,13 +101,13 @@ class Proposal_Upload(models.Model):
 
 
 class Role(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    users = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     role = models.CharField(max_length=20, choices=(
         ('viewers', 'Viewers'),
         ('departmentHOD', 'DepartmentHOD'),
         ('IQACuser', 'IQACUser'),
         ('staffs', 'Staffs'),
-    ), default='admin')
+    ), default='staffs')
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
     status = models.BooleanField(default=True)
 
@@ -128,43 +125,17 @@ class EventStatus(models.Model):
    
 
 class EventReport(models.Model):
-    target_audience = models.TextField()
-    external_members_or_agencies_with_affiliation = models.TextField()
-    website_contact_of_external_members = models.TextField()
-    organizing_committee_details = models.TextField()
-    no_of_student_volunteers = models.TextField()
-    no_of_attendees_or_participants = models.TextField()
-    
+    event = models.ForeignKey(Event_Register, on_delete=models.CASCADE)
+    target_audience = models.TextField(null = True)
+    external_members_or_agencies_with_affiliation = models.TextField(null = True)
+    website_contact_of_external_members = models.TextField(null = True)
+    organizing_committee_details = models.TextField(null = True)
+    no_of_student_volunteers = models.TextField(null = True)
+    no_of_attendees_or_participants = models.TextField(null = True)
 
-
-class EventReport(models.Model):
-    # target_audience =
-
-    event = models.ForeignKey(
-        Event_Register, on_delete=models.CASCADE, related_name='events')
-    # brochure = models.ImageField(upload_to=custom_upload_to, blank=True)
-    external_speakers = models.FileField(upload_to=custom_upload_to)
-    # photographs = models.ImageField(upload_to='photographs/%Y')
-    # blogPostPrintout = models.ImageField(upload_to='external_speakers/%Y/%m')
-    registration_list = models.FileField(upload_to=custom_upload_to)
-    list_of_attendees = models.FileField(upload_to=custom_upload_to)
-    details_of_external_attendees = models.FileField(
-        upload_to=custom_upload_to)
-    list_of_all_participants_and_winners_list = models.FileField(
-        upload_to=custom_upload_to)
-    list_of_students_volunteers = models.FileField(upload_to=custom_upload_to)
-    sample_certificates_of_participants_or_attendees = models.FileField(
-        upload_to=custom_upload_to)
-    sample_certificates_of_winners = models.FileField(
-        upload_to=custom_upload_to)
-    proposal_or_planning_documents = models.FileField(
-        upload_to=custom_upload_to)
-    budgets = models.FileField(upload_to=custom_upload_to)
-    printout_of_email_communication = models.FileField(
-        upload_to=custom_upload_to)
-    feedback = models.FileField(upload_to=custom_upload_to)
-    # def __str__(self):
-    #     return self
+class EventReportFinal(models.Model):
+    summary_of_the_overall_event = models.TextField()
+    outcomes = models.TextField()
 
 
 class ReportStatus(models.Model):

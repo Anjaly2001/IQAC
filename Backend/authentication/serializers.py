@@ -9,7 +9,7 @@ import re
 class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['username', 'email','last_login','date_joined','is_staff','is_superuser']
+        fields = ['id','username', 'email','last_login','date_joined','is_staff','is_superuser']
 
     def create(self, validated_data):
         user = CustomUser(

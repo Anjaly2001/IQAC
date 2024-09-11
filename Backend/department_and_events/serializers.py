@@ -3,6 +3,7 @@ from .models import Academic_year, Activity, Collaborators, Department, Event_Re
 from rest_framework import serializers
 
 
+
 class DepartmentSerializer(serializers.ModelSerializer):
     location = serializers.SerializerMethodField()
     location_id = serializers.PrimaryKeyRelatedField(queryset=Location.objects.all(), write_only=True, source='location')
@@ -37,9 +38,11 @@ class AcademicyearSerializer(serializers.ModelSerializer):
 
 
 class EventTypeSerializer(serializers.ModelSerializer):
+
     class Meta:
-        model =  Event_type    
-        fields = ['id','title','description']
+        model = Event_type
+        fields = '__all__'
+
 
 
 class ActivitySerializer(serializers.ModelSerializer):
@@ -134,8 +137,8 @@ class EventRegisterSerializer(serializers.ModelSerializer):
 #         fields = '__all__'
 
 class MultiRoleSerializer(serializers.ModelSerializer):
-    users = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all(), many=True)
-    departments = serializers.PrimaryKeyRelatedField(queryset=Department.objects.all(), many=True)
+    users = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all())  # Single user
+    department = serializers.CharField(source='department.name')  # Fetch department name
     role = serializers.ChoiceField(choices=(
         ('viewers', 'Viewers'),
         ('departmentHOD', 'DepartmentHOD'),
@@ -146,7 +149,24 @@ class MultiRoleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Role
-        fields = ['users', 'departments', 'role', 'status']
+        fields = ['id','users', 'department', 'role', 'status']
+
+class RoleSerializer(serializers.ModelSerializer):
+    users = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all())  # Single user
+    department = serializers.PrimaryKeyRelatedField(queryset=Department.objects.all())  # Fetch department instance
+    role = serializers.ChoiceField(choices=(
+        ('viewers', 'Viewers'),
+        ('departmentHOD', 'DepartmentHOD'),
+        ('IQACuser', 'IQACUser'),
+        ('staffs', 'Staffs'),
+    ))
+    status = serializers.BooleanField(default=True)
+
+    class Meta:
+        model = Role
+        fields = ['users', 'department', 'role', 'status']
+
+
 
 
 class EventStatusSerializer(serializers.ModelSerializer):
@@ -177,7 +197,15 @@ class EventListSerializer(serializers.ModelSerializer):
 class EventReportSerializer(serializers.ModelSerializer):
     class Meta:
         model =  EventReport  
-        fields = '__all__'
+        fields =  fields = [
+            'event',
+            'target_audience',
+            'external_members_or_agencies_with_affiliation',
+            'website_contact_of_external_members',
+            'organizing_committee_details',
+            'no_of_student_volunteers',
+            'no_of_attendees_or_participants'
+        ]
 
 # class EventRegisterSerializer(serializers.ModelSerializer):
 #     location = LocationSerializer(read_only=True)

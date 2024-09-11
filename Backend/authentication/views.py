@@ -423,7 +423,7 @@ def csv_user_view(request):
 @permission_classes([IsAuthenticated])
 def user_list(request):
     # Fetch all users
-    users = CustomUser.objects.all()
+    users = CustomUser.objects.all().order_by('-date_joined')
 
     # Create a list to hold the user data
     user_data = []

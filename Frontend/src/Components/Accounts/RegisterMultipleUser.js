@@ -70,7 +70,7 @@ const RegisterMultipleUser = () => {
 
                 if (response.status === 201) {
                     setSuccess("Users registered successfully!");
-                    toast.success("Users registered successfully!");
+                    // toast.success("Users registered successfully!");
 
                     // Update counts from response
                     setTotalCount(response.data.total_count || 0);

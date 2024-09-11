@@ -1,5 +1,5 @@
 from authentication.models import CustomUser
-from .models import Academic_year, Activity, Collaborators, Department, Event_Register, Event_type, EventStatus, Location, Proposal_Upload, Role
+from .models import Academic_year, Activity, Collaborators, Department, Event_Register, Event_type, EventReport, EventStatus, Location, Proposal_Upload, Role, Tag
 from rest_framework import serializers
 
 
@@ -52,10 +52,16 @@ class CollaboratorSerializer(serializers.ModelSerializer):
         model = Collaborators
         fields = ['department', 'location', 'staffs']
 
-class UploadProposalSerializer(serializers.ModelSerializer):
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = '__all__'
+        
+class ProposalFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Proposal_Upload
-        fields = ['files']
+        fields = ['id', 'event', 'file']
+
 
 class EventRegisterSerializer(serializers.ModelSerializer):
     # Read-only nested serializers for returning full details in the response
@@ -65,23 +71,25 @@ class EventRegisterSerializer(serializers.ModelSerializer):
     academic_year = AcademicyearSerializer(read_only=True)
     activities = ActivitySerializer(many=True, read_only=True)
     collaborators = CollaboratorSerializer(many=True, read_only=True)
+    tags = TagSerializer(many=True, read_only=True)  # Read-only for display
 
     # Write-only fields for accepting primary key values
     location_id = serializers.PrimaryKeyRelatedField(queryset=Location.objects.all(), write_only=True)
     department_id = serializers.PrimaryKeyRelatedField(queryset=Department.objects.all(), write_only=True)
     event_type_id = serializers.PrimaryKeyRelatedField(queryset=Event_type.objects.all(), write_only=True)
     academic_year_id = serializers.PrimaryKeyRelatedField(queryset=Academic_year.objects.all(), write_only=True)
-    
+    tags_id = serializers.PrimaryKeyRelatedField(queryset=Tag.objects.all(), write_only=True, many=True, required=False)  # Many-to-many field
+
     activities_data = ActivitySerializer(many=True, write_only=True)
     collaborators_data = CollaboratorSerializer(many=True, write_only=True)
 
     class Meta:
         model = Event_Register
-        fields = ['id', 'location', 'department', 'event_title', 'no_of_activities', 
-                  'start_date', 'end_date', 'venue', 'academic_year', 
-                  'event_type', 'activities', 'collaborators', 
-                  'location_id', 'department_id', 'event_type_id', 'academic_year_id', 
-                  'activities_data', 'collaborators_data']
+        fields = ['id', 'location', 'department', 'event_title', 'no_of_activities',
+                  'start_date', 'end_date', 'venue', 'academic_year',
+                  'event_type', 'activities', 'collaborators', 'tags',
+                  'location_id', 'department_id', 'event_type_id', 'academic_year_id',
+                  'activities_data', 'collaborators_data', 'tags_id']
 
     def create(self, validated_data):
         # Extract the nested related data and primary key fields
@@ -91,6 +99,7 @@ class EventRegisterSerializer(serializers.ModelSerializer):
         department = validated_data.pop('department_id')
         event_type = validated_data.pop('event_type_id')
         academic_year = validated_data.pop('academic_year_id')
+        tags = validated_data.pop('tags_id', [])  # Use an empty list if no tags provided
 
         # Set the current user as the creator
         user = self.context['request'].user
@@ -103,6 +112,10 @@ class EventRegisterSerializer(serializers.ModelSerializer):
         # Create the Event_Register instance
         event = Event_Register.objects.create(**validated_data)
 
+        # Add the tags to the event if any
+        if tags:
+            event.tags.set(tags)  # Use `.set()` to associate multiple tags with the event
+
         # Create nested activities with created_by field
         for activity_data in activities_data:
             Activity.objects.create(event=event, created_by=user, **activity_data)
@@ -112,6 +125,8 @@ class EventRegisterSerializer(serializers.ModelSerializer):
             Collaborators.objects.create(event=event, **collaborator_data)
 
         return event
+
+
 
 # class RoleSerializer(serializers.ModelSerializer):
 #     class Meta:
@@ -124,14 +139,14 @@ class MultiRoleSerializer(serializers.ModelSerializer):
     role = serializers.ChoiceField(choices=(
         ('viewers', 'Viewers'),
         ('departmentHOD', 'DepartmentHOD'),
-        ('departmentIQAC', 'DepartmentIQAC'),
+        ('IQACuser', 'IQACUser'),
         ('staffs', 'Staffs'),
     ))
     status = serializers.BooleanField(default=True)
 
     class Meta:
         model = Role
-        fields = '__all__'
+        fields = ['users', 'departments', 'role', 'status']
 
 
 class EventStatusSerializer(serializers.ModelSerializer):
@@ -139,9 +154,30 @@ class EventStatusSerializer(serializers.ModelSerializer):
         model = EventStatus
         fields = '__all__'
 
+class EventListSerializer(serializers.ModelSerializer):
+    collaborators = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
 
+    class Meta:
+        model = Event_Register
+        fields = ['id','event_title', 'collaborators', 'status']
+
+    def get_collaborators(self, obj):
+    # Fetch collaborators linked to the event
+        collaborators = Collaborators.objects.filter(event=obj)
+        return [collaborator.staffs.username for collaborator in collaborators]  # Use username or another field
+
+
+    def get_status(self, obj):
+        # Get the latest status of the event
+        latest_status = EventStatus.objects.filter(event=obj).order_by('-created_at').first()
+        return latest_status.status if latest_status else 'pending'
     
-    
+
+class EventReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model =  EventReport  
+        fields = '__all__'
 
 # class EventRegisterSerializer(serializers.ModelSerializer):
 #     location = LocationSerializer(read_only=True)

@@ -21,3 +21,30 @@
 #         headers={'Reply-To': from_email}
 #     )
 #     email.send()
+
+
+from django.core.mail import send_mail
+from django.conf import settings
+
+def send_event_status_email(to_email, event_title, status):
+    """
+    Sends an email to the user regarding the status of the event.
+    
+    :param to_email: Recipient's email address
+    :param event_title: The title of the event
+    :param status: The status of the event ('approved' or 'rejected')
+    """
+    subject = f"Event Status Update: {event_title}"
+    
+    if status == 'approved':
+        message = f"Dear User,\n\nYour event '{event_title}' has been approved."
+    else:
+        message = f"Dear User,\n\nYour event '{event_title}' has been rejected."
+    
+    send_mail(
+        subject,
+        message,
+        settings.DEFAULT_FROM_EMAIL,
+        [to_email],
+        fail_silently=False,
+    )

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import assign_roles, campus_delete, campus_name_list, campus_update, create_academic_year, create_event_type, delete_academic_year, delete_event_type, department_list_by_campus, department_list_by_user,  department_register,campus_register, campus_list, department_list, department_activation,department_update,department_delete, event_list, event_register, event_register_status, list_academic_year, list_event_type, list_events_in_each_department, update_academic_year
+from .views import assign_roles, campus_delete, campus_name_list, campus_update, create_academic_year, create_event_type, create_tag, delete_academic_year, delete_event_type, delete_tag, department_list_by_campus, department_list_by_user,  department_register,campus_register, campus_list, department_list, department_activation,department_update,department_delete, event_delete, event_list, event_register, event_register_status, list_academic_year, list_event_type, list_events_in_each_department, list_tag, update_academic_year, upload_proposal_files
 
 
 urlpatterns = [
@@ -29,8 +29,15 @@ urlpatterns = [
     path('list_event_type/',list_event_type, name = 'list_event_type'),
     path('delete_event_type/<int:id>/',delete_event_type, name = 'delete_event_type'),
 
+    path('create_tag/',create_tag, name = 'create_tag'),
+    path('list_tag/',list_tag, name = 'list_tag'),
+    path('delete_tag/<int:id>/',delete_tag, name = 'delete_tag'),
+
+
     path('event_register/',event_register,name ='event_register'),
+    path('upload_proposal_files/<int:event_id>/',upload_proposal_files, name = 'upload_proposal_files'),
     path('event_list/',event_list, name ='event_list'),
+    path('event_delete/<int:id>/',event_delete, name = 'event_delete'),
     path('event_register_status/<int:id>/',event_register_status, name = 'event_register_status'),
 
     path('assign_role/',assign_roles, name ='assign_role'),

@@ -9,15 +9,12 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-
 from authentication.validations import validate_email_format, validate_phone_number
 from department_and_events.models import Role
-
 from .models import CustomUser, User_profile
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework import status
-
 from .models import Department
 from .serializers import UserRegistrationSerializer, USerProfileSerializer, LoginSerializer
 import csv
@@ -26,7 +23,6 @@ from .emails import send_email, send_otp_to_email
 from datetime import timedelta
 from .models import OTP, Location
 from django.utils import timezone
-
 import csv
 import re
 from django.core.files.base import ContentFile
@@ -36,7 +32,6 @@ from rest_framework.response import Response
 from rest_framework import status
 
 
-# from datetime import timedelta
 
 @api_view(['POST'])
 def register(request):
@@ -54,20 +49,13 @@ def register(request):
         try:
             validate_phone_number(phone_number)
         except ValidationError as e:
-            # Return error response with status code 400
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        # try:
-        #     validate_phone_number(phone_number)
-        # except ValidationError as e:
-        #     return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-
+    
         if dep=='others':
             dep1 = request.data.get('new_department')
             depObj=Department.objects.create(name=dep1)
             data_user_profile = {
                 'emp_id':request.data.get('emp_id'),
-                # 'country_code':country_code,
                 'ph': request.data.get('ph'),                                                                  
                 'department': depObj.id,
                 'location':loc,
@@ -76,7 +64,6 @@ def register(request):
             data_user_profile = {
                 'emp_id':request.data.get('emp_id'),
                 'ph': request.data.get('ph'),
-                # 'country_code':country_code,
                 'department': dep,
                 'location':loc,
             } 
@@ -96,33 +83,25 @@ def register(request):
                 if email:
                     print(email)
                     user = CustomUser.objects.get(email=email)
-                    # print(user.role)
                     send_email(email)
-
-                
                 return Response({
                     'user': UserRegistrationSerializer(user).data,
                     'user_profile': USerProfileSerializer(user_profile).data,
                 }, status=status.HTTP_201_CREATED)
 
-            # If the user profile serializer is not valid, delete the created user
             user.delete()
             return Response(user_profile_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
 def login_with_email(request):
     email = request.data.get('email')
-    # if not email.contains('@christuniversity.in'):
-    #     return Response({'you are not authorised to login'})
     if '@christuniversity.in' not in email:
         return Response({'error': 'You are not authorized to login.'}, status=status.HTTP_401_UNAUTHORIZED)
     if email:
         print(email)
         user = CustomUser.objects.get(email=email)
-        # print(user.role)
         send_otp_to_email(email)
         return Response({'message': 'OTP sent to your email.'}, status=status.HTTP_200_OK)
     return Response({'error': 'Email is required.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -186,19 +165,16 @@ def login_with_email(request):
 def verify_otp(request):
     email = request.data.get('email')
     otp = request.data.get('otp')
-
     if email and otp:
         user = CustomUser.objects.filter(email=email).first()
         print(user)
         if not user:
             return Response({'error': 'No user found with this email.'}, status=status.HTTP_404_NOT_FOUND)
-
         otp_entry = OTP.objects.filter(user=user, code=otp).first()
         if otp_entry:
             time_difference = timezone.now() - otp_entry.created_at
             if time_difference > timedelta(days=1):
                 return Response({'error': 'OTP expired.'}, status=status.HTTP_400_BAD_REQUEST)
-            # OTP is valid, proceed with login
             login(request, user)
             refresh = RefreshToken.for_user(user)
             if user.is_superuser and user.is_staff:
@@ -264,298 +240,6 @@ def get_location_id(location_name):
         return None
 
 
-# @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
-# def multiple_user_registration(request):
-#     if 'file' not in request.FILES:
-#         return Response({"error": "No file provided"}, status=status.HTTP_400_BAD_REQUEST)
-
-#     # Handle file upload
-#     file = request.FILES['file']
-#     file_name = default_storage.save('temp.csv', ContentFile(file.read()))
-
-#     error_rows = []
-#     success_rows = []
-#     total_count = 0  
-
-#     # Parse CSV and save data
-#     with default_storage.open(file_name, mode='r') as csvfile:
-#         reader = csv.DictReader(csvfile)
-
-#         for row in reader:
-#             total_count += 1 
-#             email = row['email']
-            
-#             if not validate_email_format(email):
-#                 row['error'] = "Invalid email format"
-#                 error_rows.append(row)
-#                 continue
-
-#             if CustomUser.objects.filter(email=email).exists():
-#                 row['error'] = "User already exists"
-#                 error_rows.append(row)
-#                 continue
-
-#              # Validate phone number based on country code
-#             phone_number = row['ph']
-#             # country_code = row.get('country_code')
-#             error_message = ""
-
-#             if not validate_phone_number(phone_number):
-#                 error_message += "Invalid phone number. "
-
-#             department_id = get_department_id(row['department'])
-#             location_id = get_location_id(row['location'])
-
-#             # error_message = ""
-#             if not department_id:
-#                 if error_message:
-#                     error_message += " and Department not found"
-#                 else:
-#                     error_message += "Department not found"
-#             if not location_id:
-#                 if error_message:
-#                     error_message += " and Location not found"
-#                 else:
-#                     error_message += "Location not found"
-
-#             if error_message:
-#                 row['error'] = error_message
-#                 error_rows.append(row)
-#                 continue
-
-#             user_data = {
-#                 'email': email,
-#                 'username': row['username'],
-#                 'role': 'staffs'
-#             }
-#             # role = 'staffs'
-#             # default_department = Department.objects.first()
-#             # Role.objects.create(user=user, role=role, department=default_department)
-
-#             user_serializer = UserRegistrationSerializer(data=user_data)
-
-#             if user_serializer.is_valid():
-#                 user = user_serializer.save()
-
-#                 profile_data = {
-#                     'user': user.id,
-#                     'emp_id': row['emp_id'],
-#                     # 'country_code':row['country_code'],
-#                     'phone_number': row['ph'],
-#                     'department': department_id,
-#                     'location': location_id
-#                 }
-
-#                 profile_serializer = USerProfileSerializer(data=profile_data)
-
-#                 if profile_serializer.is_valid():
-#                     profile_serializer.save()
-#                     Role.objects.create(user=user, role='staffs', department=Department.objects.first())  # Set default department or modify as needed
-
-#                     success_row = {
-#                         'email': email,
-#                         'username': row['username'],
-#                         'emp_id': row['emp_id'],
-#                         # 'country_code':row['country_code'],
-#                         'ph': row['ph'],
-#                         'department': row['department'],
-#                         'location': row['location']
-#                     }
-#                     success_rows.append(success_row)
-#                 else:
-#                     row['error'] = profile_serializer.errors
-#                     error_rows.append(row)
-#             else:
-#                 row['error'] = user_serializer.errors
-#                 error_rows.append(row)
-
-#     success_file_url = None
-#     error_file_url = None
-
-#     if success_rows:
-#         success_file_name = 'success_report.csv'
-#         success_file_path = default_storage.path(success_file_name)
-#         with open(success_file_path, mode='w', newline='') as success_file:
-#             fieldnames = list(success_rows[0].keys())
-#             writer = csv.DictWriter(success_file, fieldnames=fieldnames)
-#             writer.writeheader()
-#             writer.writerows(success_rows)
-#         # Send email if success
-#         for success_row in success_rows:
-#             email = success_row['email']
-#             send_email(email)
-#         success_file_url = default_storage.url(success_file_name)
-
-#     if error_rows:
-#         error_file_name = 'error_report.csv'
-#         error_file_path = default_storage.path(error_file_name)
-#         with open(error_file_path, mode='w', newline='') as error_file:
-#             fieldnames = list(error_rows[0].keys())
-#             writer = csv.DictWriter(error_file, fieldnames=fieldnames)
-#             writer.writeheader()
-#             writer.writerows(error_rows)
-
-#         error_file_url = default_storage.url(error_file_name)
-
-#     response_data = {
-#         "status": "success",
-#         "total_count": total_count,  # Total number of users in the CSV
-#         "success_count": len(success_rows),  # Number of successfully registered users
-#         "error_count": len(error_rows),
-#         "success_file_url": success_file_url,
-#         "error_file_url": error_file_url,
-#     }
-
-#     return Response(response_data, status=status.HTTP_201_CREATED)
-import logging
-
-logger = logging.getLogger(__name__)
-
-
-# @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
-# def multiple_user_registration(request):
-#     if 'file' not in request.FILES:
-#         return Response({"error": "No file provided"}, status=status.HTTP_400_BAD_REQUEST)
-
-#     # Handle file upload
-#     file = request.FILES['file']
-#     file_name = default_storage.save('temp.csv', ContentFile(file.read()))
-
-#     error_rows = []
-#     success_rows = []
-#     total_count = 0  
-
-#     # Parse CSV and save data
-#     with default_storage.open(file_name, mode='r') as csvfile:
-#         reader = csv.DictReader(csvfile)
-
-#         for row in reader:
-#             total_count += 1 
-#             email = row['email']
-            
-#             if not validate_email_format(email):
-#                 row['error'] = "Invalid email format"
-#                 error_rows.append(row)
-#                 continue
-
-#             if CustomUser.objects.filter(email=email).exists():
-#                 row['error'] = "User already exists"
-#                 error_rows.append(row)
-#                 continue
-
-#             phone_number = row['ph'].strip()  # Clean any leading/trailing spaces
-#             print(f"Validating phone number: {phone_number}")  # Debugging: print phone number
-
-#             error_message = ""
-
-#             try:
-#                 validate_phone_number(phone_number)  # Validate cleaned phone number
-#             except ValidationError as e:
-#                 error_message += str(e) + " "
-
-#             department_id = get_department_id(row['department'])
-#             location_id = get_location_id(row['location'])
-
-#             print("ghjs")
-#             if not department_id:
-#                 error_message += "Department not found. "
-#             if not location_id:
-#                 error_message += "Location not found. "
-
-#             if error_message:
-#                 row['error'] = error_message
-#                 error_rows.append(row)
-#                 continue
-         
-#             print("ag")
-
-#             user_data = {
-#                 'email': email,
-#                 'username': row['username'],
-#                 'role': 'staffs'  # Set default role or modify as needed
-#             }
-#             print(user_data)
-
-#             user_serializer = UserRegistrationSerializer(data=user_data)
-#             print(user_serializer)
-            
-
-#             if user_serializer.is_valid():
-#                 user = user_serializer.save()
-
-#                 profile_data = {
-#                     'user': user.id,
-#                     'emp_id': row['emp_id'],
-#                     'ph': phone_number,  # Changed to 'ph' to match the User_profile model field
-#                     'department': department_id,
-#                     'location': location_id
-#                 }
-
-#                 profile_serializer = USerProfileSerializer(data=profile_data)
-#                 print(profile_serializer)
-
-#                 if profile_serializer.is_valid():
-#                     profile_serializer.save()
-#                     Role.objects.create(user=user, role='staffs', department=Department.objects.first())  # Set default department or modify as needed
-
-#                     success_row = {
-#                         'email': email,
-#                         'username': row['username'],
-#                         'emp_id': row['emp_id'],
-#                         'ph': phone_number,
-#                         'department': row['department'],
-#                         'location': row['location']
-#                     }
-#                     success_rows.append(success_row)
-#                 else:
-#                     row['error'] = profile_serializer.errors
-#                     error_rows.append(row)
-#             else:
-#                 row['error'] = user_serializer.errors
-#                 error_rows.append(row)
-
-#         success_file_url = None
-#         error_file_url = None
-
-#         if success_rows:
-#             success_file_name = 'success_report.csv'
-#             success_file_path = default_storage.path(success_file_name)
-#             with open(success_file_path, mode='w', newline='') as success_file:
-#                 fieldnames = list(success_rows[0].keys())
-#                 writer = csv.DictWriter(success_file, fieldnames=fieldnames)
-#                 writer.writeheader()
-#                 writer.writerows(success_rows)
-#             # Send email if success
-#             for success_row in success_rows:
-#                 email = success_row['email']
-#                 send_email(email)
-#             success_file_url = default_storage.url(success_file_name)
-
-#         if error_rows:
-#             error_file_name = 'error_report.csv'
-#             error_file_path = default_storage.path(error_file_name)
-#             with open(error_file_path, mode='w', newline='') as error_file:
-#                 fieldnames = list(error_rows[0].keys())
-#                 writer = csv.DictWriter(error_file, fieldnames=fieldnames)
-#                 writer.writeheader()
-#                 writer.writerows(error_rows)
-
-#             error_file_url = default_storage.url(error_file_name)
-
-#         response_data = {
-#             "status": "success",
-#             "total_count": total_count,  # Total number of users in the CSV
-#             "success_count": len(success_rows),  # Number of successfully registered users
-#             "error_count": len(error_rows),
-#             "success_file_url": success_file_url,
-#             "error_file_url": error_file_url,
-#         }
-
-#         return Response(response_data, status=status.HTTP_201_CREATED)
-    #     logger.error(f"An error occurred during multiple user registration: {e}")
-    #     return Response({"error": "An unexpected error occurred."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -688,11 +372,22 @@ def multiple_user_registration(request):
         "success_file_url": success_file_url,
         "error_file_url": error_file_url,
     }
-
     return Response(response_data, status=status.HTTP_201_CREATED)
 
 
-
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def user_logout(request):
+    if request.method == 'POST':
+        refresh_token = request.data.get('refresh_token')
+        if not refresh_token:
+            return Response({"error": "Refresh token is missing"}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            refresh = RefreshToken(refresh_token)
+            refresh.blacklist()
+            return Response({"message": "Logout successful"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -727,21 +422,43 @@ def csv_user_view(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def user_list(request):
-    users = User_profile.objects.select_related('user', 'department', 'location').all()
-    
-    # Creating a list of dictionaries with the required fields
+    # Fetch all users
+    users = CustomUser.objects.all()
+
+    # Create a list to hold the user data
     user_data = []
-    for profile in users:
+
+    # Loop through all users to gather data
+    for user in users:
+        # Try to get the corresponding profile, if it exists
+        try:
+            profile = User_profile.objects.get(user=user)
+            department = profile.department.name if profile.department else None
+            campus = profile.location.campus if profile.location else None
+            phone_number = profile.ph
+            emp_id = profile.emp_id
+        except User_profile.DoesNotExist:
+            # If no profile exists, set default values
+            department = None
+            campus = None
+            phone_number = None
+            emp_id = None
+
         user_data.append({
-            'id':profile.user.id,
-            'username': profile.user.username,
-            'emp_id': profile.emp_id,
-            'email': profile.user.email,
-            'campus': profile.location.campus,  # Assuming 'campus' is a field in the Location model
-            'department': profile.department.name,  # Assuming 'name' is a field in the Department model
-            'status': profile.user.is_active,
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'emp_id': emp_id,
+            'phone_number': phone_number,
+            'campus': campus,
+            'department': department,
+            'status': user.is_active,
+            'last_login': user.last_login,
+            'date_joined': user.date_joined,
+            'is_staff': user.is_staff,
+            'is_superuser': user.is_superuser,
         })
-    
+
     return Response(user_data)
 
 @api_view(['POST'])
@@ -765,16 +482,28 @@ def user_delete(request,id):
 
     
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated])  
-def user_update(request,id):
+@permission_classes([IsAuthenticated])
+def user_update(request, id):
     try:
         profile = User_profile.objects.get(user=id)
+        user = profile.user
     except User_profile.DoesNotExist:
         return Response({"detail": "User profile not found."}, status=status.HTTP_404_NOT_FOUND)
 
-    serializer = USerProfileSerializer(profile, data=request.data, partial=True)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    user_data = request.data.get('user', {}) 
+    profile_data = request.data.copy() 
+    user_serializer = UserRegistrationSerializer(user, data=user_data, partial=True)
+    if user_serializer.is_valid():
+        user_serializer.save()
     else:
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # Update the User_profile data
+    profile_data.pop('user', None)  
+    profile_serializer = USerProfileSerializer(profile, data=profile_data, partial=True)
+    if profile_serializer.is_valid():
+        profile_serializer.save()
+        data = {**profile_serializer.data, **user_serializer.data}
+        return Response(data, status=status.HTTP_200_OK)
+    else:
+        return Response(profile_serializer.errors, status=status.HTTP_400_BAD_REQUEST)

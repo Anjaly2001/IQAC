@@ -42,6 +42,15 @@ class USerProfileSerializer(serializers.ModelSerializer):
         # The department field is already converted to a Department instance by validate_department
         validated_data['department'] = validated_data['department']
         return super().create(validated_data)
+    
+    # def update(self, instance, validated_data):
+    #     # Update profile fields
+    #     instance.emp_id = validated_data.get('emp_id', instance.emp_id)
+    #     instance.ph = validated_data.get('ph', instance.ph)
+    #     instance.department = validated_data.get('department', instance.department)
+    #     instance.location = validated_data.get('location', instance.location)
+    #     instance.save()
+    #     return instance
 
 
 class LoginSerializer(serializers.Serializer):

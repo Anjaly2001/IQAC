@@ -2,17 +2,14 @@ import os
 from django.db import models
 from django.utils.text import slugify
 import datetime
-# from authentication.models import CustomUser
 from django.conf import settings
 
-# from .models import CustomUser
 
 class Location(models.Model):
-    campus = models.CharField(max_length=200,unique=True)
-    logo = models.ImageField(null = True)
+    campus = models.CharField(max_length=200, unique=True)
+    logo = models.ImageField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    # created_by = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='created_by')
-    created_by =models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE, related_name = 'created_by')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='created_by')
 
 
 class Department(models.Model):
@@ -24,54 +21,59 @@ class Department(models.Model):
         ('Cell', 'cell'),
         ('Others', 'others'),
     ]
-    name = models.CharField(unique=True,max_length=250)
-    type = models.CharField(max_length=20, choices=TYPE_CHOICES, default='others')
+    name = models.CharField(unique=True, max_length=250)
+    type = models.CharField(
+        max_length=20, choices=TYPE_CHOICES, default='others')
     description = models.CharField(max_length=250, null=True)
-    location = models.ForeignKey(Location,on_delete=models.CASCADE, related_name = 'loc')
+    location = models.ForeignKey(
+        Location, on_delete=models.CASCADE, related_name='loc')
     is_active = models.BooleanField(default=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
+
 class Academic_year(models.Model):
-    location = models.ForeignKey(Location,on_delete=models.CASCADE, related_name= 'cam')
+    location = models.ForeignKey(
+        Location, on_delete=models.CASCADE, related_name='cam')
     start_date = models.DateField()
     end_date = models.DateField()
-    label = models.CharField(max_length=9,null=False)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE, related_name = 'creat')
+    label = models.CharField(max_length=9, null=False)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='creat')
     created_on = models.DateTimeField(auto_now_add=True)
 
+
 class Tag(models.Model):
-    # event = models.ForeignKey(Event_Register, on_delete= models.CASCADE)
-    name = models.CharField(max_length=250, null = True)
+    name = models.CharField(max_length=250, null=True)
     description = models.TextField()
-
-
 
 
 class Event_type(models.Model):
     title = models.CharField(max_length=250)
     description = models.TextField()
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE, related_name = 'created')
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='created')
     created_on = models.DateTimeField(auto_now_add=True)
 
+
 class Event_Register(models.Model):
-    location = models.ForeignKey(Location,on_delete=models.CASCADE, related_name= 'locate')
-    department = models.ForeignKey(Department, on_delete= models.CASCADE, related_name='dpt')
+    location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='locate')
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='dpt')
     event_title = models.CharField(max_length=350)
     no_of_activities = models.IntegerField()
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     venue = models.TextField(max_length=250)
-    academic_year = models.ForeignKey(Academic_year,on_delete= models.CASCADE, related_name='year')
-    event_type =models.ForeignKey(Event_type,on_delete= models.CASCADE, related_name='event')
-    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name='tag')
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE, related_name = 'c',null=True, blank=True)
+    academic_year = models.ForeignKey(Academic_year, on_delete=models.CASCADE, related_name='year')
+    event_type = models.ForeignKey(Event_type, on_delete=models.CASCADE, related_name='event')
+    tags = models.ManyToManyField(Tag, related_name='events', blank=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='c', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at =  models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
 
 
 class Activity(models.Model):
-    event = models.ForeignKey(Event_Register, on_delete= models.CASCADE)
+    event = models.ForeignKey(Event_Register, on_delete=models.CASCADE)
     activity_title = models.CharField(max_length=350)
     activity_description = models.TextField()
     activity_date = models.DateTimeField()
@@ -80,11 +82,13 @@ class Activity(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
+
 class Collaborators(models.Model):
-    event = models.ForeignKey(Event_Register, on_delete= models.CASCADE)
-    department = models.ForeignKey(Department, on_delete= models.CASCADE, related_name='deptmt')
-    location = models.ForeignKey(Location,on_delete=models.CASCADE, related_name= 'loca')
-    staffs =models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE, related_name = 'user')
+    event = models.ForeignKey(Event_Register, on_delete=models.CASCADE)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='deptmt')
+    location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='loca')
+    staffs = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user')
+
 
 def custom_upload_to(instance, filename):
     # Use slugify to create a safe directory name based on the event title
@@ -92,35 +96,77 @@ def custom_upload_to(instance, filename):
     upload_path = os.path.join(event_title_slug, filename)
     return upload_path
 
+
 class Proposal_Upload(models.Model):
-    event = models.ForeignKey(Event_Register, on_delete= models.CASCADE)
-    files =  models.FileField(upload_to=custom_upload_to)
+    event = models.ForeignKey(Event_Register, on_delete=models.CASCADE, related_name='proposal_files', null=True)
+    file = models.FileField(upload_to='proposal_files/', null=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
 
 class Role(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
-    role =  models.CharField(max_length=20, choices=(
+    role = models.CharField(max_length=20, choices=(
         ('viewers', 'Viewers'),
         ('departmentHOD', 'DepartmentHOD'),
         ('IQACuser', 'IQACUser'),
-        ('staffs', 'Staffs'),    
+        ('staffs', 'Staffs'),
     ), default='admin')
-    department = models.ForeignKey(Department, on_delete= models.CASCADE)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
     status = models.BooleanField(default=True)
 
+
 class EventStatus(models.Model):
-    event = models.ForeignKey(Event_Register, on_delete= models.CASCADE)
+    event = models.ForeignKey(Event_Register, on_delete=models.CASCADE)
     STATUS_CHOICES = [
-        ('approved','Approved'),
-        ('rejected','Rejected')
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected')
     ]
     status = models.CharField(max_length=250, choices=STATUS_CHOICES, default='pending')
-    comments =  models.CharField(max_length=250)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,related_name='staff', null=False)
+    comments = models.CharField(max_length=250)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='staff', null=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    # updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,related_name='HOD')
-    # updated_at = models.DateTimeField(auto_now_add=True)
+   
+
+class EventReport(models.Model):
+    target_audience = models.TextField()
+    external_members_or_agencies_with_affiliation = models.TextField()
+    website_contact_of_external_members = models.TextField()
+    organizing_committee_details = models.TextField()
+    no_of_student_volunteers = models.TextField()
+    no_of_attendees_or_participants = models.TextField()
     
-    
+
+
+class EventReport(models.Model):
+    # target_audience =
+
+    event = models.ForeignKey(
+        Event_Register, on_delete=models.CASCADE, related_name='events')
+    # brochure = models.ImageField(upload_to=custom_upload_to, blank=True)
+    external_speakers = models.FileField(upload_to=custom_upload_to)
+    # photographs = models.ImageField(upload_to='photographs/%Y')
+    # blogPostPrintout = models.ImageField(upload_to='external_speakers/%Y/%m')
+    registration_list = models.FileField(upload_to=custom_upload_to)
+    list_of_attendees = models.FileField(upload_to=custom_upload_to)
+    details_of_external_attendees = models.FileField(
+        upload_to=custom_upload_to)
+    list_of_all_participants_and_winners_list = models.FileField(
+        upload_to=custom_upload_to)
+    list_of_students_volunteers = models.FileField(upload_to=custom_upload_to)
+    sample_certificates_of_participants_or_attendees = models.FileField(
+        upload_to=custom_upload_to)
+    sample_certificates_of_winners = models.FileField(
+        upload_to=custom_upload_to)
+    proposal_or_planning_documents = models.FileField(
+        upload_to=custom_upload_to)
+    budgets = models.FileField(upload_to=custom_upload_to)
+    printout_of_email_communication = models.FileField(
+        upload_to=custom_upload_to)
+    feedback = models.FileField(upload_to=custom_upload_to)
+    # def __str__(self):
+    #     return self
+
+
 class ReportStatus(models.Model):
     STATUS_CHOICES = [
         ('pending', 'Pending'),
@@ -130,15 +176,15 @@ class ReportStatus(models.Model):
         ('rejected_by_IQAC', 'Rejected_by_IQAC'),
         ('report_send_to_department', 'Report_send_to_Department'),
         ('report_send_to_IQAC', 'Report_send_to_IQAC')
-]
-    event = models.ForeignKey(Event_Register, on_delete= models.CASCADE)
+    ]
+    event = models.ForeignKey(Event_Register, on_delete=models.CASCADE)
     status = models.CharField(max_length=250, choices=STATUS_CHOICES, default='pending')
     comments = models.TextField(blank=True)
 
     def __str__(self):
         return f"Report Status: {self.status} for {self.report}"
 
-#  
+#
 # # Create your models here.
 # class Department(models.Model):
 #     TYPE_CHOICES = [
@@ -240,7 +286,6 @@ class ReportStatus(models.Model):
 #     event_report = models.ForeignKey(EventReport, on_delete=models.CASCADE, related_name='brochure')
 #     created_at = models.DateTimeField(auto_now_add=True)
 #     updated_at = models.DateTimeField(auto_now=True)
-
 
 
 # class ReportStatus(models.Model):

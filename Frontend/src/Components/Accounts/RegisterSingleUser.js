@@ -299,7 +299,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { toast } from 'react-toastify';
-
+import './ListUser.css'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { user_register, campus_list, department_list_by_campus } from '../../axios/api';
 import Sidebar from '../../Sidebar';
@@ -316,6 +316,10 @@ const RegisterSingleUser = () => {
     const [userCampus, setUserCampus] = useState('');
     const [campuses, setCampuses] = useState([]);
     const [departments, setDepartments] = useState([]);
+    const [userNameError, setUserNameError] = useState("");
+const [userEmpIdError, setUserEmpIdError] = useState("");
+const [userEmailError, setUserEmailError] = useState("");
+const [userPhoneNumberError, setUserPhoneNumberError] = useState("");
 
     const navigate = useNavigate(); 
 
@@ -426,6 +430,43 @@ const RegisterSingleUser = () => {
     const renderAsterisk = () => (
         <span style={{ color: 'red' }}>*</span>
     );
+    // Validation functions
+const validateUserName = (value) => {
+    const nameRegex = /^[a-zA-Z\s]*$/;
+    if (!nameRegex.test(value)) {
+        setUserNameError("Name should contain only alphabets and spaces.");
+    } else {
+        setUserNameError("");
+    }
+};
+
+const validateEmpId = (value) => {
+    const empIdRegex = /^[0-9]*$/;
+    if (!empIdRegex.test(value)) {
+        setUserEmpIdError("Emp ID should contain only numeric values.");
+    } else {
+        setUserEmpIdError("");
+    }
+};
+
+const validateEmail = (value) => {
+    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
+    if (!emailRegex.test(value)) {
+        setUserEmailError("Email must be lowercase and contain only one '@'.");
+    } else {
+        setUserEmailError("");
+    }
+};
+
+const validatePhoneNumber = (value) => {
+    const phoneRegex = /^[0-9]{10}$/;
+    if (!phoneRegex.test(value)) {
+        setUserPhoneNumberError("Phone number must be 10 digits.");
+    } else {
+        setUserPhoneNumberError("");
+    }
+};
+
 
     return (
         <div>
@@ -455,8 +496,12 @@ const RegisterSingleUser = () => {
                                                 id="userName"
                                                 placeholder="Name"
                                                 value={userName}
-                                                onChange={(e) => setUserName(e.target.value)}
+                                                onChange={(e) => {
+                                                    setUserName(e.target.value);
+                                                    validateUserName(e.target.value);
+                                                }}
                                             />
+                                             {userNameError && <div className="text-danger">{userNameError}</div>}
                                         </div>
                                         <div className="col-md-6">
                                             <OverlayTrigger
@@ -470,9 +515,14 @@ const RegisterSingleUser = () => {
                                                 className="form-control"
                                                 id="userEmpId"
                                                 placeholder="Emp ID"
+                                                inputMode='numeric'
                                                 value={userEmpId}
-                                                onChange={(e) => setUserEmpId(e.target.value)}
+                                                onChange={(e) => {
+                                                    setUserEmpId(e.target.value);
+                                                    validateEmpId(e.target.value);
+                                                }}
                                             />
+                                             {userEmpIdError && <div className="text-danger">{userEmpIdError}</div>}
                                         </div>
                                     </div>
                                     <div className="row mb-3">
@@ -489,8 +539,12 @@ const RegisterSingleUser = () => {
                                                 id="userEmail"
                                                 placeholder="Email"
                                                 value={userEmail}
-                                                onChange={(e) => setUserEmail(e.target.value)}
+                                                onChange={(e) => {
+                                                    setUserEmail(e.target.value);
+                                                    validateEmail(e.target.value);
+                                                }}
                                             />
+                                             {userEmailError && <div className="text-danger">{userEmailError}</div>}
                                         </div>
                                         <div className="col-md-6">
                                             <OverlayTrigger
@@ -502,18 +556,24 @@ const RegisterSingleUser = () => {
                                             <div className="input-group">
                                                 <span className="input-group-text">+91</span>
                                                 <input
-                                                    type="text"
+                                                    type="tel"
                                                     className="form-control"
                                                     id="userPhoneNumber"
                                                     placeholder="Enter 10-digit phone number"
                                                     value={userPhoneNumber}
-                                                    onChange={(e) => setUserPhoneNumber(e.target.value)}
+                                                    onChange={(e) => {
+                                                        setUserPhoneNumber(e.target.value);
+                                                        validatePhoneNumber(e.target.value);
+                                                    }}
                                                     maxLength={10}
+                                                    inputMode="numeric"
                                                     pattern="\d{10}"
                                                     title="Please enter a 10-digit phone number."
                                                     required
                                                 />
+                                                
                                             </div>
+                                            {userPhoneNumberError && <div className="text-danger">{userPhoneNumberError}</div>}
                                         </div>
                                     </div>
                                     <div className="row mb-3">

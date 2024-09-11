@@ -3,11 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
-import { FaSearch } from 'react-icons/fa'; // Removed FaEdit, FaTrash imports
+//import { FaSearch } from 'react-icons/fa'; // Removed FaEdit, FaTrash imports
 import { Tag } from 'primereact/tag';
 import AdminDashboard from '../Admin/AdminDashboard';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Axios from 'axios';
+//import Axios from 'axios';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
 import { department_list, department_active } from '../../axios/api'; // Removed department_delete import

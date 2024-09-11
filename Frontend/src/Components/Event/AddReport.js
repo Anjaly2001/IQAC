@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 import { Stepper } from 'primereact/stepper';
 import { StepperPanel } from 'primereact/stepperpanel';
 import { Button } from 'primereact/button';
@@ -22,7 +22,7 @@ function AddReport() {
   const [venue, setVenue] = useState('');
   const [academicYear, setAcademicYear] = useState('');
   const [eventType, setEventType] = useState('');
-  const [proposal, setProposal] = useState(null);
+  //const [proposal, setProposal] = useState(null);
   const [tag, setTag] = useState('');
   const [collaboratorNames, setCollaboratorNames] = useState(['John Doe', 'Jane Smith']); // Dummy names
   const [activities, setActivities] = useState([{ title: '', date: '', startTime: '', endTime: '' }]);

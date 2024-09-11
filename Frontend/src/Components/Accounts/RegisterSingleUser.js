@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AdminDashboard from '../Admin/AdminDashboard';
 import { OverlayTrigger, Tooltip, ToastContainer, Toast } from 'react-bootstrap'; // Assuming you use react-bootstrap
-import { user_register, campus_list, department_list } from '../../axios/api';
+import {  campus_list, department_list } from '../../axios/api';
 
 const RegisterSingleUser = () => {
     const [userName, setUserName] = useState('');

@@ -8,7 +8,7 @@ import { Dropdown } from 'primereact/dropdown';
 import AdminDashboard from '../Admin/AdminDashboard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FaTags } from 'react-icons/fa';
+//import { FaTags } from 'react-icons/fa';
 
 function RegisterEvent() {
   const [department, setDepartment] = useState('');

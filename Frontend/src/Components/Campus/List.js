@@ -9,7 +9,7 @@ import { InputIcon } from 'primereact/inputicon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import homeURL from '../../axios/homeurl';
-import { campus_list,campus_update, campus_delete } from '../../axios/api';
+import { campus_list,campus_delete } from '../../axios/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 

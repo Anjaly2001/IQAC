@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AdminDashboard from '../Admin/AdminDashboard';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'; // For API requests
+//import axios from 'axios'; // For API requests
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { academic_list, academic_delete} from '../../axios/api';

@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import AdminDashboard from '../Admin/AdminDashboard';
 import { useNavigate } from 'react-router-dom';
-import { Dropdown } from 'primereact/dropdown';
-import axios from 'axios';
 import { campus_list, academic_register} from '../../axios/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

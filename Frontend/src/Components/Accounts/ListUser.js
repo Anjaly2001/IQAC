@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
-import { FaSearch, FaEdit, FaTrash } from 'react-icons/fa';
+import {  FaEdit, FaTrash } from 'react-icons/fa';
 import { Tag } from 'primereact/tag';
 import AdminDashboard from '../Admin/AdminDashboard';
 import 'bootstrap/dist/css/bootstrap.min.css';

@@ -395,13 +395,16 @@ def upload_proposal_files(request, event_id):
     Upload files for an event.
     """
     if not event_id:
+        print('event_id')
         return Response({"detail": "Event ID is required."}, status=status.HTTP_400_BAD_REQUEST)
 
     if not Event_Register.objects.filter(id=event_id).exists():
+        print( "Event not found.")
         return Response({"detail": "Event not found."}, status=status.HTTP_404_NOT_FOUND)
 
-    files = request.FILES.getlist('files')
+    files = request.FILES.getlist('files[]')
     if not files:
+        print("no files")
         return Response({"detail": "No files uploaded."}, status=status.HTTP_400_BAD_REQUEST)
 
     response_data = []
@@ -415,6 +418,7 @@ def upload_proposal_files(request, event_id):
             serializer.save()
             response_data.append(serializer.data)
         else:
+            print(serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     return Response({"files": response_data}, status=status.HTTP_201_CREATED)
 

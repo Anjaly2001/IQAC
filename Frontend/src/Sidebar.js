@@ -937,6 +937,12 @@ const Sidebar = () => {
                       </Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
+                      <Nav.Link as={Link} to="/registerMultipleUser" className={`text-light ${isActive('/registerMultipleUser') ? 'active' : ''}`}>
+                        <FontAwesomeIcon icon={faPlus} className="me-2" />
+                        New Users
+                      </Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
                       <Nav.Link as={Link} to="/listuser" className={`text-light ${isActive('/listuser') ? 'active' : ''}`}>
                         <FontAwesomeIcon icon={faEye} className="me-2" />
                         Users List

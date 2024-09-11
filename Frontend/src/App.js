@@ -38,7 +38,7 @@ const App = () => {
     const getDefaultRoute = () => {
         switch (userRole) {
             case 'admin':
-                return '/admin-dashboard'; // Admin users go to the Admin Dashboard
+                return '/dashboard'; // Admin users go to the Admin Dashboard
             case 'staffs':
                 return '/dashboard'; // Regular users go to their dashboard
             default:
@@ -63,7 +63,7 @@ const App = () => {
                         <Route path="/dashboard" element={userRole === 'admin' ? <Dashboard /> : <Navigate to="/login" />} />
 
                         {/* Additional routes accessible to all authenticated users */}
-                        <Route path="/sidebar" element={<Sidebar />} />
+              
                         <Route path="/registerSingleuser" element={<RegisterSingleUser />} />
                         <Route path="/registerMultipleUser" element={<RegisterMultipleUser />} />
                         <Route path="/listUser" element={<ListUser />} />

@@ -1,377 +1,332 @@
-import React, { useState,  useEffect  } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
-import { Dropdown } from 'primereact/dropdown'; // Assuming you use PrimeReact for dropdowns
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { campus_name_list, department_list_by_campus} from '../../axios/api';
-import { toast } from 'react-toastify';
-import Sidebar from '../../Sidebar';
+import React, { useState, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faSave,faTrash } from "@fortawesome/free-solid-svg-icons";
+import { Dropdown } from "primereact/dropdown";
+import "bootstrap/dist/css/bootstrap.min.css";
+import {
+  campus_name_list,
+  department_list_by_campus,
+  user_list_by_department,
+  user_department_role,
+  assignUserRole,
+  deleteUserRole,
+} from "../../axios/api"; // Assuming you have an API call to fetch users
+import { toast } from "react-toastify";
+import Sidebar from "../../Sidebar";
 
 const AddRole = () => {
-    const [selectedCampus, setSelectedCampus] = useState(null);
-    const [campuses, setCampuses] = useState([]);
-    const [selectedDepartment, setSelectedDepartment] = useState(null);
-    const [departments, setDepartments] = useState([]);
-    const [selectedUser, setSelectedUser] = useState(null);
-    const [selectedRole, setSelectedRole] = useState(null);
-    const [currentUserRole, setCurrentUserRole] = useState(null); // Mock role, update as necessary
-    const [showAdditionalFields, setShowAdditionalFields] = useState(false);
+  // States for top dropdowns (showing current user campus/department)
+  const [currentCampus, setCurrentCampus] = useState(null);
+  const [currentDepartment, setCurrentDepartment] = useState(null);
 
+  // States for bottom dropdowns (for assigning new roles)
+  const [selectedNewCampus, setSelectedNewCampus] = useState(null);
+  const [selectedNewDepartment, setSelectedNewDepartment] = useState(null);
 
-    useEffect(() => {
-        const fetchCampuses = async () => {
-            const data = await campus_name_list();
-            if (data.length > 0) {
-                setCampuses(data.map(campus => ({ label: campus.name, value: campus.id })));
-            } else {
-                setCampuses([]); 
-            }
-        };
-        fetchCampuses();
-    }, []);
+  // Separate state for new dropdowns departments
+  const [newDepartments, setNewDepartments] = useState([]);
 
-    useEffect(() => {
-        const fetchDepartments = async (campusId) => {
-            if (!campusId) return;  // Do not fetch if campusId is not set
-            try {
-                const response = await department_list_by_campus(campusId);
-                setDepartments(response.map(department => ({ label: department.name, value: department.id }))); // Set the departments array correctly
-            } catch (error) {
-                console.error('Failed to fetch departments:', error);
-                toast.error('Failed to load department options.');
-            }
-        };
-        fetchDepartments(selectedCampus);  // Trigger fetching departments when selectedCampus changes
-    }, [selectedCampus]);
+  const [campuses, setCampuses] = useState([]);
+  const [currentDepartments, setCurrentDepartments] = useState([]); // Separate state for current department list
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [users, setUsers] = useState([]);
+  const [selectedRole, setSelectedRole] = useState(null);
+  const [currentUserRole, setCurrentUserRole] = useState(null);
+  const [showAdditionalFields, setShowAdditionalFields] = useState(false);
 
-    const departmentsDropdown = departments.map(department => (
-        { label: department.label, value: department.value }
-    ));
-    
+  const [roles, setRoles] = useState([]); // Add state to store user roles
 
+  // Fetch campuses when the component is mounted
+  useEffect(() => {
+    const fetchCampuses = async () => {
+      const data = await campus_name_list();
+      setCampuses(
+        data.map((campus) => ({ label: campus.name, value: campus.id }))
+      );
+    };
+    fetchCampuses();
+  }, []);
 
-    
-    // const campuses = [{ label: 'Central Campus', value: 'Lavasa Campus' }, { label: 'Lav', value: 'campusB' }];
-    // const departments = [{ label: 'Department X', value: 'deptX' }, { label: 'Department Y', value: 'deptY' }];
-    const users = [{ label: 'User 1', value: 'user1' }, { label: 'User 2', value: 'user2' }];
-    const roles = [{ label: 'Admin', value: 'admin' }, { label: 'Editor', value: 'editor' }];
+  // Fetch departments for the current campus
+  useEffect(() => {
+    const fetchDepartments = async (campusId, setDeptState) => {
+      if (!campusId) return;
+      try {
+        const response = await department_list_by_campus(campusId);
+        setDeptState(
+          response.map((department) => ({
+            label: department.name,
+            value: department.id,
+          }))
+        );
+      } catch (error) {
+        toast.error("Failed to load department options.");
+      }
+    };
+    // Fetch departments for current dropdown
+    if (currentCampus) fetchDepartments(currentCampus, setCurrentDepartments);
+  }, [currentCampus]);
 
-    const handleSubmit = () => {
-        // Handle the submit action, fetch current role for user
+  // Fetch departments for new campus (separate dropdown)
+  useEffect(() => {
+    const fetchDepartments = async (campusId) => {
+      if (!campusId) return;
+      try {
+        const response = await department_list_by_campus(campusId);
+        setNewDepartments(
+          response.map((department) => ({
+            label: department.name,
+            value: department.id,
+          }))
+        );
+      } catch (error) {
+        toast.error("Failed to load new department options.");
+      }
+    };
+    if (selectedNewCampus) fetchDepartments(selectedNewCampus);
+  }, [selectedNewCampus]);
+
+  // Fetch users when a department is selected (for current dropdowns)
+  useEffect(() => {
+    const fetchUsers = async (departmentId) => {
+      if (!departmentId) return;
+      try {
+        const response = await user_list_by_department(departmentId); // API call
+
+        // Extract users from response
+        const users = response.users || []; // Ensure there's always an array
+        setUsers(
+          users.map((user) => ({ label: user.username, value: user.id }))
+        ); // Map users to dropdown options
+      } catch (error) {
+        toast.error("Failed to load user options.");
+      }
     };
 
-    const handleSave = () => {
-        // Save the role assignment
+    fetchUsers(currentDepartment); // Fetch users based on currentDepartment
+  }, [currentDepartment]); // Dependency array to trigger the effect when currentDepartment changes
+
+  // Handle user selection and fetch default department, campus, and role
+  const handleUserSelect = async (userId) => {
+    setSelectedUser(userId);
+    try {
+      // Fetch and set current campus/department/role based on selected user
+      const userData = await user_department_role(userId); // Assuming this API exists
+      console.log(userData);
+
+      // Store the roles in the state
+      if (userData && userData.roles) {
+        setRoles(userData.roles); // Store the roles in the state
+      } else {
+        setRoles([]); // If no roles found, clear the roles state
+        toast.error("No roles found for this user");
+      }
+    } catch (error) {
+      console.error("Failed to fetch user roles", error);
+      toast.error("Failed to fetch user roles");
+    }
+  };
+
+  const handleAddRoleClick = () => {
+    setShowAdditionalFields(true);
+  };
+
+  const handleSave = async () => {
+    if (!selectedUser || !selectedRole || !selectedNewCampus || !selectedNewDepartment) {
+      toast.error("Please fill all the fields");
+      return;
+    }
+  
+    const roleData = {
+        users: selectedUser,
+      role: selectedRole,
+      department: selectedNewDepartment,
     };
+  
+    try {
+      // Make the API call to assign the new role to the user
+      await assignUserRole(roleData);
+      toast.success("Role assigned successfully!");
+  
+      // Optionally reset the form or fields after a successful save
+      setSelectedRole(null);
+      setSelectedNewCampus(null);
+      setSelectedNewDepartment(null);
+      setShowAdditionalFields(false); // Hide the additional fields again
+       // Refresh the page after saving
+       await handleUserSelect(selectedUser);
+    } catch (error) {
+      console.error("Error assigning role:", error);
+      toast.error("Failed to assign role. Please try again.");
+    }
+  };
 
-    const handleAddRoleClick = () => {
-        setShowAdditionalFields(true);
-    };
+  // Function to delete a role
+const handleDeleteRole = async (roleId) => {
+    if (!selectedUser || !roleId) return;
+  
+    try {
+      // API call to delete the role for the user
+      await deleteUserRole(roleId); // Assuming `deleteUserRole` API call exists
+      toast.success("Role deleted successfully!");
+  
+      // Refresh the user's role list after deletion
+      await handleUserSelect(selectedUser);
+    } catch (error) {
+      console.error("Error deleting role:", error);
+      toast.error("Failed to delete role. Please try again.");
+    }
+  };
+  
 
-
-    return (
-        <div className="container-fluid">
-           
-            <div className="row">
-                <div className="col-md-2 bg-light p-3">
-                    <Sidebar />
-                </div>
-                <div className="col-md-10 p-7">
-                    <h1 className="text-center fw-bold fs-5 mb-4">Role Settings</h1>
-
-                    {/* First Row: Campus, Department, User */}
-                    <div className="row mt-6">
-                        <div className="col-md-4">
-                        <label htmlFor="campus" className="form-label">Campus</label>
-                            <div className="form-group">
-                                <Dropdown
-                                    id="selectedCampus"
-                                    value={selectedCampus}
-                                    options={campuses}
-                                    onChange={(e) => setSelectedCampus(e.value)}
-                                    placeholder="Select Campus"
-                                />
-                            </div>
-                        </div>
-                        <div className="col-md-4">
-                            <label htmlFor="department" className="form-label">Department</label>
-                            <div className="form-group">
-                                <Dropdown 
-                                    id="department" 
-                                    value={selectedDepartment} 
-                                    options={departmentsDropdown}
-                                    onChange={(e) => setSelectedDepartment(e.value)}
-                                    placeholder="Select Department"
-                                    disabled={!selectedCampus}
-                                />
-                            </div>
-                        </div>
-                        <div className="col-md-4">
-                            <label htmlFor="user" className="form-label">User</label>
-                            <div className="form-group">
-                                <Dropdown id="user" value={selectedUser} options={users}
-                                    onChange={(e) => setSelectedUser(e.value)}
-                                    placeholder="Select User"
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Submit Button */}
-                    <div className="col mt-3">
-                        <div className="col-md-12 text-start">
-                            <button className="btn btn-primary posi" onClick={handleSubmit}>Submit</button>
-                        </div>
-                    </div>
-
-
-                    {/* Display current role if it exists */}
-                    {currentUserRole && (
-                        <div className="mt-3">
-                            <h5>Current Role: {currentUserRole}</h5>
-                        </div>
-                    )}
-
-                    {/* Add Role Button */}
-                    <div className="mt-3">
-                        <button className="btn btn-success" onClick={handleAddRoleClick}>
-                            <FontAwesomeIcon icon={faPlus} /> Add Role
-                        </button>
-                    </div>
-
-                    {/* Second Row: Role, Campus, Department - Conditionally displayed */}
-                    {showAdditionalFields && (
-                        <div className="row mt-4">
-                            <div className="col-md-4">
-                                <label htmlFor="role" className="form-label">Role</label>
-                                <div className="form-group">
-                                    <Dropdown id="role" value={selectedRole} options={roles}
-                                        onChange={(e) => setSelectedRole(e.value)}
-                                        placeholder="Select Role"
-                                    />
-                                </div>
-                            </div>
-                            <div className="col-md-4">
-                                <label htmlFor="campus2" className="form-label">Campus</label>
-                                <div className="form-group">
-                                    <Dropdown id="campus2" value={selectedCampus} options={campuses}
-                                        onChange={(e) => setSelectedCampus(e.value)}
-                                        placeholder="Select Campus"
-                                    />
-                                </div>
-                            </div>
-                            <div className="col-md-4">
-                                <label htmlFor="department2" className="form-label">Department</label>
-                                <div className="form-group">
-                                    <Dropdown id="department2" value={selectedDepartment} options={departments}
-                                        onChange={(e) => setSelectedDepartment(e.value)}
-                                        placeholder="Select Department"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Save Button */}
-                    {showAdditionalFields && (
-                        <div className="row mt-3">
-                            <div className="col-md-12 text-start">
-                                <button className="btn btn-primary" onClick={handleSave}>
-                                    <FontAwesomeIcon icon={faSave} /> Save
-                                </button>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            </div>
+  return (
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-md-2 bg-light p-3">
+          <Sidebar />
         </div>
-    );
+        <div className="col-md-10 p-7">
+          <h1 className="text-center fw-bold fs-5 mb-4">Role Settings</h1>
+
+          <div className="row mt-6">
+            {/* Top Dropdown for Default Campus and Department */}
+            <div className="col-md-4">
+              <label htmlFor="campus" className="form-label mx-2">
+                Current Campus
+              </label>
+              <Dropdown
+                id="currentCampus"
+                value={currentCampus}
+                options={campuses}
+                onChange={(e) => setCurrentCampus(e.value)}
+                placeholder="Select Campus"
+              />
+            </div>
+            <div className="col-md-4">
+              <label htmlFor="department" className="form-label mx-2">
+                Current Department
+              </label>
+              <Dropdown
+                id="currentDepartment"
+                value={currentDepartment}
+                options={currentDepartments}
+                onChange={(e) => setCurrentDepartment(e.value)}
+                placeholder="Select Department"
+                disabled={!currentCampus}
+              />
+            </div>
+            <div className="col-md-4">
+              <label htmlFor="user" className="form-label mx-2">
+                User
+              </label>
+              <Dropdown
+                id="user"
+                value={selectedUser}
+                options={users}
+                onChange={(e) => handleUserSelect(e.value)}
+                placeholder="Select User"
+                disabled={!currentDepartment}
+              />
+            </div>
+          </div>
+
+          <div className="my-3">
+          {roles.length > 0 && (
+            <div className="mt-3">
+              <h5>User Roles:</h5>
+              <ul>
+                {roles.map((role, index) => (
+                  <li key={index} className="mt-3">
+                    <strong>Department:</strong> {role.department},{" "}
+                    <strong>Role:</strong> {role.role}
+                    {/* Add a delete button next to each role */}
+                    <button
+                      className="btn btn-danger ms-2 fs-6 "
+                      onClick={() => handleDeleteRole(role.id)} // Assuming `role.id` uniquely identifies the role
+                    >
+                      <FontAwesomeIcon icon={faTrash} /> 
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {selectedUser && roles.length === 0 && <p>No roles assigned to this user.</p>}
+        </div>
+
+          <div className="mt-3 mb-5">
+            {!showAdditionalFields && (
+              <button className="btn btn-success" onClick={handleAddRoleClick}>
+                <FontAwesomeIcon icon={faPlus} /> Add Role
+              </button>
+            )}
+          </div>
+
+          {showAdditionalFields && (
+            <>
+            <span className="m-5 p-5 fw-bold fs-5">New Role</span>
+
+            
+              <div className="row mt-4">
+                {/* Bottom Dropdown for Assigning New Role (Separate from Top Dropdowns) */}
+                <div className="col-md-4">
+                  <label htmlFor="role" className="form-label mx-2">
+                    Role
+                  </label>
+                  <Dropdown
+                    id="role"
+                    value={selectedRole}
+                    options={[
+                      { label: "Department HOD", value: "departmentHOD" },
+                      { label: "IQAC User", value: "IQACuser" },
+                      { label: "Staffs", value: "Staffs" },
+   
+                      // Add more roles as needed
+                    ]} // Sample roles
+                    onChange={(e) => setSelectedRole(e.value)}
+                    placeholder="Select Role"
+                  />
+                </div>
+                <div className="col-md-4">
+                  <label htmlFor="newCampus" className="form-label mx-2">
+                    New Campus
+                  </label>
+                  <Dropdown
+                    id="newCampus"
+                    value={selectedNewCampus}
+                    options={campuses}
+                    onChange={(e) => setSelectedNewCampus(e.value)}
+                    placeholder="Select New Campus"
+                  />
+                </div>
+                <div className="col-md-4">
+                  <label htmlFor="newDepartment" className="form-label mx-2">
+                    New Department
+                  </label>
+                  <Dropdown
+                    id="newDepartment"
+                    value={selectedNewDepartment}
+                    options={newDepartments}
+                    onChange={(e) => setSelectedNewDepartment(e.value)}
+                    placeholder="Select New Department"
+                  />
+                </div>
+              </div>
+
+              <div className="row mt-3">
+                <div className="col-md-12 text-start">
+                  <button className="btn btn-primary" onClick={handleSave}>
+                    <FontAwesomeIcon icon={faSave} /> Save
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default AddRole;
-
-
-
-
-// import React, { useState, useEffect } from 'react';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
-// import 'bootstrap/dist/css/bootstrap.min.css';
-// import AdminDashboard from '../Admin/AdminDashboard';
-// import { campus_name_list } from '../../axios/api';
-// import { ToastContainer, toast } from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css';
-
-// const AddRole = () => {
-//     const [selectedCampus, setSelectedCampus] = useState(null);
-//     const [campuses, setCampuses] = useState([]);
-//     const [selectedDepartment, setSelectedDepartment] = useState(null);
-//     const [selectedUser, setSelectedUser] = useState(null);
-//     const [selectedRole, setSelectedRole] = useState(null);
-//     const [departments, setDepartments] = useState([]); // Added departments state
-//     const [users, setUsers] = useState([]); // Added users state
-//     const [roles, setRoles] = useState([]); // Added roles state
-
-//     useEffect(() => {
-//         const fetchLocations = async () => {
-//             try {
-//                 const response = await campus_name_list();
-//                 if (response && Array.isArray(response.data)) {
-//                     setCampuses(response.data);
-//                 } else {
-//                     console.error('Unexpected response format:', response);
-//                 }
-//             } catch (error) {
-//                 console.error('Failed to fetch campuses:', error);
-//                 toast.error('Failed to fetch campuses.');
-//             }
-//         };
-
-//         // Fetch departments, users, and roles as needed
-//         const fetchDepartments = async () => {
-//             // Replace with API call to fetch departments
-//             const deptData = [
-//                 { label: 'Department X', value: 'deptX' },
-//                 { label: 'Department Y', value: 'deptY' }
-//             ];
-//             setDepartments(deptData);
-//         };
-
-//         const fetchUsers = async () => {
-//             // Replace with API call to fetch users
-//             const userData = [
-//                 { label: 'User 1', value: 'user1' },
-//                 { label: 'User 2', value: 'user2' }
-//             ];
-//             setUsers(userData);
-//         };
-
-//         const fetchRoles = async () => {
-//             // Replace with API call to fetch roles
-//             const roleData = [
-//                 { label: 'Admin', value: 'admin' },
-//                 { label: 'Editor', value: 'editor' }
-//             ];
-//             setRoles(roleData);
-//         };
-
-//         fetchLocations();
-//         fetchDepartments();
-//         fetchUsers();
-//         fetchRoles();
-//     }, []);
-
-//     const handleSave = async () => {
-//         if (!selectedCampus || !selectedDepartment || !selectedUser || !selectedRole) {
-//             toast.error('Please fill in all fields.');
-//             return;
-//         }
-
-//         // Prepare data for submission
-//         const roleData = {
-//             campus: selectedCampus,
-//             department: selectedDepartment,
-//             user: selectedUser,
-//             role: selectedRole,
-//         };
-
-//         try {
-//             // Submit the data (make a POST request here)
-//             // await saveRoleData(roleData); // Assuming you have an API function to save the role data
-
-//             toast.success('Role assignment saved successfully!');
-//         } catch (error) {
-//             console.error('Error saving role:', error);
-//             toast.error('Failed to save role.');
-//         }
-//     };
-
-//     return (
-//         <div className="container mt-5">
-//             <AdminDashboard />
-//             <h3>Add Role</h3>
-//             <div className="row mt-4">
-//                 <div className="col-md-4">
-//                     <label htmlFor="campus" className="form-label">Campus</label>
-//                     <select
-//                         id="selectedCampus"
-//                         className="form-select"
-//                         value={selectedCampus}
-//                         onChange={(e) => setSelectedCampus(e.target.value)}
-//                     >
-//                         <option value="">Choose Campus</option>
-//                         {campuses.length > 0 ? (
-//                             campuses.map((campus) => (
-//                                 <option key={campus.id} value={campus.id}>
-//                                     {campus.name}
-//                                 </option>
-//                             ))
-//                         ) : (
-//                             <option value="">No campuses available</option>
-//                         )}
-//                     </select>
-//                 </div>
-//                 <div className="col-md-4">
-//                     <label htmlFor="department" className="form-label">Department</label>
-//                     <select
-//                         id="selectedDepartment"
-//                         className="form-select"
-//                         value={selectedDepartment}
-//                         onChange={(e) => setSelectedDepartment(e.target.value)}
-//                     >
-//                         <option value="">Choose Department</option>
-//                         {departments.map((dept) => (
-//                             <option key={dept.value} value={dept.value}>
-//                                 {dept.label}
-//                             </option>
-//                         ))}
-//                     </select>
-//                 </div>
-//                 <div className="col-md-4">
-//                     <label htmlFor="user" className="form-label">User</label>
-//                     <select
-//                         id="selectedUser"
-//                         className="form-select"
-//                         value={selectedUser}
-//                         onChange={(e) => setSelectedUser(e.target.value)}
-//                     >
-//                         <option value="">Choose User</option>
-//                         {users.map((user) => (
-//                             <option key={user.value} value={user.value}>
-//                                 {user.label}
-//                             </option>
-//                         ))}
-//                     </select>
-//                 </div>
-//             </div>
-
-//             <div className="row mt-4">
-//                 <div className="col-md-4">
-//                     <label htmlFor="role" className="form-label">Role</label>
-//                     <select
-//                         id="selectedRole"
-//                         className="form-select"
-//                         value={selectedRole}
-//                         onChange={(e) => setSelectedRole(e.target.value)}
-//                     >
-//                         <option value="">Choose Role</option>
-//                         {roles.map((role) => (
-//                             <option key={role.value} value={role.value}>
-//                                 {role.label}
-//                             </option>
-//                         ))}
-//                     </select>
-//                 </div>
-//             </div>
-
-//             <div className="mt-4">
-//                 <button className="btn btn-primary" onClick={handleSave}>
-//                     <FontAwesomeIcon icon={faSave} /> Save
-//                 </button>
-//             </div>
-//             <ToastContainer />
-//         </div>
-//     );
-// };
-
-// export default AddRole;

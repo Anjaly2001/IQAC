@@ -228,11 +228,10 @@ export const academic_register = async (form) => {
   }
 };
 
-export const academic_list = async (form) => {
+export const academic_list = async () => {
   try {
     const res = await axiosInstance.get(
-      "department_and_events/list_academic_year/",
-      form
+      "department_and_events/list_academic_year/"
     );
     return res.data;
   } catch (error) {
@@ -240,7 +239,17 @@ export const academic_list = async (form) => {
     toast.error("Failed to create academic year. Please try again.");
   }
 };
-
+export const academic_list_campus = async (campus_id) => {
+  try {
+    const res = await axiosInstance.get(
+      `department_and_events/list_academic_year_by_campus/${campus_id}/`
+    );
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    toast.error("Failed to Fetch academic year. Please try again.");
+  }
+};
 export const academic_delete = async (academicYearId) => {
   try {
     const res = await axiosInstance.delete(
@@ -266,11 +275,10 @@ export const event_type_register = async (form) => {
   }
 };
 
-export const event_type_list = async (form) => {
+export const event_type_list = async () => {
   try {
     const res = await axiosInstance.get(
       "department_and_events/list_event_type/",
-      form
     );
     return res.data;
   } catch (error) {
@@ -361,9 +369,9 @@ export const create_tag = async (form) => {
 };
 
 
-export const list_tags = async (form) => {
+export const list_tags = async () => {
   try {
-    const res = await axiosInstance.get("department_and_events/list_tag/", form);
+    const res = await axiosInstance.get("department_and_events/list_tag/",);
     return res.data;
   } catch (error) {
     console.log(error);
@@ -378,5 +386,26 @@ export const delete_tag = async (tag_id) => {
   } catch (error) {
     console.log(error);
     toast.error("Failed to delete tag. Please try again.");
+  }
+};
+
+export const register_event=async(form)=>{
+  try {
+    const res = await axiosInstance.post("department_and_events/event_register/", form);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    toast.error("Failed to create event. Please try again.");
+  }
+};
+
+// propsal_file_upload
+export const proposal_file_upload=async(form,event_id)=>{
+  try {
+    const res = await postMultipartData(`department_and_events/upload_proposal_files/${event_id}/`, form);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    toast.error("Failed to create proposal file. Please try again.");
   }
 };

@@ -31,7 +31,6 @@ const AddRole = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [users, setUsers] = useState([]);
   const [selectedRole, setSelectedRole] = useState(null);
-  const [currentUserRole, setCurrentUserRole] = useState(null);
   const [showAdditionalFields, setShowAdditionalFields] = useState(false);
 
   const [roles, setRoles] = useState([]); // Add state to store user roles

@@ -348,3 +348,35 @@ export const deleteUserRole = async (roleId) => {
     throw new Error("Error deleting role");
   }
 };
+
+//tags
+export const create_tag = async (form) => {
+  try {
+    const res = await axiosInstance.post( "department_and_events/create_tag/",form);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    toast.error("Failed to create tag. Please try again.");
+  }
+};
+
+
+export const list_tags = async (form) => {
+  try {
+    const res = await axiosInstance.get("department_and_events/list_tag/", form);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    toast.error("Failed to list tags. Please try again.");
+  }
+};
+
+export const delete_tag = async (tag_id) => {
+  try {
+    const res = await axiosInstance.delete( `department_and_events/delete_tag/${tag_id}/`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    toast.error("Failed to delete tag. Please try again.");
+  }
+};

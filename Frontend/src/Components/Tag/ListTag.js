@@ -4,37 +4,69 @@ import { Column } from 'primereact/column';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import Sidebar from '../../Sidebar';
+// import axios from 'axios';
+import { toast } from 'react-toastify';
+import { list_tags,delete_tag } from '../../axios/api';
 
 export default function ListTag() {
     const [tags, setTags] = useState([]);
-    const [globalFilter, setGlobalFilter] = useState(null);
+    const [globalFilter, setGlobalFilter] = useState('');
 
     useEffect(() => {
-        // Fetch tags data from backend or use dummy data
-        const dummyData = [
-            { id: 1, tagName: 'Tag1', description: 'Description for Tag1' },
-            { id: 2, tagName: 'Tag2', description: 'Description for Tag2' },
-            // Add more dummy data here
-        ];
-        setTags(dummyData);
+        fetchTags();
     }, []);
+
+    const fetchTags = async () => {
+        try {
+            const response = await list_tags();  // Update the endpoint as needed
+            setTags(response);  // Adjust if the data structure is different
+            console.log(response.data)
+        } catch (error) {
+            console.error('Error fetching tags:', error);
+            toast.error('Failed to fetch tags. Please try again.');
+        }
+    };
 
     const handleSearchChange = (e) => {
         setGlobalFilter(e.target.value);
     };
 
-    const actionBodyTemplate = (rowData) => {
+    const handleEdit = (tagId) => {
+        // Implement edit functionality
+        console.log('Edit tag with ID:', tagId);
+    };
+
+    const handleDelete = async (tagId) => {
+        try {
+            await delete_tag(tagId);  // Update the endpoint as needed
+            toast.success('Tag deleted successfully');
+            fetchTags();  // Refresh the list
+        } catch (error) {
+            console.error('Error deleting tag:', error);
+            toast.error('Failed to delete tag. Please try again.');
+        }
+    };
+
+     // Define actionBodyTemplate inside the component scope
+     const actionBodyTemplate = (rowData) => {
         return (
             <div>
-                <button className="btn btn-link">
+                <button
+                    className="btn btn-link"
+                    onClick={() => handleEdit(rowData.id)}
+                >
                     <FontAwesomeIcon icon={faEdit} />
                 </button>
-                <button className="btn btn-link text-danger">
+                <button
+                    className="btn btn-link text-danger"
+                    onClick={() => handleDelete(rowData.id)}
+                >
                     <FontAwesomeIcon icon={faTrash} />
                 </button>
             </div>
         );
     };
+
 
     return (
         <div className="container-fluid">
@@ -70,7 +102,7 @@ export default function ListTag() {
                                 globalFilter={globalFilter}
                                 emptyMessage="No tags found."
                             >
-                                <Column field="tagName" header="Tag Name" sortable />
+                                <Column field="name" header="Tag Name" sortable />
                                 <Column field="description" header="Description" sortable />
                                 <Column header="Actions" body={actionBodyTemplate} />
                             </DataTable>

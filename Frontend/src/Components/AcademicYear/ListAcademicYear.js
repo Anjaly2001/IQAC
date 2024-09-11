@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import AdminDashboard from '../Admin/AdminDashboard';
+
 import { useNavigate } from 'react-router-dom';
+<<<<<<< HEAD
 //import axios from 'axios'; // For API requests
+=======
+>>>>>>> dde8ef404e6d82e622bb5aecf475725f6da1b58f
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { academic_list, academic_delete} from '../../axios/api';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import {  toast } from 'react-toastify';
+import Sidebar from '../../Sidebar';
 
 
 const ListAcademicYear = () => {
@@ -31,7 +34,7 @@ const ListAcademicYear = () => {
 
     const handleEdit = (year) => {
         // Navigate to CreateAcademicYear page with pre-filled details
-        history('/create-academic-year', { state: { academicYear: year } });
+        history('/academicyear', { state: { academicYear: year } });
     };
 
     const handleDelete = async (id) => {
@@ -49,10 +52,10 @@ const ListAcademicYear = () => {
 
     return (
         <div className="container-fluid">
-            <ToastContainer />
+            
             <div className="row">
                 <div className="col-md-2 p-0">
-                    <AdminDashboard />
+                    <Sidebar />
                 </div>
                 <div className="col-md-10 mt-5 pt-6">
                     <div className="container mt-4 p-6 text-center text-bold">

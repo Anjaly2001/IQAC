@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import AdminDashboard from '../Admin/AdminDashboard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { multiple_user_register } from '../../axios/api';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import {  toast } from 'react-toastify';
+
 import homeURL from '../../axios/homeurl';
+import Sidebar from '../../Sidebar';
 
 const RegisterMultipleUser = () => {
     const [file, setFile] = useState(null);
@@ -30,15 +30,33 @@ const RegisterMultipleUser = () => {
         setSuccessCount(0);
         setErrorCount(0);
 
+        const toTitleCase = (str) => {
+            if (typeof str !== 'string') return str; 
+            return str
+                .toLowerCase()
+                .split(' ')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+        };
+
         if (selectedFile) {
             const reader = new FileReader();
             reader.onload = function(event) {
                 const text = event.target.result;
                 const rows = text.split('\n').map(row => row.split(','));
-                setPreviewData(rows); // Update preview data
+
+                // Apply title case to specific columns (e.g., assuming first and last name are columns 0 and 1)
+                const transformedRows = rows.map(row => {
+                    // row[0] = toTitleCase(row[0]); // Apply title case to the first column (e.g., first name)
+                    row[1] = toTitleCase(row[1]); // Apply title case to the second column (e.g., last name)
+                    console.log(row)
+                    return row;
+                });
+
+                setPreviewData(transformedRows); // Update preview data with transformed rows
             };
             reader.readAsText(selectedFile);
-        }
+        }   
     };
 
     const handleFileUpload = async () => {
@@ -52,7 +70,7 @@ const RegisterMultipleUser = () => {
 
                 if (response.status === 201) {
                     setSuccess("Users registered successfully!");
-                    toast.success("Users registered successfully!");
+                    // toast.success("Users registered successfully!");
 
                     // Update counts from response
                     setTotalCount(response.data.total_count || 0);
@@ -97,12 +115,12 @@ const RegisterMultipleUser = () => {
 
     return (
         <div>
-            <ToastContainer />
-            <AdminDashboard />
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-md-3 justify-content-center p-0">
                         {/* Sidebar or other components can go here */}
+            <Sidebar />
+
                     </div>
                     <div className="col-md-8 mt-1 pt-5">
                         <div className="container mt-3">
@@ -212,7 +230,7 @@ export default RegisterMultipleUser;
 // import 'bootstrap/dist/css/bootstrap.min.css';
 // import { multiple_user_register } from '../../axios/api';
 // import { ToastContainer, toast } from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css';
+// 
 // import homeURL from '../../axios/homeurl';
 
 // const RegisterMultipleUser = () => {
@@ -358,7 +376,7 @@ export default RegisterMultipleUser;
 // import 'bootstrap/dist/css/bootstrap.min.css';
 // import { multiple_user_register } from '../../axios/api';
 // import { ToastContainer, toast } from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css';
+// 
 // import homeURL from '../../axios/homeurl';
 // import Papa from 'papaparse';
 

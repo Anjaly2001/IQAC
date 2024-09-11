@@ -1,41 +1,45 @@
-import React from 'react';
-import AdminDashboard from './AdminDashboard';
-import BarChart from './BarChart';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import DemoGraph from './DemoGraph';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
+import React from "react";
+import BarChart from "./BarChart";
+import "bootstrap/dist/css/bootstrap.min.css";
+import DemoGraph from "./DemoGraph";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+import Sidebar from "../../Sidebar";
 
 function Dashboard() {
   const events = [
-    { id: 1, name: 'Event 1', department: 'Data Science', location: 'Pune' },
-    { id: 2, name: 'Event 2', department: 'Commerce', location: 'Bangalore' },
-    { id: 3, name: 'Event 3', department: 'BBA', location: 'Delhi' },
+    { id: 1, name: "Event 1", department: "Data Science", location: "Pune" },
+    { id: 2, name: "Event 2", department: "Commerce", location: "Bangalore" },
+    { id: 3, name: "Event 3", department: "BBA", location: "Delhi" },
   ];
 
   return (
     <div className="container-fluid">
       <div className="row">
-        {/* Sidebar */}
         <div className="col-md-2 p-0 mt-5">
-          <AdminDashboard />
+          <Sidebar />
         </div>
 
         <div className="col-md-2 mt-7 d-flex flex-column">
           <div className="bg-light p-3 mb-3 text-center border flex-fill">
             <p>Sample Text</p>
-            <p>Count: <strong>1</strong></p>
+            <p>
+              Count: <strong>1</strong>
+            </p>
           </div>
           <div className="bg-light p-3 mb-3 text-center border flex-fill">
             <p>Sample Text</p>
-            <p>Count: <strong>2</strong></p>
+            <p>
+              Count: <strong>2</strong>
+            </p>
           </div>
           <div className="bg-light p-3 text-center border flex-fill">
             <p>Sample Text</p>
-            <p>Count: <strong>3</strong></p>
+            <p>
+              Count: <strong>3</strong>
+            </p>
           </div>
         </div>
-
 
         {/* Main Content */}
         <div className="col-md-8 mt-5 d-flex flex-column">
@@ -75,7 +79,6 @@ function Dashboard() {
                   </DataTable>
                 </div>
               </div>
-
             </div>
           </div>
         </div>

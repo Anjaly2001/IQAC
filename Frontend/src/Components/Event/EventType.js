@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Editor } from "primereact/editor";
-import AdminDashboard from '../Admin/AdminDashboard';
-// import axios from 'axios'; 
-import { ToastContainer, toast } from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 import { event_type_register} from '../../axios/api';
+import Sidebar from "../../Sidebar";
 
 
 const EventType = () => {
@@ -17,10 +15,14 @@ const EventType = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const isTitleCase = (str) => {
-        return str === str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+    const toTitleCase = (str) => {
+        return str
+            .toLowerCase()
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
     };
-    
+
 
     useEffect(() => {
         if (location.state) {
@@ -32,10 +34,7 @@ const EventType = () => {
     }, [location.state]);
 
     const handleSubmit = async (e) => {
-        if (!isTitleCase(title)) {
-            toast.error('Department name must be in title case.');
-            return;  // Stop further execution if validation fails
-        }
+        
 
         e.preventDefault();
         
@@ -60,10 +59,9 @@ const EventType = () => {
     );
     return (
         <div className="container-fluid">
-                <ToastContainer />
             <div className="row">
                 <div className="col-md-2 p-0">
-                    <AdminDashboard />
+                    <Sidebar />
                 </div>
                 <div className="col-md-10 mt-5 pt-5">
                     <div className="container mt-3 p-6">
@@ -76,7 +74,7 @@ const EventType = () => {
                                         type="text"
                                         id="title"
                                         className="form-control"
-                                        value={title}
+                                        value={toTitleCase(title)}
                                         placeholder="enter title"
                                         onChange={(e) => setTitle(e.target.value)}
                                         required

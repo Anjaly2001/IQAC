@@ -1,28 +1,56 @@
 from django.urls import path
-from .views import campus_delete, campus_update, create_academic_year, create_event_type, delete_academic_year,  department_register,campus_register, campus_list, department_list, department_activation,department_update,department_delete, event_register, list_academic_year, list_event_type, update_academic_year
-
+from department_and_events import views
 
 urlpatterns = [
-    path('department_register/',department_register,name = 'department_register'),
-    path('department_list/',department_list, name = 'department_list'),
-    path('department_activation/<int:id>/', department_activation, name=' department_activation'),
-    path('department_update/<int:id>/',department_update,name = 'department_update'),
-    path('department_delete/<str:id>/',department_delete, name= 'department_delete'),
+    path('department_register/',views.department_register,name = 'department_register'),
+    path('department_list/',views.department_list, name = 'department_list'),
+    path('department_activation/<int:id>/', views.department_activation, name=' department_activation'),
+    path('department_update/<int:id>/',views.department_update,name = 'department_update'),
+    path('department_delete/<str:id>/',views.department_delete, name= 'department_delete'),
 
-    path('campus_register/',campus_register, name = 'campus_register'),
-    path('campus_list/',campus_list, name = 'campus_list'),
-    path('campus_delete/<int:id>/',campus_delete, name = 'campus_delete'),
-    path('campus_update/<int:id>/',campus_update, name = 'campus_update'),
+    path('department_list_by_user/<int:id>/',views.department_list_by_user, name = 'department_list_by_user'),
+    path('list_events_in_each_department/<int:id>/',views.list_events_in_each_department, name = 'list_events_in_each_department'),
+    path('department_list_by_campus/<int:id>/',views.department_list_by_campus, name = 'department_list_by_campus'),
 
-    path('create_academic_year/',create_academic_year, name = 'create_academic_year'),
-    path('list_academic_year/',list_academic_year, name = 'list_academic_year'),
-    path('update_academic_year/<int:id>/',update_academic_year, name = 'update_academic_year'),
-    path('delete_academic_year/<int:id>/',delete_academic_year,name ='delete_academic_year'),
+    path('campus_register/',views.campus_register, name = 'campus_register'),
+    path('campus_list/',views.campus_list, name = 'campus_list'),
+    path('campus_delete/<int:id>/',views.campus_delete, name = 'campus_delete'),
+    path('campus_update/<int:id>/',views.campus_update, name = 'campus_update'),
+
+    path('campus_name_list/',views.campus_name_list,name = 'campus_name_list'),
+
+    path('create_academic_year/',views.create_academic_year, name = 'create_academic_year'),
+    path('list_academic_year/',views.list_academic_year, name = 'list_academic_year'),
+    path('update_academic_year/<int:id>/',views.update_academic_year, name = 'update_academic_year'),
+    path('delete_academic_year/<int:id>/',views.delete_academic_year,name ='delete_academic_year'),
+    path('users_list_of_each_department/<int:id>/',views.users_list_of_each_department, name = 'users_list_of_each_department'),
+    path('roles_and_department_of_each_user/<int:id>/',views.roles_and_department_of_each_user, name = 'roles_and_department_of_each_user'),
+    path('list_academic_year_by_campus/<int:id>/',views.list_academic_year_by_campus, name = 'list_academic_year_by_campus'),
     
-    path('create_event_type/',create_event_type, name = 'create_event_type'),
-    path('list_event_type/',list_event_type, name = 'list_event_type'),
+    path('create_event_type/',views.create_event_type, name = 'create_event_type'),
+    path('list_event_type/',views.list_event_type, name = 'list_event_type'),
+    path('delete_event_type/<int:id>/',views.delete_event_type, name = 'delete_event_type'),
 
-    path('event_register/',event_register,name ='event_register'),
+    path('create_tag/',views.create_tag, name = 'create_tag'),
+    path('list_tag/',views.list_tag, name = 'list_tag'),
+    path('delete_tag/<int:id>/',views.delete_tag, name = 'delete_tag'),
+
+
+    path('event_register/',views.event_register,name ='event_register'),
+    path('upload_proposal_files/<int:event_id>/',views.upload_proposal_files, name = 'upload_proposal_files'),
+    path('event_list/',views.event_list, name ='event_list'),
+    path('event_delete/<int:id>/',views.event_delete, name = 'event_delete'),
+    path('event_register_status/<int:id>/',views.event_register_status, name = 'event_register_status'),
+    path('event_details/<int:id>/',views.event_details, name ='event_details'),
+
+    path('event_report_create/<int:id>/',views.event_report_create, name = 'event_report_create'),
+
+    path('assign_role/',views.assign_roles, name ='assign_role'),
+    path('delete_role/<int:id>/', views.delete_role, name = 'delete_role'),
+
+    path('delete_collaborators/<int:id>/',views.delete_collaborators,name ='delete_collaborators'),
+    # path('role_list/',role_list,name = 'role_list'),
+
 ]
 
 

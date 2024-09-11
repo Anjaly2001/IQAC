@@ -1,6 +1,6 @@
 // src/axios/index.js
-import axios from 'axios';
-import homeURL from './homeurl';
+import axios from "axios";
+import homeURL from "./homeurl";
 
 const baseURL = homeURL + "/api/";
 
@@ -8,27 +8,25 @@ const instance = axios.create({
   baseURL: baseURL,
   timeout: 10000,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
-
 
 // Add console logs to check the token
 instance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem("access_token");
     // console.log('Access Token:', token);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    console.log('Request Headers:', config.headers); // Add this line
+    console.log("Request Headers:", config.headers); // Add this line
     return config;
   },
   (error) => {
     return Promise.reject(error);
   }
 );
-
 
 instance.interceptors.response.use(
   (response) => response,
@@ -49,11 +47,16 @@ instance.interceptors.response.use(
         }
 
         instance.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
-
         originalRequest.headers.Authorization = `Bearer ${response.data.access}`;
         return instance(originalRequest);
       } catch (refreshError) {
         console.error('Refresh token error:', refreshError);
+        if (refreshError.response && refreshError.response.status === 401) {
+          // Clear tokens and redirect to login
+          localStorage.removeItem('access_token');
+          localStorage.removeItem('refresh_token');
+          window.location.href = '/login';  // Redirect to login page
+        }
       }
     }
 

@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { InputOtp } from 'primereact/inputotp';
 import Header from '../../Header';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 import { login, verify_otp } from '../../axios/api';
 
 const Login = () => {
@@ -32,7 +31,7 @@ const Login = () => {
         try {
             const data = { email };
             const response = await login(data);
-            console.log(response);
+            // console.log(response);
 
             // Simulate delay before showing the OTP sent message
             setTimeout(() => {
@@ -61,10 +60,12 @@ const Login = () => {
             localStorage.setItem('refresh_token', refresh_token);
             localStorage.setItem('user_role', role);
 
+             window.dispatchEvent(new Event('storage'));
+
             if (role === 'admin') {
                 navigate('/dashboard');
             } else if (role === 'staffs') {
-                navigate('/user-dashboard');
+                navigate('/dashboard');
             } else {
                 setError('Invalid role');
             }
@@ -81,7 +82,6 @@ const Login = () => {
     return (
         <>
             <Header />
-            <ToastContainer />
             <div className="d-flex justify-content-center align-items-center min-vh-100">
                 <div className="card p-4" style={{ width: '100%', maxWidth: '400px' }}>
                     <h2 className="text-center">Login</h2>

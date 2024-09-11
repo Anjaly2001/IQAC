@@ -1,5 +1,8 @@
 import React, { useState, useRef } from 'react';
+<<<<<<< HEAD
 //import { useNavigate } from 'react-router-dom';
+=======
+>>>>>>> dde8ef404e6d82e622bb5aecf475725f6da1b58f
 import { Stepper } from 'primereact/stepper';
 import { StepperPanel } from 'primereact/stepperpanel';
 import { Button } from 'primereact/button';
@@ -7,9 +10,9 @@ import { InputText } from 'primereact/inputtext';
 import { Editor } from 'primereact/editor';
 import { Dropdown } from 'primereact/dropdown';
 import { MultiSelect } from 'primereact/multiselect';
-import AdminDashboard from '../Admin/AdminDashboard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import Sidebar from '../../Sidebar';
 
 function AddReport() {
   // Defining state variables
@@ -228,7 +231,7 @@ function AddReport() {
     <div className="container-fluid">
       <div className="row">
         <div className="col-3">
-          <AdminDashboard />
+          <Sidebar />
         </div>
         <div className="col-7 mt-1 pt-2 d-flex justify-content-center">
           <div className="container" style={{ maxWidth: '800px' }}>

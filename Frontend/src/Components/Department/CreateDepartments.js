@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Editor } from 'primereact/editor';
 import { Button } from 'primereact/button';
-import AdminDashboard from '../Admin/AdminDashboard';
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { department_register, campus_list } from '../../axios/api';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import Sidebar from '../../Sidebar';
 
 const CreateDepartment = ({ onAddDepartment }) => {
     const [departmentName, setDepartmentName] = useState('');
@@ -20,6 +19,15 @@ const CreateDepartment = ({ onAddDepartment }) => {
     const [messageType, setMessageType] = useState('');
 
     const navigate = useNavigate(); // Initialize useNavigate
+
+    const toTitleCase = (str) => {
+        return str
+            .toLowerCase()
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    };
+
 
     useEffect(() => {
         const fetchLocations = async () => {
@@ -37,23 +45,17 @@ const CreateDepartment = ({ onAddDepartment }) => {
         };
         fetchLocations();
     }, []);
-    const isTitleCase = (str) => {
-        return str === str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
-    };
+    
     const handleCreateDepartment = async () => {
-        if (!isTitleCase(departmentName)) {
-            toast.error('Department name must be in title case.');
-            return;  // Stop further execution if validation fails
-        }
-
+        
         const finalType = type === 'Others' ? customType : type;
         const finalLocation = location === 'Others' ? customLocation : location;
     
         if (departmentName && description && finalType && finalLocation) {
             const newDepartment = {
-                name: departmentName,
+                name: toTitleCase(departmentName),
                 type: finalType,
-                location: finalLocation,
+                location_id: finalLocation,
                 description,
             };
     
@@ -87,10 +89,10 @@ const CreateDepartment = ({ onAddDepartment }) => {
 
     return (
         <div className="container-fluid">
-            <ToastContainer />
+            
             <div className="row">
                 <div className="col-md-2 p-0">
-                    <AdminDashboard />
+                    <Sidebar />
                 </div>
                 <div className="col-md-10 mt-5 pt-5">
                     <div className="container mt-3" style={{ maxWidth: '800px' }}>

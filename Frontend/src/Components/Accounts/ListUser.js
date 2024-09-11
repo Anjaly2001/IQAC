@@ -5,13 +5,13 @@ import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
 import {  FaEdit, FaTrash } from 'react-icons/fa';
 import { Tag } from 'primereact/tag';
-import AdminDashboard from '../Admin/AdminDashboard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
 import { users_list, user_active, user_delete} from '../../axios/api';  // user list
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import {  toast } from 'react-toastify';
+
+import Sidebar from '../../Sidebar';
 
 const ListUser = () => {
     const navigate = useNavigate();
@@ -43,9 +43,11 @@ const ListUser = () => {
  
 
 
-    const startEditing = (user) => {
-        navigate(`/registerSingleuser/${user.id}`);
+    const startEditing = (userId) => {
+        const selectedUser = users.find(user => user.id === userId);
+        navigate('/registerSingleuser', { state: { user: selectedUser } });
     };
+    
 
     
     const handleDeleteUser = async (id) => {
@@ -136,11 +138,10 @@ const ListUser = () => {
 
     return (
         <div>
-            <ToastContainer />
             <div className="container-fluid mt-1">
                 <div className="row">
                     <div className="col-md-2 p-0">
-                        <AdminDashboard />
+                        <Sidebar />
                     </div>
                     <div className="col-md-10 mt-1 pt-5">
                         <div className="container mt-3 p-5">

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import AdminDashboard from '../Admin/AdminDashboard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css'; 
+import Sidebar from '../../Sidebar';
 
 const Map = () => {
     const [users, setUsers] = useState([]);
@@ -44,11 +44,12 @@ const Map = () => {
 
     return (
         <div>
-            <AdminDashboard />
             <div className="container-fluid mt-1">
                 <div className="row">
                     <div className="col-md-2 p-0">
                         {/* Sidebar or other components can go here */}
+            <Sidebar />
+
                     </div>
                     <div className="col-md-10 mt-1 pt-5">
                         <div className="container mt-3">

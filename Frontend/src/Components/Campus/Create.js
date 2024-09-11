@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import AdminDashboard from '../Admin/AdminDashboard';
-import 'react-toastify/dist/ReactToastify.css';
+import {  toast } from 'react-toastify';
+
 import { campus_register, campus_update } from '../../axios/api'; // Import the update API function
+import Sidebar from '../../Sidebar';
 
 const CreateCampus = () => {
     const location = useLocation();
@@ -18,6 +18,15 @@ const CreateCampus = () => {
 
     const token = localStorage.getItem('access_token');
 
+    const toTitleCase = (str) => {
+        return str
+            .toLowerCase()
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    };
+
+
     useEffect(() => {
         if (location.state && location.state.campus) {
             const { campus } = location.state;
@@ -28,19 +37,19 @@ const CreateCampus = () => {
         }
     }, [location.state]);
 
-    const isTitleCase = (str) => {
-        return str === str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
-    };
+    // const isTitleCase = (str) => {
+    //     return str === str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+    // };
 
     const handleCreateOrUpdateCampus = async () => {
-        if (!isTitleCase(campusName)) {
-            toast.error('Campus name must be in title case.');
-            return;
-        }
+        // if (!isTitleCase(campusName)) {
+        //     toast.error('Campus name must be in title case.');
+        //     return;
+        // }
 
         if (campusName && (logo || isEdit)) {
             const formData = new FormData();
-            formData.append('campus', campusName);
+            formData.append('campus', toTitleCase(campusName));
             if (logo) formData.append('logo', logo);
 
             try {
@@ -115,11 +124,10 @@ const CreateCampus = () => {
     );
     return (
         <div>
-            <ToastContainer />
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-md-4 p-0">
-                        <AdminDashboard />
+                        <Sidebar />
                     </div>
                     <div className="col-md-6 mt-5 pt-5">
                         <div className="container mt-3">

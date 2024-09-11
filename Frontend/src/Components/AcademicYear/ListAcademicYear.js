@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import AdminDashboard from '../Admin/AdminDashboard';
+
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'; // For API requests
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { academic_list, academic_delete} from '../../axios/api';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import {  toast } from 'react-toastify';
+import Sidebar from '../../Sidebar';
 
 
 const ListAcademicYear = () => {
@@ -49,10 +48,10 @@ const ListAcademicYear = () => {
 
     return (
         <div className="container-fluid">
-            <ToastContainer />
+            
             <div className="row">
                 <div className="col-md-2 p-0">
-                    <AdminDashboard />
+                    <Sidebar />
                 </div>
                 <div className="col-md-10 mt-5 pt-6">
                     <div className="container mt-4 p-6 text-center text-bold">

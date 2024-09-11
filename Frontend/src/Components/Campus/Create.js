@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import AdminDashboard from '../Admin/AdminDashboard';
-import 'react-toastify/dist/ReactToastify.css';
+import {  toast } from 'react-toastify';
+
 import { campus_register, campus_update } from '../../axios/api'; // Import the update API function
+import Sidebar from '../../Sidebar';
 
 const CreateCampus = () => {
     const location = useLocation();
@@ -124,11 +124,10 @@ const CreateCampus = () => {
     );
     return (
         <div>
-            <ToastContainer />
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-md-4 p-0">
-                        <AdminDashboard />
+                        <Sidebar />
                     </div>
                     <div className="col-md-6 mt-5 pt-5">
                         <div className="container mt-3">

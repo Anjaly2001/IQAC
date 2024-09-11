@@ -3,10 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
 import { Dropdown } from 'primereact/dropdown'; // Assuming you use PrimeReact for dropdowns
 import 'bootstrap/dist/css/bootstrap.min.css';
-import AdminDashboard from '../Admin/AdminDashboard';
 import { campus_name_list, department_list_by_campus} from '../../axios/api';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
+import Sidebar from '../../Sidebar';
 
 const AddRole = () => {
     const [selectedCampus, setSelectedCampus] = useState(null);
@@ -72,10 +71,10 @@ const AddRole = () => {
 
     return (
         <div className="container-fluid">
-            <ToastContainer />
+           
             <div className="row">
                 <div className="col-md-2 bg-light p-3">
-                    <AdminDashboard />
+                    <Sidebar />
                 </div>
                 <div className="col-md-10 p-7">
                     <h1 className="text-center fw-bold fs-5 mb-4">Role Settings</h1>

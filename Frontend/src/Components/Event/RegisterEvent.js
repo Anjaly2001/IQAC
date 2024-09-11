@@ -5,10 +5,9 @@ import { InputText } from 'primereact/inputtext';
 import { MultiSelect } from 'primereact/multiselect';
 import { Editor } from 'primereact/editor';
 import { Dropdown } from 'primereact/dropdown';
-import AdminDashboard from '../Admin/AdminDashboard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FaTags } from 'react-icons/fa';
+import Sidebar from '../../Sidebar';
 
 function RegisterEvent() {
   const [department, setDepartment] = useState('');
@@ -211,7 +210,7 @@ function RegisterEvent() {
     <div className="container-fluid">
       <div className="row">
         <div className="col-3">
-          <AdminDashboard />
+          <Sidebar />
         </div>
         <div className="col-7 mt-1 pt-2 d-flex justify-content-center">
           <div className="container" style={{ maxWidth: '800px' }}>

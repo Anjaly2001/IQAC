@@ -1,8 +1,8 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'; // Importing necessary components from react-router-dom for routing
+import useAuth from './hooks/useAuth'; // Importing the custom hook for handling authentication
 import Login from './Components/Accounts/Login';
-import AdminDashboard from './Components/Admin/AdminDashboard';
-import Dashboard from './Components/Admin/Dashboard'
+import Dashboard from './Components/Admin/Dashboard';
 import Sidebar from './Sidebar';
 import Createdepartments from './Components/Department/CreateDepartments';
 import ListDepartment from './Components/Department/ListDepartment';
@@ -25,46 +25,71 @@ import EventTypeList from './Components/Event/EventTypeList';
 import ListAcademicYear from './Components/AcademicYear/ListAcademicYear';
 import AddRole from './Components/Role/AddRole';
 
-
 const App = () => {
-    return (
+    // Fetch authentication status and user role from the custom hook
+    const { userRole, isAuthenticated, isLoading } = useAuth();
 
+    // Show loading spinner while checking authentication status
+    if (isLoading) {
+        return <div className='d-flex justify-content-center align-items-center vh-100'>Loading...</div>;
+    }
+
+    // Function to determine where to redirect based on the user's role
+    const getDefaultRoute = () => {
+        switch (userRole) {
+            case 'admin':
+                return '/admin-dashboard'; // Admin users go to the Admin Dashboard
+            case 'staffs':
+                return '/dashboard'; // Regular users go to their dashboard
+            default:
+                return '/login'; // If no role is found, go to the login page
+        }
+    };
+
+    return (
         <Router>
             <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="*" element={
+                {/* If the user is not authenticated, only allow access to login-related pages */}
+                {!isAuthenticated ? (
                     <>
-                        <Routes>
-                            <Route path="/" element={<Login />} />
-                            <Route path="/admin-dashboard" element={<AdminDashboard />} />
-                            <Route path="/sidebar" element={<Sidebar />} />
-                            <Route path="/registerSingleuser" element={<RegisterSingleUser />} />
-                            <Route path="/registerMultipleUser" element={<RegisterMultipleUser />} />
-                            <Route path="/listUser" element={<ListUser />} />
-
-                            <Route path="/addrole" element={<AddRole />} />
-                            <Route path="/map" element={<Map />} />
-                            <Route path="/dashboard" element={<Dashboard />} />
-                            <Route path="/listCampus/*" element={<ListCampus />} />
-                            <Route path="/createCampus/*" element={<CreateCampus />} />
-                            <Route path="/createdepartments/*" element={<Createdepartments />} />
-                            <Route path="/listdepartment/*" element={<ListDepartment />} />
-                            <Route path="/registerEvent" element={<RegisterEvent />} />
-                            <Route path="/listevents" element={<ListEvents />} />
-                            <Route path="/addreport" element={<AddReport />} />
-                            <Route path="/tagmanager" element={<TagManager />} />
-                            <Route path="/createtag" element={<CreateTag />} />
-                            <Route path="/listtag" element={<ListTag />} />
-                            <Route path="/academicyear" element={<AcademicYear />} />
-                            <Route path="/listacademicyear" element={<ListAcademicYear />} />
-                            
-                            <Route path="/eventtype" element={<EventType />} />
-                            <Route path="/eventtypelist" element={<EventTypeList />} />
-                            <Route path="/eventsummary" component={EventSummary} />
-
-                        </Routes>
+                        {/* Public routes accessible to non-authenticated users */}
+                        <Route path="/login" element={<Login />} />
+                        {/* Any other route will redirect to the login page */}
+                        <Route path="*" element={<Navigate to="/login" />} />
                     </>
-                } />
+                ) : (
+                    <>
+                        {/* Role-based redirection and protected routes */}
+                        <Route path="/dashboard" element={userRole === 'admin' ? <Dashboard /> : <Navigate to="/login" />} />
+
+                        {/* Additional routes accessible to all authenticated users */}
+                        <Route path="/sidebar" element={<Sidebar />} />
+                        <Route path="/registerSingleuser" element={<RegisterSingleUser />} />
+                        <Route path="/registerMultipleUser" element={<RegisterMultipleUser />} />
+                        <Route path="/listUser" element={<ListUser />} />
+                        <Route path="/addrole" element={<AddRole />} />
+                        <Route path="/map" element={<Map />} />
+                        <Route path="/listCampus/*" element={<ListCampus />} />
+                        <Route path="/createCampus/*" element={<CreateCampus />} />
+                        <Route path="/createdepartments/*" element={<Createdepartments />} />
+                        <Route path="/listdepartment/*" element={<ListDepartment />} />
+                        <Route path="/registerEvent" element={<RegisterEvent />} />
+                        <Route path="/listevents" element={<ListEvents />} />
+                        <Route path="/addreport" element={<AddReport />} />
+                        <Route path="/tagmanager" element={<TagManager />} />
+                        <Route path="/createtag" element={<CreateTag />} />
+                        <Route path="/listtag" element={<ListTag />} />
+                        <Route path="/academicyear" element={<AcademicYear />} />
+                        <Route path="/listacademicyear" element={<ListAcademicYear />} />
+                        <Route path="/eventtype" element={<EventType />} />
+                        <Route path="/eventtypelist" element={<EventTypeList />} />
+                        <Route path="/eventsummary" component={EventSummary} />
+
+                        {/* Fallback route for authenticated users */}
+                        <Route path="/" element={<Navigate to={getDefaultRoute()} />} />
+                        <Route path="*" element={<Navigate to={getDefaultRoute()} />} />
+                    </>
+                )}
             </Routes>
         </Router>
     );

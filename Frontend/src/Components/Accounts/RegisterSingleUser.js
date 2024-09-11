@@ -297,12 +297,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AdminDashboard from '../Admin/AdminDashboard';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
+
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { user_register, campus_list, department_list_by_campus } from '../../axios/api';
+import Sidebar from '../../Sidebar';
 
 
 
@@ -428,12 +428,12 @@ const RegisterSingleUser = () => {
 
     return (
         <div>
-            <AdminDashboard />
-            <ToastContainer />
             <div className="container-fluid mt-1">
                 <div className="row">
                     <div className="col-md-3 justify-content-center p-0">
                         {/* Sidebar or other components can go here */}
+            <Sidebar />
+
                     </div>
                     <div className="col-md-8 mt-1 pt-5">
                         <div className="container mt-4">

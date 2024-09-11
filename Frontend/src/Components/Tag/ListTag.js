@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { InputText } from 'primereact/inputtext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
-import AdminDashboard from '../Admin/AdminDashboard';
+import Sidebar from '../../Sidebar';
 
 export default function ListTag() {
     const [tags, setTags] = useState([]);
@@ -41,7 +40,7 @@ export default function ListTag() {
         <div className="container-fluid">
             <div className="row">
                 <div className="col-md-2 p-0">
-                    <AdminDashboard />
+                    <Sidebar />
                 </div>
                 <div className="col-md-10 mt-5 pt-5">
                     <div className="container mt-3 p-5">

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AdminDashboard from '../Admin/AdminDashboard';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
@@ -10,8 +9,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import homeURL from '../../axios/homeurl';
 import { campus_list,campus_update, campus_delete } from '../../axios/api';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import {  toast } from 'react-toastify';
+import Sidebar from '../../Sidebar';
 
 const ListCampus = () => {
     const [campuses, setCampuses] = useState([]);
@@ -137,11 +136,11 @@ const ListCampus = () => {
 
     return (
         <div>
-            <ToastContainer />
+           
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-md-2 p-0">
-                        <AdminDashboard />
+                        <Sidebar />
                     </div>
                     <div className="col-md-10 mt-4 pt-6 justify-content-center">
                         <div className="container mt-1 p-8">

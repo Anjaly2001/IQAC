@@ -3,16 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
-import { FaSearch } from 'react-icons/fa'; // Removed FaEdit, FaTrash imports
 import { Tag } from 'primereact/tag';
-import AdminDashboard from '../Admin/AdminDashboard';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Axios from 'axios';
+
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
 import { department_list, department_active } from '../../axios/api'; // Removed department_delete import
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import {  toast } from 'react-toastify';
+import Sidebar from '../../Sidebar';
 
 const DepartmentList = () => {
     const navigate = useNavigate();
@@ -113,11 +112,10 @@ const DepartmentList = () => {
 
     return (
         <div>
-            <ToastContainer />
             <div className="container-fluid mt-1">
                 <div className="row">
                     <div className="col-md-2 p-0">
-                        <AdminDashboard />
+                        <Sidebar />
                     </div>
                     <div className="col-md-10 mt-1 pt-5">
                         <div className="container mt-5 p-6">

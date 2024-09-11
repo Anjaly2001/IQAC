@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import AdminDashboard from '../Admin/AdminDashboard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { multiple_user_register } from '../../axios/api';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import {  toast } from 'react-toastify';
+
 import homeURL from '../../axios/homeurl';
+import Sidebar from '../../Sidebar';
 
 const RegisterMultipleUser = () => {
     const [file, setFile] = useState(null);
@@ -115,12 +115,12 @@ const RegisterMultipleUser = () => {
 
     return (
         <div>
-            <ToastContainer />
-            <AdminDashboard />
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-md-3 justify-content-center p-0">
                         {/* Sidebar or other components can go here */}
+            <Sidebar />
+
                     </div>
                     <div className="col-md-8 mt-1 pt-5">
                         <div className="container mt-3">
@@ -230,7 +230,7 @@ export default RegisterMultipleUser;
 // import 'bootstrap/dist/css/bootstrap.min.css';
 // import { multiple_user_register } from '../../axios/api';
 // import { ToastContainer, toast } from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css';
+// 
 // import homeURL from '../../axios/homeurl';
 
 // const RegisterMultipleUser = () => {
@@ -376,7 +376,7 @@ export default RegisterMultipleUser;
 // import 'bootstrap/dist/css/bootstrap.min.css';
 // import { multiple_user_register } from '../../axios/api';
 // import { ToastContainer, toast } from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css';
+// 
 // import homeURL from '../../axios/homeurl';
 // import Papa from 'papaparse';
 

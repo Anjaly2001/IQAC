@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import AdminDashboard from '../Admin/AdminDashboard';
+
 import { useNavigate } from 'react-router-dom';
-import { Dropdown } from 'primereact/dropdown';
-import axios from 'axios';
 import { campus_list, academic_register } from '../../axios/api';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import {  toast } from 'react-toastify';
+
+import Sidebar from '../../Sidebar';
 
 const CreateAcademicYear = () => {
     const [location_id, setCampus] = useState([]);
@@ -69,10 +68,10 @@ const CreateAcademicYear = () => {
     };
     return (
         <div className="container-fluid">
-            <ToastContainer />
+
             <div className="row">
                 <div className="col-md-2 p-0">
-                    <AdminDashboard />
+                    <Sidebar />
                 </div>
                 <div className="col-md-10 mt-1 pt-6">
                     <div className="container mt-5 p-6">

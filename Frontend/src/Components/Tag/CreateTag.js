@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { InputText } from "primereact/inputtext";
 import { Editor } from "primereact/editor";
 import { Button } from "primereact/button";
-import AdminDashboard from "../Admin/AdminDashboard";
+import Sidebar from "../../Sidebar";
 
 export default function CreateTag() {
     const [tagName, setTagName] = useState('');
@@ -22,7 +22,7 @@ export default function CreateTag() {
         <div className="container-fluid">
             <div className="row">
                 <div className="col-md-2 p-0">
-                    <AdminDashboard />
+                    <Sidebar />
                 </div>
                 <div className="col-md-10 mt-5 pt-5">
                     <div className="container mt-3 p-6">

@@ -4,10 +4,9 @@ import { Column } from 'primereact/column';
 // import { InputText } from 'primereact/inputtext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
-import AdminDashboard from '../Admin/AdminDashboard';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 import {event_type_list, event_type_delete} from '../../axios/api';
+import Sidebar from '../../Sidebar';
 
 export default function EventTypeList() {
     const [eventTypes, setEventTypes] = useState([]);
@@ -67,10 +66,10 @@ export default function EventTypeList() {
 
     return (
         <div className="container-fluid">
-            <ToastContainer />
+          
             <div className="row">
                 <div className="col-md-2 p-0">
-                    <AdminDashboard />
+                    <Sidebar />
                 </div>
                 <div className="col-md-10 mt-5 pt-5">
                     <div className="container mt-3 p-5">

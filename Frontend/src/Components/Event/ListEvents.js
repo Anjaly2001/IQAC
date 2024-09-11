@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AdminDashboard from '../Admin/AdminDashboard';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -10,6 +9,7 @@ import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Sidebar from '../../Sidebar';
 
 const ListEvents = () => {
   const [pendingReports, setPendingReports] = useState([]);
@@ -81,7 +81,7 @@ const ListEvents = () => {
     <div className="container-fluid">
       <div className="row">
         <div className="col-md-2 p-0">
-          <AdminDashboard />
+          <Sidebar />
         </div>
         <div className="col-md-10 mt-5 pt-5 p-6">
           <div className="container mt-3">

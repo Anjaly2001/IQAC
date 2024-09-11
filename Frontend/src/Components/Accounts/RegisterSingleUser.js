@@ -402,8 +402,9 @@ const RegisterSingleUser = () => {
             location: userCampus,
         };
 
+        console.log('Payload to be sent:', newUser);
+
         try {
-            
             const response = await user_register(newUser);
             console.log('User created successfully:', response);
             toast.success('User created successfully!');
@@ -415,10 +416,10 @@ const RegisterSingleUser = () => {
             setUserDepartment('');
             setCustomDepartment('');
             setUserCampus('');
-            navigate('/listuser')
+            navigate('/listuser');
         } catch (error) {
             console.error('Failed to create user:', error);
-            // You can show an additional error toast here if needed, but it's not required based on your request.
+            toast.error('Failed to create user.');
         }
     };
 

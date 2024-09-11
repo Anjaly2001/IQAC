@@ -341,6 +341,7 @@ def delete_event_type(request, id):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def event_register(request):
+    print(request.data)
     if request.method == 'POST':
         serializer = EventRegisterSerializer(
             data=request.data, context={'request': request})
@@ -350,6 +351,7 @@ def event_register(request):
             department_id = request.data.get('department_id')
 
             if not department_id:
+                print('Department ID is required.')
                 return Response({'error': 'Department ID is required.'}, status=status.HTTP_400_BAD_REQUEST)
             
             # Query to find HODs and IQAC users in the department
@@ -378,7 +380,10 @@ def event_register(request):
                     
             return Response({'data': serializer.data, 'message': 'Event Registered Successfully'}, status=status.HTTP_201_CREATED)
         
+        # Return errors in case serializer is not valid
+        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 @api_view(['POST'])

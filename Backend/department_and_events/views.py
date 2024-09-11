@@ -7,8 +7,8 @@ from rest_framework import status
 from authentication.emails import send_event_register
 from authentication.models import CustomUser, User_profile
 from authentication.serializers import UserRegistrationSerializer
-from .models import Academic_year, Event_Register, Event_type, EventStatus, Location, Department, Role, Tag
-from .serializers import AcademicyearSerializer, DepartmentSerializer,  DepartmentSerializer, EventListSerializer, EventRegisterSerializer, EventStatusSerializer, EventTypeSerializer, LocationSerializer, MultiRoleSerializer, ProposalFileSerializer, TagSerializer
+from .models import Academic_year, Collaborators, Event_Register, Event_type, EventReport, EventStatus, Location, Department, Role, Tag
+from .serializers import AcademicyearSerializer, CollaboratorSerializer, DepartmentSerializer,  DepartmentSerializer, EventListSerializer, EventRegisterSerializer, EventReportSerializer, EventStatusSerializer, EventTypeSerializer, LocationSerializer, MultiRoleSerializer, ProposalFileSerializer, RoleSerializer, TagSerializer
 from django.contrib.auth.models import User
 from .emails import send_event_status_email
 
@@ -127,8 +127,49 @@ def department_list_by_campus(request, id):
         departments = Department.objects.filter(location=campus)
         serializer = DepartmentSerializer(departments, many=True)
         department_data = [{'id': department['id'], 'name': department['name']}
-                           for department in serializer.data]
+            for department in serializer.data]
         return Response(department_data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def users_list_of_each_department(request, id):
+    if request.method == 'GET':
+        try:
+            department = Department.objects.get(id=id)
+        except Department.DoesNotExist:
+            return Response({"error": "Department not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        user_profiles = User_profile.objects.filter(department=department)
+        users = [profile.user for profile in user_profiles]
+        user_serializer = UserRegistrationSerializer(users, many=True)
+        user_data = [{'id': user.get('id'), 'username': user['username']} for user in user_serializer.data]
+    
+        return Response({
+            'department': department.name,
+            'users': user_data
+        }, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def roles_and_department_of_each_user(request, id):
+    try:
+        user = CustomUser.objects.get(id=id)
+        roles = Role.objects.filter(users=user)
+        serializer = MultiRoleSerializer(roles, many=True)
+
+        return Response({
+            'user_id': user.id,
+            'roles': serializer.data
+        }, status=status.HTTP_200_OK)
+
+    except CustomUser.DoesNotExist:
+        return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+    except User_profile.DoesNotExist:
+        return Response({"error": "User profile not found"}, status=status.HTTP_404_NOT_FOUND)
+   
+   
 
 
 # ________________CAMPUS API____________
@@ -230,6 +271,18 @@ def list_academic_year(request):
         return Response({'data': serializer.data, }, status=status.HTTP_200_OK)
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_academic_year_by_campus(request,id):
+    if request.method == 'GET':
+        try:
+            # Filter academic years by campus ID
+            academic_years = Academic_year.objects.filter(location_id=id)
+            serializer = AcademicyearSerializer(academic_years, many=True)
+            return Response({'data': serializer.data}, status=status.HTTP_200_OK)
+        except Academic_year.DoesNotExist:
+            return Response({'detail': 'Academic years not found for the given campus.'}, status=status.HTTP_404_NOT_FOUND)
+
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def update_academic_year(request, id):
@@ -298,31 +351,41 @@ def event_register(request):
 
             if not department_id:
                 return Response({'error': 'Department ID is required.'}, status=status.HTTP_400_BAD_REQUEST)
-            hods_and_iqacs = Role.objects.filter(department=department_id, role__in=[
-                                                 'departmentHOD', 'IQACuser'])
-            user_ids = hods_and_iqacs.values_list('user_id', flat=True)
+            
+            # Query to find HODs and IQAC users in the department
+            hods_and_iqacs = Role.objects.filter(department=department_id, role__in=['departmentHOD', 'IQACuser'])
+            
+            # Use 'users_id' instead of 'user_id'
+            user_ids = hods_and_iqacs.values_list('users_id', flat=True)
+            
+            # Fetch the users with the filtered IDs
             users_with_roles = CustomUser.objects.filter(id__in=user_ids)
-            email_list = [
-                user.email for user in users_with_roles if user.email]
+            email_list = [user.email for user in users_with_roles if user.email]
 
+            # Sending emails to HOD and IQAC users
             if email_list:
                 try:
                     send_event_register(email_list)
                 except Exception as e:
                     print(f"Error sending email to HOD/IQAC users: {str(e)}")
 
+            # Send email to the event creator if not already in the list
             if user.email and user.email not in email_list:
                 try:
                     send_event_register([user.email])
                 except Exception as e:
                     print(f"Error sending email to event creator: {str(e)}")
+                    
             return Response({'data': serializer.data, 'message': 'Event Registered Successfully'}, status=status.HTTP_201_CREATED)
+        
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def upload_proposal_files(request, event_id):
+
+    print(request.data)
     """
     Upload files for an event.
     """
@@ -349,6 +412,32 @@ def upload_proposal_files(request, event_id):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     return Response({"files": response_data}, status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def event_details(request, id):
+    try:
+        event = Event_Register.objects.get(id=id)
+    except Event_Register.DoesNotExist:
+        return Response({"error": "Event not found."}, status=status.HTTP_404_NOT_FOUND)
+    event_serializer = EventRegisterSerializer(event)
+
+    try:
+        event_status = EventStatus.objects.filter(event=event).latest('created_at')  # Get the latest status
+        status_serializer = EventStatusSerializer(event_status)
+    except EventStatus.DoesNotExist:
+        status_serializer = None
+
+    collaborators = Collaborators.objects.filter(event=event)
+    collaborator_serializer = CollaboratorSerializer(collaborators, many=True)
+
+    response_data = {
+        'event': event_serializer.data,
+        'status': status_serializer.data if status_serializer else None,
+        'collaborators': collaborator_serializer.data
+    }
+    return Response(response_data, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
@@ -421,18 +510,37 @@ def event_register_status(request, id):
 @permission_classes([IsAuthenticated])
 def assign_roles(request):
     if request.method == 'POST':
-        serializer = MultiRoleSerializer(data=request.data)
+        serializer = RoleSerializer(data=request.data)
         if serializer.is_valid():
-            users = serializer.validated_data['users']
-            departments = serializer.validated_data['departments']
+            user = serializer.validated_data['users']
+            department = serializer.validated_data['department']
             role = serializer.validated_data['role']
-            for user in users:
-                for department in departments:
-                    Role.objects.create(
-                        user=user, role=role, department=department)
-            return Response({'message': 'Roles assigned successfully'}, status=status.HTTP_201_CREATED)
+            
+            # Rename the local variable 'status' to 'role_status' to avoid conflict
+            role_status = serializer.validated_data.get('status', True)  # Default to True if not provided
+
+            # Create or update the role for the user and department
+            Role.objects.create(
+                users=user,
+                department=department,
+                role=role,
+                status=role_status  # Use renamed variable
+            )
+
+            return Response({'message': 'Role assigned successfully'}, status=status.HTTP_201_CREATED)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_role(request, id):
+    try:
+        role = Role.objects.get(id=id)
+        role.delete()
+        return Response({'message': 'Role deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+    except Role.DoesNotExist:
+        return Response({'error': 'Role not found'}, status=status.HTTP_404_NOT_FOUND)
 
 # __________TAG API_______________
 
@@ -465,7 +573,41 @@ def delete_tag(request, id):
         return Response('Tag Deleted Successfully')
 
 
+
+#_____________EVENT REPORT API_____________
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def event_report_create(request, id):
+    if request.method == 'POST':
+        try:
+            report = EventReport.objects.get(id=id)
+            serializer = EventReportSerializer(report, data=request.data, partial=True)
+        except EventReport.DoesNotExist:
+            data = request.data.copy()
+            data['event'] = id 
+            serializer = EventReportSerializer(data=data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'data': serializer.data, 'message': 'Details saved successfully'}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 # ____________COLLABORATORS API________
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_collaborators(request, id):
+    if request.method == 'DELETE':
+        try:
+            collaborator = Collaborators.objects.get(id=id)
+            collaborator.delete()
+            return Response({'message': 'Collaborator deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+        except Collaborators.DoesNotExist:
+            return Response({'error': 'Collaborator not found'}, status=status.HTTP_404_NOT_FOUND)
 
 
 

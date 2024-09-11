@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import { useNavigate } from 'react-router-dom';
-<<<<<<< HEAD
-//import axios from 'axios'; // For API requests
-=======
->>>>>>> dde8ef404e6d82e622bb5aecf475725f6da1b58f
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { academic_list, academic_delete} from '../../axios/api';

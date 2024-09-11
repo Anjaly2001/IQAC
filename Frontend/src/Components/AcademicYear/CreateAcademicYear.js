@@ -1,16 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
 import { useNavigate } from 'react-router-dom';
-<<<<<<< HEAD
 import { campus_list, academic_register} from '../../axios/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-=======
-import { campus_list, academic_register } from '../../axios/api';
-import {  toast } from 'react-toastify';
-
 import Sidebar from '../../Sidebar';
->>>>>>> dde8ef404e6d82e622bb5aecf475725f6da1b58f
 
 const CreateAcademicYear = () => {
     const [location_id, setCampus] = useState([]);

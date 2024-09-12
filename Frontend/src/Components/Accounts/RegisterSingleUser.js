@@ -109,8 +109,8 @@ const RegisterSingleUser = () => {
     const [firstName, lastName] = userName.split(" "); // Split the userName by space
 
     const newUser = {
-      first_name: firstName, // Assign first part to first_name
-      last_name: lastName || "", // Assign second part to last_name or set it to an empty string if not provided
+      first_name: toTitleCase(firstName), // Assign first part to first_name
+      last_name: toTitleCase(lastName) || "", // Assign second part to last_name or set it to an empty string if not provided
       username: userEmail,
       emp_id: userEmpId,
       email: userEmail,

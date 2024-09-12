@@ -35,17 +35,14 @@ const CreateAcademicYear = () => {
 
     const validateYear = (value) => {
         const yearRegex = /^\d{4}-\d{4}$/; // Matches format 'YYYY-YYYY'
-        const startYear = parseInt(value.split('-')[0], 10); 
-        const endYear = parseInt(value.split('-')[1], 10);
     
         if (!yearRegex.test(value)) {
             setYearError("Year format should be 'YYYY-YYYY'.");
-        } else if (endYear !== startYear + 1) {
-            setYearError("The second year should be exactly one year after the first.");
         } else {
-            setYearError("");
+            setYearError(""); // Clear the error if the format is correct
         }
     };
+    
     
 
     const handleSubmit = async (e) => {

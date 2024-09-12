@@ -1,6 +1,6 @@
 import axiosInstance from "./index"; // Your Axios instance
 import { postMultipartData, updateMultipartData } from "./utils";
-import { toast } from "react-toastify";
+
 
 // lOGIN API ARGUMENT as form elements
 export const login = async (form) => {
@@ -30,11 +30,10 @@ export const campus_register = async (form) => {
       "department_and_events/campus_register/",
       form
     );
-    // toast.success('campus created Successfully')
     return res.data;
   } catch (error) {
     console.log(error);
-    toast.error("campus already exist.");
+    // toast.error("campus already exist.");
   }
 };
 
@@ -46,7 +45,7 @@ export const campus_list = async (form) => {
     return res.data;
   } catch (error) {
     console.log(error);
-    toast.error("Failed to create campus. Please try again.");
+    // toast.error("Failed to create campus. Please try again.");
   }
 };
 
@@ -56,11 +55,10 @@ export const campus_update = async (campus_id, updatedCampusData) => {
       `department_and_events/campus_update/${campus_id}/`,
       updatedCampusData
     );
-    // toast.success('campus created Successfully')
     return res.data;
   } catch (error) {
     console.log(error);
-    toast.error("campus already exist.");
+    // toast.error("campus already exist.");
   }
 };
 
@@ -72,7 +70,7 @@ export const campus_delete = async (campus_id) => {
     return res.data;
   } catch (error) {
     console.log(error);
-    // toast.error('Failed to delete campus. Please try again.');
+   
   }
 };
 
@@ -85,7 +83,7 @@ export const department_register = async (form) => {
     return res.data;
   } catch (error) {
     console.log(error);
-    toast.error("Failed to create department. Please try again.");
+   
   }
 };
 
@@ -97,7 +95,6 @@ export const department_list_by_campus = async (campus_id) => {
     return res.data;
   } catch (error) {
     console.log(error);
-    toast.error("Failed to create department. Please try again.");
   }
 };
 
@@ -110,7 +107,6 @@ export const department_list = async (form) => {
     return res.data;
   } catch (error) {
     console.log(error);
-    toast.error("Failed to create department. Please try again.");
   }
 };
 
@@ -122,7 +118,6 @@ export const department_delete = async (department_id) => {
     return res.data;
   } catch (error) {
     console.log(error);
-    toast.error("Failed to delete department. Please try again.");
   }
 };
 
@@ -134,7 +129,6 @@ export const department_active = async (department_id) => {
     return res.data;
   } catch (error) {
     console.log(error);
-    toast.error("Failed to activate department. Please try again.");
   }
 };
 
@@ -144,7 +138,7 @@ export const department_active = async (department_id) => {
 //     return res.data;
 //   } catch (error) {
 //     console.log(error);
-//     toast.error('Failed to delete department. Please try again.');
+//     // toast.error('Failed to delete department. Please try again.');
 //   }
 // };
 
@@ -154,7 +148,6 @@ export const user_register = async (form) => {
     return res.data;
   } catch (error) {
     console.log(error);
-    toast.error("Failed to create department. Please try again.");
   }
 };
 
@@ -167,7 +160,6 @@ export const multiple_user_register = async (form) => {
     return res;
   } catch (error) {
     console.log(error);
-    toast.error("Failed to register users. Please try again.");
   }
 };
 
@@ -177,7 +169,6 @@ export const users_list = async (form) => {
     return res.data;
   } catch (error) {
     console.log(error);
-    toast.error("Failed to create department. Please try again.");
   }
 };
 
@@ -189,7 +180,6 @@ export const user_active = async (user_id) => {
     return res.data;
   } catch (error) {
     console.log(error);
-    toast.error("Failed to activate user. Please try again.");
   }
 };
 
@@ -201,7 +191,6 @@ export const user_delete = async (department_id) => {
     return res.data;
   } catch (error) {
     console.log(error);
-    toast.error("Failed to delete user. Please try again.");
   }
 };
 
@@ -211,7 +200,7 @@ export const user_delete = async (department_id) => {
 //     return res.data;
 //   } catch (error) {
 //     console.log(error);
-//     toast.error('Failed to activate user. Please try again.');
+//     // toast.error('Failed to activate user. Please try again.');
 //   }
 // };
 
@@ -224,7 +213,7 @@ export const academic_register = async (form) => {
     return res.data;
   } catch (error) {
     console.log(error);
-    toast.error("Failed to create academic year. Please try again.");
+    // toast.error("Failed to create academic year. Please try again.");
   }
 };
 
@@ -236,7 +225,7 @@ export const academic_list = async () => {
     return res.data;
   } catch (error) {
     console.log(error);
-    toast.error("Failed to create academic year. Please try again.");
+    // toast.error("Failed to create academic year. Please try again.");
   }
 };
 export const academic_list_campus = async (campus_id) => {
@@ -247,7 +236,7 @@ export const academic_list_campus = async (campus_id) => {
     return res.data;
   } catch (error) {
     console.log(error);
-    toast.error("Failed to Fetch academic year. Please try again.");
+    // toast.error("Failed to Fetch academic year. Please try again.");
   }
 };
 export const academic_delete = async (academicYearId) => {
@@ -258,7 +247,7 @@ export const academic_delete = async (academicYearId) => {
     return res.data;
   } catch (error) {
     console.log(error);
-    toast.error("Failed to delete academic year. Please try again.");
+    // toast.error("Failed to delete academic year. Please try again.");
   }
 };
 
@@ -271,7 +260,7 @@ export const event_type_register = async (form) => {
     return res.data;
   } catch (error) {
     console.log(error);
-    toast.error("Failed to create academic year. Please try again.");
+    // toast.error("Failed to create academic year. Please try again.");
   }
 };
 
@@ -283,7 +272,7 @@ export const event_type_list = async () => {
     return res.data;
   } catch (error) {
     console.log(error);
-    toast.error("Failed to list event types. Please try again.");
+    // toast.error("Failed to list event types. Please try again.");
   }
 };
 
@@ -295,7 +284,7 @@ export const event_type_delete = async (eventType) => {
     return res.data;
   } catch (error) {
     console.log(error);
-    // toast.error('Failed to delete user. Please try again.');
+    // // toast.error('Failed to delete user. Please try again.');
   }
 };
 
@@ -310,7 +299,7 @@ export const campus_name_list = async (form) => {
     return res.data;
   } catch (error) {
     console.log(error);
-    toast.error("Failed to list event types. Please try again.");
+    // toast.error("Failed to list event types. Please try again.");
   }
 };
 
@@ -322,7 +311,7 @@ export const user_list_by_department = async (department_id) => {
     return res.data;
   } catch (error) {
     console.log(error);
-    toast.error("Failed to list event types. Please try again.");
+    // toast.error("Failed to list event types. Please try again.");
   }
 };
 
@@ -334,7 +323,7 @@ export const user_department_role = async (user_id)=>{
     return res.data;
   } catch (error) {
     console.log(error);
-    toast.error("Failed to list event types. Please try again.");
+    // toast.error("Failed to list event types. Please try again.");
   }
 };
 
@@ -364,7 +353,7 @@ export const create_tag = async (form) => {
     return res.data;
   } catch (error) {
     console.log(error);
-    toast.error("Failed to create tag. Please try again.");
+    // toast.error("Failed to create tag. Please try again.");
   }
 };
 
@@ -375,7 +364,7 @@ export const list_tags = async () => {
     return res.data;
   } catch (error) {
     console.log(error);
-    toast.error("Failed to list tags. Please try again.");
+    // toast.error("Failed to list tags. Please try again.");
   }
 };
 
@@ -385,7 +374,7 @@ export const delete_tag = async (tag_id) => {
     return res.data;
   } catch (error) {
     console.log(error);
-    toast.error("Failed to delete tag. Please try again.");
+    // toast.error("Failed to delete tag. Please try again.");
   }
 };
 
@@ -395,7 +384,7 @@ export const register_event=async(form)=>{
     return res.data;
   } catch (error) {
     console.log(error);
-    toast.error("Failed to create event. Please try again.");
+    // toast.error("Failed to create event. Please try again.");
   }
 };
 
@@ -406,6 +395,6 @@ export const proposal_file_upload=async(form,event_id)=>{
     return res.data;
   } catch (error) {
     console.log(error);
-    toast.error("Failed to create proposal file. Please try again.");
+    // toast.error("Failed to create proposal file. Please try again.");
   }
 };

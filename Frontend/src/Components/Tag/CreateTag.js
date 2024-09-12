@@ -21,6 +21,13 @@ export default function CreateTag() {
             setTagNameError("");
         }
     };
+    const toTitleCase = (str) => {
+        return str
+            .toLowerCase()
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    };
 
     // const validateDescription = (value) => {
     //     if (value == null || value.trim() === '') {
@@ -43,7 +50,7 @@ export default function CreateTag() {
     
         // Proceed with saving if validation passes
         try {
-            const response = await create_tag({ name: tagName, description: description });
+            const response = await create_tag({ name: toTitleCase(tagName), description: description });
             console.log('Tag created successfully:', response);
             toast.success('Registered Successfully');
             // Optionally, reset form or handle success

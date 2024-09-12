@@ -251,10 +251,9 @@ export const academic_delete = async (academicYearId) => {
   }
 };
 
-export const event_type_register = async () => {
+export const event_type_register = async (data) => {
   try {
-    const res = await axiosInstance.post(
-      "department_and_events/create_event_type/",);
+    const res = await axiosInstance.post("department_and_events/create_event_type/",data);
     return res.data;
   } catch (error) {
     console.log(error);

@@ -114,7 +114,7 @@ const RegisterSingleUser = () => {
       username: userEmail,
       emp_id: userEmpId,
       email: userEmail,
-      ph: userPhoneNumber,
+      phone_number: userPhoneNumber,
       department: department,
       location: userCampus,
     };

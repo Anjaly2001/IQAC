@@ -58,6 +58,41 @@ function RegisterEvent() {
   const [files, setFiles] = useState([]);
   const [error, setError] = useState(null);
 
+  const [eventTitleError, setEventTitleError] = useState("");
+  const [isFormValid, setIsFormValid] = useState(false);
+
+
+
+
+  // Validate a single field
+  const isValidString = (value) => value && value.trim() !== "";
+
+  // Validate the form
+  const validateForm = () => {
+    // Check if all simple fields are valid
+    const isValidEventTitle = isValidString(eventTitle);
+    const isValidVenue = isValidString(venue);
+    const isValidDescription = isValidString(description);
+    const isValidCampus = campus !== "";
+    const isValidDepartment = department !== "";
+    const isValidEventType = eventType !== null;
+    const isValidAcademicYear = academicYear !== null;
+
+  };
+  
+  useEffect(() => {
+    setIsFormValid(validateForm());
+  }, [
+    eventTitle,
+    venue,
+    description,
+    campus,
+    department,
+    eventType,
+    academicYear,
+
+  ]);
+
   // Fetch campuses on mount
   useEffect(() => {
     const fetchCampuses = async () => {
@@ -485,17 +520,23 @@ function RegisterEvent() {
               </div>
 
               <div className="mb-3">
-                <label htmlFor="eventTitle" className="form-label">
-                  Event Title{renderAsterisk()}
-                </label>
-                <InputText
-                  id="eventTitle"
-                  value={eventTitle}
-                  onChange={(e) => setEventTitle(e.target.value)}
-                  placeholder="Enter event title"
-                  className="w-100"
-                />
-              </div>
+                  <label htmlFor="eventTitle" className="form-label">
+                    Event Title{renderAsterisk()}
+                  </label>
+                  <InputText
+                    id="eventTitle"
+                    value={eventTitle}
+                    onChange={(e) => {
+                      setEventTitle(e.target.value);
+                      // validateEventTitle(e.target.value);
+                    }}
+                    placeholder="Enter event title"
+                    className={`w-100 ${eventTitleError ? "is-invalid" : ""}`} // Add invalid class if there's an error
+                  />
+                  {/* {eventTitleError && (
+                    <div className="invalid-feedback">{eventTitleError}</div>
+                  )} */}
+                </div>
 
               <div className="mb-3">
                 <label htmlFor="description" className="form-label">
@@ -517,10 +558,10 @@ function RegisterEvent() {
                 <InputText
                   id="numberOfActivities"
                   type="number"
-                  value={numberOfActivities > 0 ? numberOfActivities : 1} // Ensure only positive numbers
+                  value={numberOfActivities} // Ensure only positive numbers
                   onChange={handleNumberOfActivitiesChange}
                   className="w-100"
-                  min="1"
+                  defaultValue={1}
                 />
               </div>
 
@@ -694,7 +735,7 @@ function RegisterEvent() {
                 />
               </div>
 
-              <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
+              <button type="submit" className="btn btn-primary" disabled={isSubmitting || !isFormValid}>
   {isSubmitting ? "Submitting..." : "Submit"}
 </button>
 

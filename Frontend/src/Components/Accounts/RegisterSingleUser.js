@@ -933,7 +933,8 @@ const validatePhoneNumber = (value) => {
                                                 className="form-select"
                                                 value={userDepartment}
                                                 onChange={(e) => setUserDepartment(e.target.value)}
-                                                disabled={!userCampus}
+                                                disabled={!userCampus || campuses.length === 0}
+
                                             >
                                                 <option value="">Select Department</option>
                                                 {departments && departments.length > 0 ? (

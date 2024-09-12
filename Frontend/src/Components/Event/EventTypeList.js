@@ -31,7 +31,7 @@ export default function EventTypeList() {
     
         fetchEventTypeList();
     }, []);
-    
+   
     const handleSearchChange = (e) => {
         setGlobalFilter(e.target.value);
     };

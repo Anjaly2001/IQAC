@@ -46,7 +46,11 @@ const RegisterMultipleUser = () => {
                 const rows = text.split('\n').map(row => row.split(','));
 
                 // Apply title case to specific columns (e.g., assuming first and last name are columns 0 and 1)
-                const transformedRows = rows.map(row => {
+                const transformedRows = rows.map((row, index)=> {
+                    if (index === 0) {
+                        // Skip the first row (headers)
+                        return row;
+                    }
                     // row[0] = toTitleCase(row[0]); // Apply title case to the first column (e.g., first name)
                     row[1] = toTitleCase(row[1]); // Apply title case to the second column (e.g., last name)
                     console.log(row)

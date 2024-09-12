@@ -14,6 +14,7 @@ const CreateAcademicYear = () => {
     const [campuses, setCampuses] = useState([]); // State for campuses
     const [error, setError] = useState(''); // State for form validation errors
     const history = useNavigate();
+    const [yearError, setYearError] = useState('');
 
     useEffect(() => {
         const fetchCampuses = async () => {
@@ -31,6 +32,21 @@ const CreateAcademicYear = () => {
         };
         fetchCampuses();
     }, []);
+
+    const validateYear = (value) => {
+        const yearRegex = /^\d{4}-\d{4}$/; // Matches format 'YYYY-YYYY'
+        const startYear = parseInt(value.split('-')[0], 10); 
+        const endYear = parseInt(value.split('-')[1], 10);
+    
+        if (!yearRegex.test(value)) {
+            setYearError("Year format should be 'YYYY-YYYY'.");
+        } else if (endYear !== startYear + 1) {
+            setYearError("The second year should be exactly one year after the first.");
+        } else {
+            setYearError("");
+        }
+    };
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -116,9 +132,13 @@ const CreateAcademicYear = () => {
                                             className="form-control"
                                             value={label}
                                             placeholder="e.g., 2023-2024"
-                                            onChange={(e) => setLabel(e.target.value)}
+                                            onChange={(e) => {
+                                                setLabel(e.target.value);
+                                                validateYear(e.target.value); // Call the year validation function
+                                            }}
                                             required
                                         />
+                                        {yearError && <small className="text-danger">{yearError}</small>}
                                         <small className="form-text text-muted">Enter a label for this academic year.</small>
                                     </div>
                                 </div>

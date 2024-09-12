@@ -11,6 +11,7 @@ const EventType = () => {
     const [description, setDescription] = useState('');
     const [eventTypes, setEventTypes] = useState([]); // State to store event types
     const [editIndex, setEditIndex] = useState(null);
+    const [titleError, setTitleError] = useState('');
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -23,6 +24,15 @@ const EventType = () => {
             .join(' ');
     };
 
+    const validateTitle = (value) => {
+        const titleRegex = /^[a-zA-Z\s]+$/; // Adjust regex as needed
+        if (!titleRegex.test(value)) {
+            setTitleError("Title should contain only alphabets and spaces.");
+        } else {
+            setTitleError(""); // Clear error if valid
+        }
+    };
+    
 
     useEffect(() => {
         if (location.state) {
@@ -73,12 +83,16 @@ const EventType = () => {
                                     <input
                                         type="text"
                                         id="title"
-                                        className="form-control"
-                                        value={toTitleCase(title)}
-                                        placeholder="enter title"
-                                        onChange={(e) => setTitle(e.target.value)}
+                                        className={`form-control ${titleError ? 'is-invalid' : ''}`} // Add 'is-invalid' class if there's an error
+                                        value={title}
+                                        placeholder="Enter title"
+                                        onChange={(e) => {
+                                            setTitle(e.target.value); // Update title state
+                                            validateTitle(e.target.value); // Validate the input
+                                        }}
                                         required
                                     />
+                                    {titleError && <div className="invalid-feedback">{titleError}</div>}  {/* Display validation error */}
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="description" className="form-label">Description{renderAsterisk()}</label>

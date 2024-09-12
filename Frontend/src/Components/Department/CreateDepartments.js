@@ -17,6 +17,8 @@ const CreateDepartment = ({ onAddDepartment }) => {
     const [locations, setLocations] = useState([]);
     const [message, setMessage] = useState('');  
     const [messageType, setMessageType] = useState('');
+    const [departmentNameError, setDepartmentNameError] = useState('');
+
 
     const navigate = useNavigate(); // Initialize useNavigate
 
@@ -27,6 +29,16 @@ const CreateDepartment = ({ onAddDepartment }) => {
             .map(word => word.charAt(0).toUpperCase() + word.slice(1))
             .join(' ');
     };
+
+    const validateDepartmentName = (value) => {
+        const nameRegex = /^[a-zA-Z\s]*$/;
+        if (!nameRegex.test(value)) {
+            setDepartmentNameError("Department name should contain only alphabets and spaces.");
+        } else {
+            setDepartmentNameError("");
+        }
+    };
+    
 
 
     useEffect(() => {
@@ -105,10 +117,16 @@ const CreateDepartment = ({ onAddDepartment }) => {
                                 <InputText
                                     id="departmentName"
                                     value={departmentName}
-                                    onChange={(e) => setDepartmentName(e.target.value)}
+                                    onChange={(e) => {
+                                        setDepartmentName(e.target.value);
+                                        validateDepartmentName(e.target.value);  // Call validation here
+                                    }}
                                     placeholder="Enter department name"
                                     className="w-100"
                                 />
+                                {departmentNameError && <small style={{ color: 'red' }}>{departmentNameError}</small>}
+                            
+
                             </div>
                             <div className="p-field w-100 mb-3">
                                 <label htmlFor="description">Description{renderAsterisk()}</label>

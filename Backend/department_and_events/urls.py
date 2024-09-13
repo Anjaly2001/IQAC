@@ -44,6 +44,7 @@ urlpatterns = [
     path('event_details/<int:id>/',views.event_details, name ='event_details'),
 
     path('event_report_create/<int:id>/',views.event_report_create, name = 'event_report_create'),
+    path('upload_event_report_files/<int:id>/',views.upload_event_report_files, name = 'upload_event_files'),
 
     path('assign_role/',views.assign_roles, name ='assign_role'),
     path('delete_role/<int:id>/', views.delete_role, name = 'delete_role'),

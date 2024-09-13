@@ -1,5 +1,5 @@
 from authentication.models import CustomUser
-from .models import Academic_year, Activity, Collaborators, Department, Event_Register, Event_type, EventReport, EventStatus, Location, Proposal_Upload, Role, Tag
+from .models import Academic_year, Activity, Collaborators, Department, Event_Register, Event_type, EventReport, EventReportFileUpload, EventStatus, Location, Proposal_Upload, Role, Tag
 from rest_framework import serializers
 
 
@@ -41,14 +41,14 @@ class EventTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Event_type
-        fields = '__all__'
+        fields = ['id','title','description']
 
 
 
 class ActivitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Activity
-        fields = ['activity_title', 'activity_description', 'activity_date', 'venue']
+        fields = ['activity_title', 'activity_description', 'start_date','end_date', 'venue','start_time','end_time']
 
 class CollaboratorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -88,8 +88,8 @@ class EventRegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Event_Register
-        fields = ['id', 'location', 'department', 'event_title', 'no_of_activities',
-                  'start_date', 'end_date', 'venue', 'academic_year',
+        fields = ['id', 'location', 'department', 'event_title', 'description','no_of_activities',
+                  'start_date', 'end_date', 'academic_year',
                   'event_type', 'activities', 'collaborators', 'tags',
                   'location_id', 'department_id', 'event_type_id', 'academic_year_id',
                   'activities_data', 'collaborators_data', 'tags_id']
@@ -206,6 +206,11 @@ class EventReportSerializer(serializers.ModelSerializer):
             'no_of_student_volunteers',
             'no_of_attendees_or_participants'
         ]
+
+class EventReportFileUploadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EventReportFileUpload
+        fields = '__all__'
 
 # class EventRegisterSerializer(serializers.ModelSerializer):
 #     location = LocationSerializer(read_only=True)

@@ -59,12 +59,14 @@ const RegisterSingleUser = () => {
   }, [userCampus]); // Add userCampus as a dependency
 
   const toTitleCase = (str) => {
+    if (!str) return ""; // Handle undefined or null values
     return str
       .toLowerCase()
       .split(" ")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
   };
+  
 
   const createUser = async () => {
     setIsSubmitting(true);

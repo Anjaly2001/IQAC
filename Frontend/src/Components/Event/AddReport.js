@@ -29,6 +29,30 @@ function AddReport() {
   const [summary, setSummary] = useState('');
   const [files, setFiles] = useState([]);
   const [error, setError] = useState(null);
+  // Define states for each field
+  const [posterFiles, setPosterFiles] = useState([]);
+  const [brochureFiles, setBrochureFiles] = useState([]);
+  const [reportFiles, setReportFiles] = useState([]);
+  const [photographFiles, setPhotographFiles] = useState([]);
+  const [registrationListFiles, setRegistrationListFiles] = useState([]);
+  const [certificateParticipantsFiles, setCertificateParticipantsFiles] = useState([]);
+  const [certificateWinnersFiles, setCertificateWinnersFiles] = useState([]);
+  const [proposalFiles, setProposalFiles] = useState([]);
+  const [budgetFiles, setBudgetFiles] = useState([]);
+  const [emailFiles, setEmailFiles] = useState([]);
+
+  // Handle file changes for each field
+  const handleFileChanges = (event, setFiles) => {
+    const newFile = event.target.files[0];
+    if (newFile) {
+      setFiles(prevFiles => [...prevFiles, newFile]);
+    }
+  };
+
+  // Handle click to trigger file input
+  const handleAddFiles = (inputId) => {
+    document.getElementById(inputId).click();
+  };
 
   const [form, setForm] = useState({
     department: '',
@@ -477,10 +501,7 @@ function AddReport() {
                       filter
                     />
                   </div>
-                  <div className="mb-3">
-                    <label className="form-label">Blog Link{renderAsterisk()}</label>
-                    <input type="text" className="form-control" name="blogLink" value={form.blogLink} onChange={handleChange} />
-                  </div>
+
                   <div className="flex pt-4 justify-content-end">
                     <Button label="Next" icon="pi pi-arrow-right" iconPos="right" onClick={() => stepperRef.current.nextCallback()} />
                   </div>
@@ -488,6 +509,10 @@ function AddReport() {
 
 
                 <StepperPanel header="">
+                  <div className="mb-3">
+                    <label className="form-label">Blog Link{renderAsterisk()}</label>
+                    <input type="text" className="form-control" name="blogLink" value={form.blogLink} onChange={handleChange} />
+                  </div>
 
                   <h3 className="text-center mt-4 mb-3">PARTICIPANTS INFORMATION</h3>
                   <div className="mb-3">
@@ -544,8 +569,246 @@ function AddReport() {
                   </div>
                 </StepperPanel>
 
-
                 <StepperPanel header="">
+
+                  <h3 className="text-center mt-4 mb-3">File uploads of the event</h3>
+                  <div>
+                    {/* Poster Upload */}
+                    <div className="mb-3">
+                      <label htmlFor="poster" className="form-label">Upload Poster {renderAsterisk()}</label>
+                      <div className="d-flex flex-wrap">
+                        {posterFiles.map((file, index) => (
+                          <div key={index} className="file-box p-3 me-2 mb-2 border border-primary">
+                            <span>{file.name}</span>
+                          </div>
+                        ))}
+                        <div className="file-box p-3 me-2 mb-2 border border-primary d-flex align-items-center justify-content-center" onClick={() => handleAddFiles('posterFileInput')}>
+                          <FontAwesomeIcon icon={faPlus} />
+                        </div>
+                      </div>
+                      <input
+                        id="posterFileInput"
+                        type="file"
+                        accept=".pdf"
+                        onChange={(e) => handleFileChanges(e, setPosterFiles)}
+                        className="d-none"
+                      />
+                    </div>
+
+                    {/* Brochure Upload */}
+                    <div className="mb-3">
+                      <label htmlFor="brochure" className="form-label">Upload Brochure {renderAsterisk()}</label>
+                      <div className="d-flex flex-wrap">
+                        {brochureFiles.map((file, index) => (
+                          <div key={index} className="file-box p-3 me-2 mb-2 border border-primary">
+                            <span>{file.name}</span>
+                          </div>
+                        ))}
+                        <div className="file-box p-3 me-2 mb-2 border border-primary d-flex align-items-center justify-content-center" onClick={() => handleAddFiles('brochureFileInput')}>
+                          <FontAwesomeIcon icon={faPlus} />
+                        </div>
+                      </div>
+                      <input
+                        id="brochureFileInput"
+                        type="file"
+                        accept=".pdf"
+                        onChange={(e) => handleFileChanges(e, setBrochureFiles)}
+                        className="d-none"
+                      />
+                    </div>
+
+                    {/* Detailed Report Upload */}
+                    <div className="mb-3">
+                      <label htmlFor="detailedReport" className="form-label">Upload Detailed Report {renderAsterisk()}</label>
+                      <div className="d-flex flex-wrap">
+                        {reportFiles.map((file, index) => (
+                          <div key={index} className="file-box p-3 me-2 mb-2 border border-primary">
+                            <span>{file.name}</span>
+                          </div>
+                        ))}
+                        <div className="file-box p-3 me-2 mb-2 border border-primary d-flex align-items-center justify-content-center" onClick={() => handleAddFiles('reportFileInput')}>
+                          <FontAwesomeIcon icon={faPlus} />
+                        </div>
+                      </div>
+                      <input
+                        id="reportFileInput"
+                        type="file"
+                        accept=".pdf"
+                        onChange={(e) => handleFileChanges(e, setReportFiles)}
+                        className="d-none"
+                      />
+                    </div>
+
+                    {/* Photographs of Event Upload */}
+                    <div className="mb-3">
+                      <label htmlFor="photographs" className="form-label">Upload Photographs {renderAsterisk()}</label>
+                      <div className="d-flex flex-wrap">
+                        {photographFiles.map((file, index) => (
+                          <div key={index} className="file-box p-3 me-2 mb-2 border border-primary">
+                            <span>{file.name}</span>
+                          </div>
+                        ))}
+                        <div className="file-box p-3 me-2 mb-2 border border-primary d-flex align-items-center justify-content-center" onClick={() => handleAddFiles('photographFileInput')}>
+                          <FontAwesomeIcon icon={faPlus} />
+                        </div>
+                      </div>
+                      <input
+                        id="photographFileInput"
+                        type="file"
+                        accept=".pdf"
+                        onChange={(e) => handleFileChanges(e, setPhotographFiles)}
+                        className="d-none"
+                      />
+                    </div>
+
+                    {/* Registration List Upload */}
+                    <div className="mb-3">
+                      <label htmlFor="registrationList" className="form-label">Upload Registration List {renderAsterisk()}</label>
+                      <div className="d-flex flex-wrap">
+                        {registrationListFiles.map((file, index) => (
+                          <div key={index} className="file-box p-3 me-2 mb-2 border border-primary">
+                            <span>{file.name}</span>
+                          </div>
+                        ))}
+                        <div className="file-box p-3 me-2 mb-2 border border-primary d-flex align-items-center justify-content-center" onClick={() => handleAddFiles('registrationListInput')}>
+                          <FontAwesomeIcon icon={faPlus} />
+                        </div>
+                      </div>
+                      <input
+                        id="registrationListInput"
+                        type="file"
+                        accept=".pdf"
+                        onChange={(e) => handleFileChanges(e, setRegistrationListFiles)}
+                        className="d-none"
+                      />
+                    </div>
+
+                    {/* Sample Certificate of Participants Upload */}
+                    <div className="mb-3">
+                      <label htmlFor="sampleCertificateParticipants" className="form-label">Upload Sample Certificate of Participants {renderAsterisk()}</label>
+                      <div className="d-flex flex-wrap">
+                        {certificateParticipantsFiles.map((file, index) => (
+                          <div key={index} className="file-box p-3 me-2 mb-2 border border-primary">
+                            <span>{file.name}</span>
+                          </div>
+                        ))}
+                        <div className="file-box p-3 me-2 mb-2 border border-primary d-flex align-items-center justify-content-center" onClick={() => handleAddFiles('certificateParticipantsInput')}>
+                          <FontAwesomeIcon icon={faPlus} />
+                        </div>
+                      </div>
+                      <input
+                        id="certificateParticipantsInput"
+                        type="file"
+                        accept=".pdf"
+                        onChange={(e) => handleFileChanges(e, setCertificateParticipantsFiles)}
+                        className="d-none"
+                      />
+                    </div>
+
+                    {/* Sample Certificate of Winners Upload */}
+                    <div className="mb-3">
+                      <label htmlFor="sampleCertificateWinners" className="form-label">Upload Sample Certificate of Winners {renderAsterisk()}</label>
+                      <div className="d-flex flex-wrap">
+                        {certificateWinnersFiles.map((file, index) => (
+                          <div key={index} className="file-box p-3 me-2 mb-2 border border-primary">
+                            <span>{file.name}</span>
+                          </div>
+                        ))}
+                        <div className="file-box p-3 me-2 mb-2 border border-primary d-flex align-items-center justify-content-center" onClick={() => handleAddFiles('certificateWinnersInput')}>
+                          <FontAwesomeIcon icon={faPlus} />
+                        </div>
+                      </div>
+                      <input
+                        id="certificateWinnersInput"
+                        type="file"
+                        accept=".pdf"
+                        onChange={(e) => handleFileChanges(e, setCertificateWinnersFiles)}
+                        className="d-none"
+                      />
+                    </div>
+
+                    {/* Proposal and Planning Document Upload */}
+                    <div className="mb-3">
+                      <label htmlFor="proposal" className="form-label">Upload Proposal and Planning Document {renderAsterisk()}</label>
+                      <div className="d-flex flex-wrap">
+                        {proposalFiles.map((file, index) => (
+                          <div key={index} className="file-box p-3 me-2 mb-2 border border-primary">
+                            <span>{file.name}</span>
+                          </div>
+                        ))}
+                        <div className="file-box p-3 me-2 mb-2 border border-primary d-flex align-items-center justify-content-center" onClick={() => handleAddFiles('proposalFileInput')}>
+                          <FontAwesomeIcon icon={faPlus} />
+                        </div>
+                      </div>
+                      <input
+                        id="proposalFileInput"
+                        type="file"
+                        accept=".pdf"
+                        onChange={(e) => handleFileChanges(e, setProposalFiles)}
+                        className="d-none"
+                      />
+                    </div>
+
+                    {/* Budget Upload */}
+                    <div className="mb-3">
+                      <label htmlFor="budget" className="form-label">Upload Budget {renderAsterisk()}</label>
+                      <div className="d-flex flex-wrap">
+                        {budgetFiles && budgetFiles.length > 0 ? (
+                          budgetFiles.map((file, index) => (
+                            <div key={index} className="file-box p-3 me-2 mb-2 border border-primary">
+                              <span>{file.name}</span>
+                            </div>
+                          ))
+                        ) : (
+                          <div className="text-muted">No files uploaded</div>
+                        )}
+                        <div className="file-box p-3 me-2 mb-2 border border-primary d-flex align-items-center justify-content-center" onClick={() => document.getElementById('budgetFileInput').click()}>
+                          <FontAwesomeIcon icon={faPlus} />
+                        </div>
+                      </div>
+                      <input
+                        id="budgetFileInput"
+                        type="file"
+                        accept=".pdf"
+                        multiple
+                        onChange={(e) => handleFileChanges(e, setBudgetFiles)}
+                        className="d-none"
+                      />
+                    </div>
+
+
+                    {/* Print of Email Communication Upload */}
+                    <div className="mb-3">
+                      <label htmlFor="emailCommunication" className="form-label">Upload Print of Email Communication {renderAsterisk()}</label>
+                      <div className="d-flex flex-wrap">
+                        {emailFiles.map((file, index) => (
+                          <div key={index} className="file-box p-3 me-2 mb-2 border border-primary">
+                            <span>{file.name}</span>
+                          </div>
+                        ))}
+                        <div className="file-box p-3 me-2 mb-2 border border-primary d-flex align-items-center justify-content-center" onClick={() => handleAddFiles('emailFileInput')}>
+                          <FontAwesomeIcon icon={faPlus} />
+                        </div>
+                      </div>
+                      <input
+                        id="emailFileInput"
+                        type="file"
+                        accept=".pdf"
+                        onChange={(e) => handleFileChanges(e, setEmailFiles)}
+                        className="d-none"
+                      />
+                    </div>
+                  </div>
+
+
+                  <div className="flex pt-4 justify-content-between">
+                    <Button label="Back" severity="secondary" icon="pi pi-arrow-left" onClick={() => stepperRef.current.prevCallback()} />
+                    <Button label="Next" icon="pi pi-arrow-right" iconPos="right" onClick={() => stepperRef.current.nextCallback()} />
+                  </div>
+                </StepperPanel>
+                <StepperPanel header="">
+
+
                   <div className="mb-3">
                     <label className="form-label">SUMMARY OF THE OVERALL EVENT{renderAsterisk()}</label>
                     <Editor
@@ -598,39 +861,39 @@ function AddReport() {
                 </StepperPanel>
 
                 <StepperPanel header="">
-                <div className="row">
-                <div className="col-lg-6">
-                <h4 className="text-center mb-4 mt-2">Registered Event Details</h4>
+                  <div className="row">
+                    <div className="col-lg-6">
+                      <h4 className="text-center mb-4 mt-2">Registered Event Details</h4>
 
-                            <p><strong>Campus :</strong> {}</p>
-                            <p><strong>Department :</strong> {}</p>
-                            <p><strong>C_Campus :</strong> {}</p>
-                            <p><strong>C_Department :</strong> {}</p>
-                            <p><strong>C_Name :</strong> {}</p>
-                            <p><strong>Event Title :</strong> {}</p>
-                            <p><strong>Description :</strong> {}</p>
-                            <p><strong>NO.Of_Activities :</strong> {}</p>
-                            <p><strong>Title :</strong> {}</p>
-                            <p><strong>Date :</strong> {}</p>
-                            <p><strong>Time :</strong> {}</p>
-                            <p><strong>Venue :</strong> {}</p>
-                            <p><strong>Academic Year :</strong> {}</p>
-                            <p><strong>Event_Type :</strong> {}</p>
-                            <p><strong>proposal :</strong> {}</p>
-                            <p><strong>Tags :</strong> {}</p>
-                            <p><strong>Blog Link :</strong> {}</p>
-                            <p><strong>Target Audience :</strong> {}</p>
-                            <p><strong>External Members :</strong> {}</p>
-                            <p><strong>Organizing Committee :</strong> {}</p>
-                            <p><strong>No.Of_Student_Volunteers :</strong> {}</p>
-                            <p><strong>No.Of_Attendees :</strong> {}</p>
-                            <p><strong>Summary :</strong> {}</p>
-                            <p><strong>Outcome :</strong> {}</p>
-                            <p><strong>feedBack :</strong> {}</p>
+                      <p><strong>Campus :</strong> { }</p>
+                      <p><strong>Department :</strong> { }</p>
+                      <p><strong>C_Campus :</strong> { }</p>
+                      <p><strong>C_Department :</strong> { }</p>
+                      <p><strong>C_Name :</strong> { }</p>
+                      <p><strong>Event Title :</strong> { }</p>
+                      <p><strong>Description :</strong> { }</p>
+                      <p><strong>NO.Of_Activities :</strong> { }</p>
+                      <p><strong>Title :</strong> { }</p>
+                      <p><strong>Date :</strong> { }</p>
+                      <p><strong>Time :</strong> { }</p>
+                      <p><strong>Venue :</strong> { }</p>
+                      <p><strong>Academic Year :</strong> { }</p>
+                      <p><strong>Event_Type :</strong> { }</p>
+                      <p><strong>proposal :</strong> { }</p>
+                      <p><strong>Tags :</strong> { }</p>
+                      <p><strong>Blog Link :</strong> { }</p>
+                      <p><strong>Target Audience :</strong> { }</p>
+                      <p><strong>External Members :</strong> { }</p>
+                      <p><strong>Organizing Committee :</strong> { }</p>
+                      <p><strong>No.Of_Student_Volunteers :</strong> { }</p>
+                      <p><strong>No.Of_Attendees :</strong> { }</p>
+                      <p><strong>Summary :</strong> { }</p>
+                      <p><strong>Outcome :</strong> { }</p>
+                      <p><strong>feedBack :</strong> { }</p>
 
 
 
-                            {/* {[
+                      {/* {[
                                 { label: ":", value:1 },
                                 { label: ":", value:2 },
                                 { label: ":", value:3 },
@@ -641,8 +904,8 @@ function AddReport() {
                          
                               ]} */}
 
-        
-                   </div>
+
+                    </div>
                   </div>
 
 
@@ -650,7 +913,7 @@ function AddReport() {
 
 
 
-                
+
               </Stepper>
             </div>
           </div>

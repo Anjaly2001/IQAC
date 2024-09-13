@@ -55,10 +55,12 @@ const Login = () => {
             const response = await verify_otp({ email, otp });
             const { access_token, refresh_token } = response.data;
             const { role } = response;
+            const {first_name } = response;
 
             localStorage.setItem('access_token', access_token);
             localStorage.setItem('refresh_token', refresh_token);
             localStorage.setItem('user_role', role);
+            localStorage.setItem('first_name', first_name);
 
              window.dispatchEvent(new Event('storage'));
 

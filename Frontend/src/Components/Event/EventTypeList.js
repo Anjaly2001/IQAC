@@ -8,6 +8,8 @@ import { toast } from 'react-toastify';
 import {event_type_list, event_type_delete} from '../../axios/api';
 import Sidebar from '../../Sidebar';
 
+import DOMPurify from 'dompurify'; // Import DOMPurify
+
 export default function EventTypeList() {
     const [eventTypes, setEventTypes] = useState([]);
     const [globalFilter, setGlobalFilter] = useState(null);
@@ -20,7 +22,7 @@ export default function EventTypeList() {
                 const eventTypeData = response.map(eventType => ({
                     id: eventType.id,
                     title: eventType.title,
-                    description: eventType.description // Corrected the typo here
+                    description: DOMPurify.sanitize(eventType.description) // Sanitize the HTML
                 }));
     
                 setEventTypes(eventTypeData);
@@ -31,7 +33,7 @@ export default function EventTypeList() {
     
         fetchEventTypeList();
     }, []);
-    
+   
     const handleSearchChange = (e) => {
         setGlobalFilter(e.target.value);
     };
@@ -61,6 +63,12 @@ export default function EventTypeList() {
                     <FontAwesomeIcon icon={faTrash} />
                 </button>
             </div>
+        );
+    };
+    // Custom body template for rendering HTML content
+    const descriptionBodyTemplate = (rowData) => {
+        return (
+            <div dangerouslySetInnerHTML={{ __html: rowData.description }} />
         );
     };
 
@@ -101,7 +109,7 @@ export default function EventTypeList() {
                             >
                                 {/* <Column field="eventTypeName" header="Event Type Name" sortable /> */}
                                 <Column field="title" header="Event Type Name" sortable />
-                                <Column field="description" header="Description" sortable />
+                                <Column field="description" header="Description"  body={descriptionBodyTemplate} sortable />
                                 <Column header="Actions" body={actionBodyTemplate} />
                             </DataTable>
                         </div>

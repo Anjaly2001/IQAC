@@ -4,6 +4,8 @@ import { Editor } from "primereact/editor";
 import { toast } from 'react-toastify';
 import { event_type_register} from '../../axios/api';
 import Sidebar from "../../Sidebar";
+import DOMPurify from 'dompurify';
+
 
 
 const EventType = () => {
@@ -11,6 +13,9 @@ const EventType = () => {
     const [description, setDescription] = useState('');
     const [eventTypes, setEventTypes] = useState([]); // State to store event types
     const [editIndex, setEditIndex] = useState(null);
+    const [titleError, setTitleError] = useState('');
+
+    const sanitizedDescription = DOMPurify.sanitize(description);
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -23,28 +28,54 @@ const EventType = () => {
             .join(' ');
     };
 
+    const validateTitle = (value) => {
+        const titleRegex = /^[a-zA-Z\s]+$/; // Adjust regex as needed
+        if (!titleRegex.test(value)) {
+            setTitleError("Title should contain only alphabets and spaces.");
+        } else {
+            setTitleError(""); // Clear error if valid
+        }
+    };
+    
 
     useEffect(() => {
         if (location.state) {
             const { eventType, index } = location.state;
-            setTitle(eventType.title);
-            setDescription(eventType.description);
+            setTitle(eventType?.title || '');
+            setDescription(eventType?.description || '');
             setEditIndex(index);
         }
     }, [location.state]);
 
     const handleSubmit = async (e) => {
-        
-
         e.preventDefault();
+    
+        // Validate Title
+        validateTitle(title);
         
-        const newEventType = { title, description };
+        // Check if both title and description are provided
+        if (!title || !description) {
+            toast.warning("Please fill in all the fields.");
+            return;
+        }
+    
+        // Check if there are any title errors from validation
+        if (titleError) {
+            toast.error("Please fix the errors before submitting.");
+            return;
+        }
+    
+        const formattedTitle = toTitleCase(title);
+        const newEventType = { title: formattedTitle, description };
+    
+        console.log("Submitting event type:", newEventType); // Debugging: Log data
     
         try {
             const response = await event_type_register(newEventType); 
-            console.log('Event Type registered:', response.data);
-            setEventTypes([...eventTypes, response.data]); 
-
+            console.log('Event Type registered:', response.data); // Debugging: Check response
+    
+            // Update state with the new event type and navigate
+            setEventTypes([...eventTypes, response.data]);
             setTitle('');
             setDescription('');
             navigate('/eventtypelist');
@@ -53,6 +84,7 @@ const EventType = () => {
             toast.error('Error registering event type. Please try again.');
         }
     };
+    
     
     const renderAsterisk = () => (
         <span style={{ color: 'red' }}>*</span>
@@ -73,12 +105,16 @@ const EventType = () => {
                                     <input
                                         type="text"
                                         id="title"
-                                        className="form-control"
-                                        value={toTitleCase(title)}
-                                        placeholder="enter title"
-                                        onChange={(e) => setTitle(e.target.value)}
+                                        className={`form-control ${titleError ? 'is-invalid' : ''}`} // Add 'is-invalid' class if there's an error
+                                        value={title}
+                                        placeholder="Enter title"
+                                        onChange={(e) => {
+                                            setTitle(e.target.value); // Update title state
+                                            validateTitle(e.target.value); // Validate the input
+                                        }}
                                         required
                                     />
+                                    {titleError && <div className="invalid-feedback">{titleError}</div>}  {/* Display validation error */}
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="description" className="form-label">Description{renderAsterisk()}</label>

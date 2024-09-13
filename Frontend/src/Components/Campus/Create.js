@@ -15,6 +15,7 @@ const CreateCampus = () => {
     const [campuses, setCampuses] = useState([]);
     const [isEdit, setIsEdit] = useState(false);
     const [campusId, setCampusId] = useState(null); // State to hold campus ID when editing
+    const [campusNameError, setCampusNameError] = useState(''); 
 
     const token = localStorage.getItem('access_token');
 
@@ -26,6 +27,15 @@ const CreateCampus = () => {
             .join(' ');
     };
 
+    const validateCampusName = (value) => {
+        const nameRegex = /^[a-zA-Z\s]*$/;
+        if (!nameRegex.test(value)) {
+            setCampusNameError("Name should contain only alphabets and spaces.");
+        } else {
+            setCampusNameError("");
+        }
+    };
+    
 
     useEffect(() => {
         if (location.state && location.state.campus) {
@@ -144,8 +154,14 @@ const CreateCampus = () => {
                                             className="form-control same-width"
                                             placeholder="Enter Campus Name"
                                             value={campusName}
-                                            onChange={(e) => setCampusName(e.target.value)}
+                                            onChange={(e) => {
+                                                setCampusName(e.target.value);
+                                                validateCampusName(e.target.value);
+                                            }}
                                         />
+                                        {campusNameError && (
+                                            <small className="text-danger">{campusNameError}</small>
+                                        )}
                                     </div>
                                     <div className="mb-3">
                                         <label htmlFor="logo" className="form-label">Logo{renderAsterisk()}</label>

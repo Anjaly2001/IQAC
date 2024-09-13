@@ -1,16 +1,3 @@
-<<<<<<< HEAD
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Use useNavigate instead of useHistory
-import EventSummary from './EventSummary'; // Import the EventSummary component
-import { InputText } from 'primereact/inputtext';
-import { MultiSelect } from 'primereact/multiselect';
-import { Editor } from 'primereact/editor';
-import { Dropdown } from 'primereact/dropdown';
-import AdminDashboard from '../Admin/AdminDashboard';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
-//import { FaTags } from 'react-icons/fa';
-=======
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // Use useNavigate instead of useHistory
 import EventSummary from "./EventSummary"; // Import the EventSummary component
@@ -22,6 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import Sidebar from "../../Sidebar";
 import { toast } from "react-toastify";
+import './event.css'
 import {
   campus_name_list,
   department_list_by_campus,
@@ -32,7 +20,8 @@ import {
   register_event,
   proposal_file_upload,
 } from "../../axios/api";
->>>>>>> dde8ef404e6d82e622bb5aecf475725f6da1b58f
+import "primereact/resources/themes/saga-blue/theme.css"; // Import theme
+import "primereact/resources/primereact.min.css"; // Import PrimeReact CSS
 
 function RegisterEvent() {
   const [campus, setCampus] = useState(""); // Holds the selected campus ID
@@ -69,6 +58,36 @@ function RegisterEvent() {
   const navigate = useNavigate(); // Initialize useNavigate
   const [files, setFiles] = useState([]);
   const [error, setError] = useState(null);
+
+  const [eventTitleError, setEventTitleError] = useState("");
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  // Validate a single field
+  const isValidString = (value) => value && value.trim() !== "";
+
+  // Validate the form
+  const validateForm = () => {
+    // Check if all simple fields are valid
+    const isValidEventTitle = isValidString(eventTitle);
+    const isValidVenue = isValidString(venue);
+    const isValidDescription = isValidString(description);
+    const isValidCampus = campus !== "";
+    const isValidDepartment = department !== "";
+    const isValidEventType = eventType !== null;
+    const isValidAcademicYear = academicYear !== null;
+  };
+
+  useEffect(() => {
+    setIsFormValid(validateForm());
+  }, [
+    eventTitle,
+    venue,
+    description,
+    campus,
+    department,
+    eventType,
+    academicYear,
+  ]);
 
   // Fetch campuses on mount
   useEffect(() => {
@@ -145,7 +164,7 @@ function RegisterEvent() {
     fetchEventTypeOptions(); // Fetch event types on mount
   }, []); // Empty dependency array to run only on mount
 
-  // Fetch tags when the component mounts
+  // Fetch tags on component mount
   useEffect(() => {
     const fetchTags = async () => {
       try {
@@ -166,6 +185,11 @@ function RegisterEvent() {
 
     fetchTags(); // Call the fetch function on mount
   }, []);
+
+  // Function to remove a selected tag
+  const removeTag = (tagValue) => {
+    setTags((prevTags) => prevTags.filter((tag) => tag !== tagValue));
+  };
 
   // Function to handle collaborator state changes
   const handleCollaboratorChange = (index, field, value) => {
@@ -217,10 +241,10 @@ function RegisterEvent() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-  
+
     const activitiesData = activities.map((activity) => ({
       activity_title: activity.title,
-      activity_description:description,
+      activity_description: description,
       activity_date: new Date(activity.date).toISOString(),
       venue: venue, // Adjust according to the input
     }));
@@ -229,51 +253,53 @@ function RegisterEvent() {
       department: collaborator.department,
       staffs: collaborator.users[0].id, // Assuming each collaborator has a single user assigned
     }));
-  
+
     const requestData = {
       location_id: campus,
       department_id: department,
       event_title: eventTitle,
       no_of_activities: numberOfActivities,
-      start_date: `${activities[0].date}T${activities[0].startTime}:00Z`,  // Start date and time from first activity
-      end_date: `${activities[numberOfActivities - 1].date}T${activities[numberOfActivities - 1].endTime}:00Z`, // End date and time from last activity
+      start_date: `${activities[0].date}T${activities[0].startTime}:00Z`, // Start date and time from first activity
+      end_date: `${activities[numberOfActivities - 1].date}T${
+        activities[numberOfActivities - 1].endTime
+      }:00Z`, // End date and time from last activity
       venue: venue,
       academic_year_id: academicYear,
       event_type_id: eventType,
       tags_id: tags.map((tag) => tag), // Adjust if needed
       activities_data: activitiesData,
-      collaborators_data:collaboratorsData
+      collaborators_data: collaboratorsData,
     };
-  
+
     try {
       const response = await register_event(requestData);
-      console.log(response)
+      console.log(response);
       const eventId = response.data.id; // Extract event ID from response
-      console.log(eventId)
+      console.log(eventId);
       setSubmitted(true);
-  
+
       // If files are selected, proceed to upload them
       if (files.length > 0) {
         await uploadFiles(eventId, files); // Call the file upload function
       }
-  
+
       console.log("Event registered successfully");
-      toast.success("Event registered successfully")
+      toast.success("Event registered successfully");
       // Handle success (show a success message or redirect)
       // Reset form fields
-    setCampus('');
-    setDepartment('');
-    setEventTitle('');
-    setNumberOfActivities('');
-    setStartDate('');
-    setEndDate('');
-    setVenue('');
-    setAcademicYear('');
-    setEventType('');
-    setTags([]);
-    setActivities([]);
-    setCollaborators([]);
-    setFiles([]);
+      setCampus("");
+      setDepartment("");
+      setEventTitle("");
+      setNumberOfActivities("");
+      setStartDate("");
+      setEndDate("");
+      setVenue("");
+      setAcademicYear("");
+      setEventType("");
+      setTags([]);
+      setActivities([]);
+      setCollaborators([]);
+      setFiles([]);
     } catch (error) {
       console.error("Error submitting the form", error);
       // Handle error (show an error message)
@@ -283,26 +309,25 @@ function RegisterEvent() {
   };
   const uploadFiles = async (eventId, files) => {
     const formData = new FormData();
-  
+
     files.forEach((file) => {
       formData.append("files[]", file); // Append each file to the form data
     });
-  
+
     formData.append("event_id", eventId); // Append the event ID to the form data
-  
+
     try {
-      console.log(formData)
-      const response = await proposal_file_upload(formData,eventId)
-  
+      console.log(formData);
+      const response = await proposal_file_upload(formData, eventId);
+
       console.log("Files uploaded successfully", response.data);
       // Handle success (e.g., show a success message or update the UI)
     } catch (error) {
-      
       console.error("Error uploading files", error);
       // Handle error (e.g., show an error message)
     }
   };
-  
+
   const renderAsterisk = () => <span style={{ color: "red" }}>*</span>;
 
   const handleFileChange = (e) => {
@@ -503,10 +528,16 @@ function RegisterEvent() {
                 <InputText
                   id="eventTitle"
                   value={eventTitle}
-                  onChange={(e) => setEventTitle(e.target.value)}
+                  onChange={(e) => {
+                    setEventTitle(e.target.value);
+                    // validateEventTitle(e.target.value);
+                  }}
                   placeholder="Enter event title"
-                  className="w-100"
+                  className={`w-100 ${eventTitleError ? "is-invalid" : ""}`} // Add invalid class if there's an error
                 />
+                {/* {eventTitleError && (
+                    <div className="invalid-feedback">{eventTitleError}</div>
+                  )} */}
               </div>
 
               <div className="mb-3">
@@ -529,10 +560,10 @@ function RegisterEvent() {
                 <InputText
                   id="numberOfActivities"
                   type="number"
-                  value={numberOfActivities > 0 ? numberOfActivities : 1} // Ensure only positive numbers
+                  value={numberOfActivities} // Ensure only positive numbers
                   onChange={handleNumberOfActivitiesChange}
                   className="w-100"
-                  min="1"
+                  defaultValue={1}
                 />
               </div>
 
@@ -693,23 +724,54 @@ function RegisterEvent() {
 
               <div className="mb-3">
                 <label htmlFor="tags" className="form-label">
-                  Tags{renderAsterisk()}
+                  Tags
                 </label>
+
+                {/* MultiSelect for tag selection */}
                 <MultiSelect
-                  id="Tags"
-                  value={tags}
-                  options={tagOptions} // Set the fetched options here
-                  onChange={(e) => setTags(e.value)} // Update selected tags on change
+                  id="tags"
+                  value={tags} // Selected tags
+                  options={tagOptions} // Fetched options
+                  onChange={(e) => setTags(e.value)} // Handle tag selection
                   placeholder="Select Tags"
                   className="w-100"
                   filter // Enable filter for searching tags
                 />
+
+                {/* Display selected tags as small boxes (chips) */}
+                <div className="mt-2">
+                  {tags.length > 0 && (
+                    <div className="tag-boxes">
+                      {tags.map((tagId) => {
+                        // Find the corresponding tag name from tagOptions
+                        const tag = tagOptions.find(
+                          (option) => option.value === tagId
+                        );
+                        return (
+                          <div key={tagId} className="tag-chip">
+                            {tag.label}
+                            <button
+                              
+                              className="close-btn"
+                              onClick={() => removeTag(tagId)}
+                            >
+                              &times; {/* Close button symbol */}
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
               </div>
 
-              <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
-  {isSubmitting ? "Submitting..." : "Submit"}
-</button>
-
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={isSubmitting || !isFormValid}
+              >
+                {isSubmitting ? "Submitting..." : "Submit"}
+              </button>
             </form>
           </div>
         </div>

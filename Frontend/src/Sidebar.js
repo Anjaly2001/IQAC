@@ -1113,10 +1113,10 @@ const Sidebar = () => {
                       </Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                      <Nav.Link as={Link} to="/addreport" className={`text-light ${isActive('/addreport') ? 'active' : ''}`}>
+                      {/* <Nav.Link as={Link} to="/addreport" className={`text-light ${isActive('/addreport') ? 'active' : ''}`}>
                         <FontAwesomeIcon icon={faPlus} className="me-2" />
                         Add Report
-                      </Nav.Link>
+                      </Nav.Link> */}
                     </Nav.Item>
                     <Nav.Item>
                       <Nav.Link as={Link} to="/listevents" className={`text-light ${isActive('/listevents') ? 'active' : ''}`}>

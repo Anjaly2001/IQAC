@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
 import { useNavigate } from 'react-router-dom';
-import { campus_list, academic_register } from '../../axios/api';
-import {  toast } from 'react-toastify';
-
+import { campus_list, academic_register} from '../../axios/api';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Sidebar from '../../Sidebar';
 
 const CreateAcademicYear = () => {
@@ -14,6 +14,7 @@ const CreateAcademicYear = () => {
     const [campuses, setCampuses] = useState([]); // State for campuses
     const [error, setError] = useState(''); // State for form validation errors
     const history = useNavigate();
+    const [yearError, setYearError] = useState('');
 
     useEffect(() => {
         const fetchCampuses = async () => {
@@ -31,6 +32,18 @@ const CreateAcademicYear = () => {
         };
         fetchCampuses();
     }, []);
+
+    const validateYear = (value) => {
+        const yearRegex = /^\d{4}-\d{4}$/; // Matches format 'YYYY-YYYY'
+    
+        if (!yearRegex.test(value)) {
+            setYearError("Year format should be 'YYYY-YYYY'.");
+        } else {
+            setYearError(""); // Clear the error if the format is correct
+        }
+    };
+    
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -116,9 +129,13 @@ const CreateAcademicYear = () => {
                                             className="form-control"
                                             value={label}
                                             placeholder="e.g., 2023-2024"
-                                            onChange={(e) => setLabel(e.target.value)}
+                                            onChange={(e) => {
+                                                setLabel(e.target.value);
+                                                validateYear(e.target.value); // Call the year validation function
+                                            }}
                                             required
                                         />
+                                        {yearError && <small className="text-danger">{yearError}</small>}
                                         <small className="form-text text-muted">Enter a label for this academic year.</small>
                                     </div>
                                 </div>

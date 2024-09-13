@@ -1,0 +1,29 @@
+.tag-boxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .tag-chip {
+    background-color: #343a40; /* Dark background color */
+    color: #ffffff; /* White text */
+    padding: 5px 10px;
+    border-radius: 15px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 14px;
+  }
+  
+  .close-btn {
+    background: none;
+    border: none;
+    color: #ffffff; /* White color for the close button */
+    margin-left: 8px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .close-btn:hover {
+    color: #ff5a5f; /* Change color on hover */
+  }
+  

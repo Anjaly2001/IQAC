@@ -9,31 +9,35 @@ import re
 class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id','username', 'email','last_login','date_joined','is_staff','is_superuser']
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'last_login', 'date_joined', 'is_staff', 'is_superuser']
 
     def create(self, validated_data):
+        # Set email as username
         user = CustomUser(
             email=validated_data['email'],
-            username=validated_data['username'],
-            # emp_id = validated_data['emp_id'],
-            # is_superuser=validated_data['is_superuser'],
-            # is_staff=validated_data['is_staff'],
-            # role=validated_data['role']
+            username=validated_data['email'],  # Use email as the username
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name'],
+            is_staff=validated_data.get('is_staff', False),
+            is_superuser=validated_data.get('is_superuser', False)
         )
+        
+        # Save the user with any additional logic you need
         user.save()
         return user
-    
+
     def validate(self, data):
-        # Transform the data to title case
-        data['username'] = data.get('username', '').title()
-        # data['last_name'] = data.get('last_name', '').title()
+        # Ensure the username is converted to title case before processing
+        data['username'] = data.get('email', '').lower()  # Use email as username, ensure it's lowercase
         return data
+
+
 
     
 class USerProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User_profile
-        fields = ['user','emp_id','ph','department','location']
+        fields = ['user','emp_id','phone_number','department','location']
     def create(self, validated_data):
         return super().create(validated_data)
 

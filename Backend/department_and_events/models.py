@@ -133,6 +133,19 @@ class EventReport(models.Model):
     no_of_student_volunteers = models.TextField(null = True)
     no_of_attendees_or_participants = models.TextField(null = True)
 
+class EventReportFileUpload(models.Model):
+    event = models.ForeignKey(Event_Register, on_delete=models.CASCADE)
+    poster = models.FileField(upload_to=custom_upload_to, blank=True, null=True)
+    brochure = models.FileField(upload_to=custom_upload_to, blank=True, null=True)
+    detailed_report = models.FileField(upload_to=custom_upload_to, blank=True, null=True)
+    photographs = models.FileField(upload_to=custom_upload_to, blank=True, null=True)
+    registration_list = models.FileField(upload_to=custom_upload_to, blank=True, null=True)
+    certificate_participants = models.FileField(upload_to=custom_upload_to, blank=True, null=True)
+    certificate_winners = models.FileField(upload_to=custom_upload_to,  blank=True, null=True)
+    proposal = models.FileField(upload_to=custom_upload_to, blank=True, null=True)
+    budget = models.FileField(upload_to=custom_upload_to, blank=True, null=True)
+    email_communication = models.FileField(upload_to=custom_upload_to, blank=True, null=True)
+
 class EventReportFinal(models.Model):
     summary_of_the_overall_event = models.TextField()
     outcomes = models.TextField()
@@ -154,6 +167,8 @@ class ReportStatus(models.Model):
 
     def __str__(self):
         return f"Report Status: {self.status} for {self.report}"
+    
+
 
 #
 # # Create your models here.

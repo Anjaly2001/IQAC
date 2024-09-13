@@ -32,66 +32,108 @@ from rest_framework.response import Response
 from rest_framework import status
 
 
-
 @api_view(['POST'])
 def register(request):
     if request.method == 'POST':
+        # Print incoming request data for debugging purposes
+        print(request.data)
        
+        # Create a copy of request data to modify
         data = request.data.copy()
-        # data['role'] = 'staffs'
-        data['is_superuser'] =  False
+
+        # Set default values for `is_superuser` and `is_staff` fields
+        data['is_superuser'] = False
         data['is_staff'] = False
-        dep=request.data.get('department')
-        loc = request.data.get('location')
-        phone_number = request.data.get('ph')
+        
+        # Extract department, location, and phone number from request data
+        dep_id = request.data.get('department')
+        loc_id = request.data.get('location')
+        phone_number = request.data.get('phone_number')
         print(f"Phone number received: {phone_number}")
 
+        # Validate the phone number; raise an error if invalid
         try:
             validate_phone_number(phone_number)
         except ValidationError as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
-        if dep=='others':
-            dep1 = request.data.get('new_department')
-            depObj=Department.objects.create(name=dep1)
-            data_user_profile = {
-                'emp_id':request.data.get('emp_id'),
-                'ph': request.data.get('ph'),                                                                  
-                'department': depObj.id,
-                'location':loc,
-            } 
+        # Check if the department is 'others'; if so, create a new department
+        if dep_id == 'others':
+            new_department_name = request.data.get('new_department')  # Get the name for the new department
+            dep_obj = Department.objects.create(name=new_department_name)  # Create and save the new department
+            dep_id = dep_obj.id  # Use the new department ID for the user profile
         else:
-            data_user_profile = {
-                'emp_id':request.data.get('emp_id'),
-                'ph': request.data.get('ph'),
-                'department': dep,
-                'location':loc,
-            } 
-       
+            # Use the existing department ID
+            dep_id = int(dep_id)  # Ensure it's an integer if needed
+
+        data_user_profile = {
+            'emp_id': request.data.get('emp_id'),
+            'phone_number': request.data.get('phone_number'),
+            'department': dep_id,
+            'location': loc_id,
+        }
+        
+        # Initialize the UserRegistrationSerializer with the modified data
         serializer = UserRegistrationSerializer(data=data)
+        
+        # Check if the serialized data is valid
         if serializer.is_valid():
-            user = serializer.save()
+            try:
+                # Save the new user instance
+                user = serializer.save()
 
-            # Add the user to the user profile data
-            data_user_profile['user'] = user.id
+                # Check if a role entry exists for the user
+                role_entry = Role.objects.filter(users=user).first()
+                if not role_entry:
+                    # Assign a default role and department
+                    role = 'staffs'  # Or whatever default role you prefer
+                    # Get the department instance by ID
+                    default_department = Department.objects.filter(id=dep_id).first()
+                    if not default_department:
+                        return Response({'error': 'Department does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+                    
+                    Role.objects.create(users=user, role=role, department=default_department)
 
-            # Serialize and save the user profile
-            user_profile_serializer = USerProfileSerializer(data=data_user_profile)
-            if user_profile_serializer.is_valid():
-                user_profile = user_profile_serializer.save()
-                email = request.data.get('email')
-                if email:
-                    print(email)
-                    user = CustomUser.objects.get(email=email)
-                    send_email(email)
-                return Response({
-                    'user': UserRegistrationSerializer(user).data,
-                    'user_profile': USerProfileSerializer(user_profile).data,
-                }, status=status.HTTP_201_CREATED)
+                # Add the user ID to the user profile data
+                data_user_profile['user'] = user.id
 
-            user.delete()
-            return Response(user_profile_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                # Initialize the USerProfileSerializer with the profile data
+                user_profile_serializer = USerProfileSerializer(data=data_user_profile)
+                
+                # Check if the profile data is valid
+                if user_profile_serializer.is_valid():
+                    # Save the user profile instance
+                    user_profile = user_profile_serializer.save()
+                    
+                    # If email is provided, send a confirmation email to the user
+                    email = request.data.get('email')
+                    if email:
+                        print(email)
+                        user = CustomUser.objects.get(email=email)  # Fetch the user by email
+                        send_email(email)  # Call function to send email
+                    
+                    # Return a successful response with user and profile data
+                    return Response({
+                        'user': UserRegistrationSerializer(user).data,
+                        'user_profile': USerProfileSerializer(user_profile).data,
+                    }, status=status.HTTP_201_CREATED)
+
+                # If the user profile data is not valid, delete the created user and return errors
+                user.delete()
+                return Response(user_profile_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
+            except Exception as e:
+                # Handle unexpected errors
+                return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        # If the user data is not valid, return errors
+        print(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # Handle non-POST requests (optional, but should return an error)
+    return Response({'error': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
 
 
 @api_view(['POST'])
@@ -253,14 +295,14 @@ def multiple_user_registration(request):
 
     error_rows = []
     success_rows = []
-    total_count = 0  
+    total_count = 0
 
     # Parse CSV and save data
     with default_storage.open(file_name, mode='r') as csvfile:
         reader = csv.DictReader(csvfile)
 
         for row in reader:
-            total_count += 1 
+            total_count += 1
             email = row['email']
             error_message = ""
 
@@ -272,7 +314,7 @@ def multiple_user_registration(request):
             if CustomUser.objects.filter(email=email).exists():
                 error_message += "User already exists. "
 
-            phone_number = row['ph'].strip()  # Clean any leading/trailing spaces
+            phone_number = row['phone_number'].strip()  # Clean any leading/trailing spaces
             print(f"Validating phone number: {phone_number}")  # Debugging: print phone number
 
             # Validate phone number
@@ -298,7 +340,9 @@ def multiple_user_registration(request):
                 # No errors, proceed with user registration and profile creation
                 user_data = {
                     'email': email,
-                    'username': row['username'],
+                    'username':email,
+                    'first_name': row['first_name'],
+                    'last_name': row['last_name'],
                     'role': 'staffs'  # Set default role or modify as needed
                 }
 
@@ -310,7 +354,7 @@ def multiple_user_registration(request):
                     profile_data = {
                         'user': user.id,
                         'emp_id': row['emp_id'],
-                        'ph': phone_number,
+                        'phone_number': phone_number,
                         'department': department_id,
                         'location': location_id
                     }
@@ -319,21 +363,25 @@ def multiple_user_registration(request):
 
                     if profile_serializer.is_valid():
                         profile_serializer.save()
-                        Role.objects.create(user=user, role='staffs', department=Department.objects.first())  # Set default department or modify as needed
+
+                        # Assign role and department (use correct department logic here)
+                        department = Department.objects.get(id=department_id)
+                        Role.objects.create(user=user, role='staffs', department=department)
 
                         success_row = {
                             'email': email,
-                            'username': row['username'],
                             'emp_id': row['emp_id'],
-                            'ph': phone_number,
+                            'phone_number': phone_number,
                             'department': row['department'],
                             'location': row['location']
                         }
                         success_rows.append(success_row)
                     else:
+                        print(profile_serializer.errors)
                         row['error'] = profile_serializer.errors
                         error_rows.append(row)
                 else:
+                    print(user_serializer.errors)
                     row['error'] = user_serializer.errors
                     error_rows.append(row)
 
@@ -398,7 +446,7 @@ def csv_user_view(request):
     writer = csv.writer(response)
     
     # Write the header row in the CSV
-    writer.writerow(['Username', 'Email', 'Role', 'Employee ID', 'Phone', 'Department', 'Location'])
+    writer.writerow(['Username', 'Email', 'Role', 'Employee ID', 'phone_number', 'Department', 'Location'])
 
     # Fetch user data along with the related profile data
     users = CustomUser.objects.select_related('user_profile').all()
@@ -410,7 +458,7 @@ def csv_user_view(request):
             user.email,
             user.role,
             profile.emp_id,
-            profile.ph,
+            profile.phone_number,
             profile.department.name if profile.department else '',  # Fetch department name
             profile.location.campus if profile.location else ''  # Fetch location campus name
         ])
@@ -435,7 +483,7 @@ def user_list(request):
             profile = User_profile.objects.get(user=user)
             department = profile.department.name if profile.department else None
             campus = profile.location.campus if profile.location else None
-            phone_number = profile.ph
+            phone_number = profile.phone_number
             emp_id = profile.emp_id
         except User_profile.DoesNotExist:
             # If no profile exists, set default values
@@ -447,6 +495,8 @@ def user_list(request):
         user_data.append({
             'id': user.id,
             'username': user.username,
+            'first_name':user.first_name,
+            'last_name':user.last_name,
             'email': user.email,
             'emp_id': emp_id,
             'phone_number': phone_number,

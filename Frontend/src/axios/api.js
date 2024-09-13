@@ -395,3 +395,23 @@ export const proposal_file_upload=async(form,event_id)=>{
     // toast.error("Failed to create proposal file. Please try again.");
   }
 };
+
+export const event_list= async () => {
+  try {
+    const res = await axiosInstance.get( "department_and_events/event_list/",);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    // toast.error("Failed to list event types. Please try again.");
+  }
+};
+
+
+export const event_delete = async (eventId) => {
+  try {
+    const response = await axiosInstance.delete(`/department_and_events/event_delete/${eventId}/`);
+    return response.data;
+  } catch (error) {
+    throw new Error("Error deleting role");
+  }
+};

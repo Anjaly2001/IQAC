@@ -4,6 +4,7 @@ import EventSummary from "./EventSummary"; // Import the EventSummary component
 import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
 import { Editor } from "primereact/editor";
+import { InputTextarea } from 'primereact/inputtextarea';
 import { Dropdown } from "primereact/dropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -42,7 +43,7 @@ function RegisterEvent() {
   const [eventTitle, setEventTitle] = useState("");
   const [numberOfActivities, setNumberOfActivities] = useState(1);
   const [activities, setActivities] = useState([
-    { title: "", date: "", startTime: "", endTime: "" },
+    { title: "", date: "", startTime: "", endTime: "", description: "", venue: "" },
   ]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -65,7 +66,15 @@ function RegisterEvent() {
 
   // Validate the form
   const validateForm = () => {
-    // Check if all simple fields are valid
+    // return (
+    //   eventTitle &&
+    //   venue &&
+    //   description &&
+    //   campus &&
+    //   department &&
+    //   eventType &&
+    //   academicYear
+    // );
   };
 
   useEffect(() => {
@@ -204,6 +213,7 @@ function RegisterEvent() {
   };
 
   const handleActivitiesChange = (index, field, value) => {
+    console.log(value)
     const updatedActivities = [...activities];
     updatedActivities[index][field] = value;
     setActivities(updatedActivities);
@@ -235,9 +245,13 @@ function RegisterEvent() {
 
     const activitiesData = activities.map((activity) => ({
       activity_title: activity.title,
-      activity_description: description,
-      activity_date: new Date(activity.date).toISOString(),
-      venue: venue, // Adjust according to the input
+      activity_description: activity.description,
+      // activity_date: new Date(activity.date).toISOString(),
+      start_date: new Date(activity.startDate).toISOString(),  // Convert to ISO string if required by the backend
+      end_date: new Date(activity.endDate).toISOString(),
+      start_time: activity.startTime,
+      end_time: activity.endTime,
+      venue: activity.venue, // Adjust according to the input
     }));
     const collaboratorsData = collaborators.map((collaborator) => ({
       location: collaborator.campus,
@@ -249,18 +263,18 @@ function RegisterEvent() {
       location_id: campus,
       department_id: department,
       event_title: eventTitle,
+      description: description,
       no_of_activities: numberOfActivities,
-      start_date: `${activities[0].date}T${activities[0].startTime}:00Z`, // Start date and time from first activity
-      end_date: `${activities[numberOfActivities - 1].date}T${
-        activities[numberOfActivities - 1].endTime
-      }:00Z`, // End date and time from last activity
-      venue: venue,
+      start_date: startDate, // Event-level start date
+      end_date: endDate, // 
+      // venue: venue,
       academic_year_id: academicYear,
       event_type_id: eventType,
       tags_id: tags.map((tag) => tag), // Adjust if needed
       activities_data: activitiesData,
       collaborators_data: collaboratorsData,
     };
+    console.log(activitiesData)
 
     try {
       const response = await register_event(requestData);
@@ -544,6 +558,37 @@ function RegisterEvent() {
                 />
               </div>
 
+              {/* Start Date and End Date in one row */}
+              <div className="row mb-3">
+                <div className="col">
+                  <label htmlFor="startDate" className="form-label">
+                    Start Date{renderAsterisk()}
+                  </label>
+                  <InputText
+                    id="startDate"
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="w-100"
+                  />
+                </div>
+
+                <div className="col">
+                  <label htmlFor="endDate" className="form-label">
+                    End Date{renderAsterisk()}
+                  </label>
+                  <InputText
+                    id="endDate"
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    className="w-100"
+                  />
+                </div>
+              </div>
+
+
+
               <div className="mb-3">
                 <label htmlFor="numberOfActivities" className="form-label">
                   Number of Activities{renderAsterisk()}
@@ -575,22 +620,68 @@ function RegisterEvent() {
                     placeholder="Enter activity title"
                     className="w-100"
                   />
+                  <div className="mt-3">
+                    <label htmlFor={`activityDescription-${index}`} className="form-label">
+                      Description {renderAsterisk()}
+                    </label>
+                    <Editor
+                      id={`activityDescription-${index}`}
+                      value={activity.description}
+                      onTextChange={(e) =>
+                        handleActivitiesChange(index, "description", e.htmlValue)
+                      }
+                      placeholder="Enter activity description"
+                      className="w-100"
+                      style={{ height: "100px" }}
+                    />
+                  </div>
 
-                  <label
-                    htmlFor={`activityDate-${index}`}
-                    className="form-label mt-3"
-                  >
-                    Date{renderAsterisk()}
-                  </label>
-                  <InputText
-                    id={`activityDate-${index}`}
-                    type="date"
-                    value={activity.date}
-                    onChange={(e) =>
-                      handleActivitiesChange(index, "date", e.target.value)
-                    }
-                    className="w-100"
-                  />
+                  <div className="row mt-3">
+                    <div className="col">
+                      <label
+                        htmlFor={`startDate-${index}`}
+                        className="form-label"
+                      >
+                        Start Date{renderAsterisk()}
+                      </label>
+                      <InputText
+                        id={`startDate-${index}`}
+                        type="date"
+                        value={activity.startDate}
+                        onChange={(e) =>
+                          handleActivitiesChange(
+                            index,
+                            "startDate",
+                            e.target.value
+                          )
+                        }
+                        className="w-100"
+                      />
+                    </div>
+                    <div className="col">
+                      <label
+                        htmlFor={`endDate-${index}`}
+                        className="form-label"
+                      >
+                        End Date{renderAsterisk()}
+                      </label>
+                      <InputText
+                        id={`endDate-${index}`}
+                        type="date"
+                        value={activity.endDate}
+                        onChange={(e) =>
+                          handleActivitiesChange(
+                            index,
+                            "endDate",
+                            e.target.value
+                          )
+                        }
+                        className="w-100"
+                      />
+                    </div>
+                  </div>
+
+
 
                   <div className="row mt-3">
                     <div className="col">
@@ -641,8 +732,13 @@ function RegisterEvent() {
                       </label>
                       <InputText
                         id="venue"
-                        value={venue}
-                        onChange={(e) => setVenue(e.target.value)}
+                        value={activity.venue}
+                        onChange={(e) => handleActivitiesChange(
+                          index,
+                          "venue",
+                          e.target.value
+                        )
+                        }
                         placeholder="Enter venue"
                         className="w-100"
                       />
@@ -742,7 +838,7 @@ function RegisterEvent() {
                           <div key={tagId} className="tag-chip">
                             {tag.label}
                             <button
-                              
+
                               className="close-btn"
                               onClick={() => removeTag(tagId)}
                             >
@@ -759,7 +855,7 @@ function RegisterEvent() {
               <button
                 type="submit"
                 className="btn btn-primary"
-                disabled={isSubmitting || !isFormValid}
+                disabled={isSubmitting}
               >
                 {isSubmitting ? "Submitting..." : "Submit"}
               </button>

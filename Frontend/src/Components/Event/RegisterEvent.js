@@ -55,7 +55,6 @@ function RegisterEvent() {
 
   const [tag, setTag] = useState("");
   const [submitted, setSubmitted] = useState(false); // New state to check if form is submitted
-  const navigate = useNavigate(); // Initialize useNavigate
   const [files, setFiles] = useState([]);
   const [error, setError] = useState(null);
 
@@ -63,18 +62,10 @@ function RegisterEvent() {
   const [isFormValid, setIsFormValid] = useState(false);
 
   // Validate a single field
-  const isValidString = (value) => value && value.trim() !== "";
 
   // Validate the form
   const validateForm = () => {
     // Check if all simple fields are valid
-    const isValidEventTitle = isValidString(eventTitle);
-    const isValidVenue = isValidString(venue);
-    const isValidDescription = isValidString(description);
-    const isValidCampus = campus !== "";
-    const isValidDepartment = department !== "";
-    const isValidEventType = eventType !== null;
-    const isValidAcademicYear = academicYear !== null;
   };
 
   useEffect(() => {

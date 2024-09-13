@@ -287,11 +287,10 @@ export const event_type_delete = async (eventType) => {
 
 // role
 
-export const campus_name_list = async (form) => {
+export const campus_name_list = async () => {
   try {
     const res = await axiosInstance.get(
-      "department_and_events/campus_name_list/",
-      form
+      "department_and_events/campus_name_list/"
     );
     return res.data;
   } catch (error) {

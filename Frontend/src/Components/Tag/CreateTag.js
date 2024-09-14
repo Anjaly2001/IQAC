@@ -44,7 +44,7 @@ export default function CreateTag() {
     
         // Check if there are validation errors or if fields are empty
         if (tagNameError || descriptionError || !tagName || !description) {
-            toast.warning('Please fill in all the fields correctly.');
+            // toast.warning('Please fill in all the fields correctly.');
             return; // Exit the function if validation fails
         }
     

@@ -55,7 +55,7 @@ const ListAcademicYear = () => {
                     <Sidebar />
                 </div>
                 <div className="col-md-10 mt-5 pt-6">
-                    <div className="container mt-4 p-6 text-center text-bold">
+                    <div className="container mt-4 p-6 text-center">
                         <h3>Academic Years</h3>
                         <table className="table table-striped mt-5">
                             <thead>

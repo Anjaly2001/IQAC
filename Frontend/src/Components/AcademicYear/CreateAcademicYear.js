@@ -33,15 +33,32 @@ const CreateAcademicYear = () => {
         fetchCampuses();
     }, []);
 
+    // const validateYear = (value) => {
+    //     const yearRegex = /^\d{4}-\d{4}$/; // Matches format 'YYYY-YYYY'
+    
+    //     if (!yearRegex.test(value)) {
+    //         setYearError("Year format should be 'YYYY-YYYY'.");
+    //     } else {
+    //         setYearError(""); // Clear the error if the format is correct
+    //     }
+    // }
     const validateYear = (value) => {
         const yearRegex = /^\d{4}-\d{4}$/; // Matches format 'YYYY-YYYY'
-    
+        
         if (!yearRegex.test(value)) {
             setYearError("Year format should be 'YYYY-YYYY'.");
+            return;
+        }
+    
+        const [startYear, endYear] = value.split('-').map(Number);
+    
+        if (endYear !== startYear + 1) {
+            setYearError("The end year should be exactly 1 year more than the start year.");
         } else {
-            setYearError(""); // Clear the error if the format is correct
+            setYearError(""); // Clear the error if the format and year gap are correct
         }
     };
+    
     
     
 

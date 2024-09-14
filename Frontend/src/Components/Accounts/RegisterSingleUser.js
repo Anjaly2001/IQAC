@@ -26,6 +26,9 @@ const RegisterSingleUser = () => {
   const [userEmailError, setUserEmailError] = useState("");
   const [userPhoneNumberError, setUserPhoneNumberError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [userRole, setUserRole] = useState('');
+  const [userRoleError, setUserRoleError] = useState('');
+
 
 
   const navigate = useNavigate();
@@ -119,6 +122,7 @@ const RegisterSingleUser = () => {
       phone_number: userPhoneNumber,
       department: department,
       location: userCampus,
+      role:userRole,
     };
 
     console.log("Payload to be sent:", newUser);
@@ -405,9 +409,29 @@ const RegisterSingleUser = () => {
                     </div>
                   )}
                 </div>
+                {/* Role Input */}
+                <div className="row mb-3">
+                  <div className="col-md-6">
+                    <label htmlFor="userRole">Role {renderAsterisk()}</label>
+                    <select
+                      id="userRole"
+                      className="form-select"
+                      value={userRole}
+                      onChange={(e) => setUserRole(e.target.value)}
+                    >
+                      <option value="">Select Role</option>
+                      <option value="Admin">Admin</option>
+                      <option value="University_Viewer">University Viewer</option>
+                      <option value="Campus_Admin">Campus Admin</option>
+                      <option value="Campus_Viewer">Campus Viewer</option>
+                      <option value="Department">Department</option>
+
+                    </select>
+                  </div>
+                </div>
                 <div className="text-left">
-                  <button className="btn btn-primary" onClick={createUser}disabled={isSubmitting}>
-                  {isSubmitting ? "Submitting..." : " Register User"}
+                  <button className="btn btn-primary" onClick={createUser} disabled={isSubmitting}>
+                    {isSubmitting ? "Submitting..." : " Register User"}
                   </button>
                 </div>
               </div>

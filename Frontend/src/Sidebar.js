@@ -29,7 +29,18 @@ const Sidebar = () => {
     AcademicYear: false,
     eventtype: false,
     tags: false,
+    accounts: false,
+    role: false,
+    eventStatus: false,
   });
+
+  // Load openSections from localStorage when the component mounts
+  useEffect(() => {
+    const storedOpenSections = JSON.parse(localStorage.getItem("openSections"));
+    if (storedOpenSections) {
+      setOpenSections(storedOpenSections);
+    }
+  }, []);
 
   useEffect(() => {
     const user = localStorage.getItem("username");
@@ -46,15 +57,38 @@ const Sidebar = () => {
     }
   }, [location]);
 
-  const toggleSection = (section) => {
-    setOpenSections((prev) => ({ ...prev, [section]: !prev[section] }));
+  const toggleSection = (section, parent = null) => {
+    setOpenSections((prev) => {
+      // Check if the current section being toggled is a nested section
+      const isNestedSection = parent !== null;
+  
+      const newOpenSections = { ...prev };
+  
+      // If it's a nested section, we toggle only the nested section,
+      // and we ensure that the parent section remains open
+      if (isNestedSection) {
+        newOpenSections[parent] = true; // Keep the parent section open
+        newOpenSections[section] = !prev[section]; // Toggle the nested section
+      } else {
+        // If it's not a nested section, we toggle the parent section
+        // and close all other parent sections
+        Object.keys(newOpenSections).forEach((key) => {
+          newOpenSections[key] = key === section ? !prev[section] : false;
+        });
+      }
+  
+      // Save the new state to localStorage
+      localStorage.setItem("openSections", JSON.stringify(newOpenSections));
+      return newOpenSections;
+    });
   };
-
+  
   const handleLogout = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
     localStorage.removeItem("user_role");
     localStorage.removeItem("username");
+    localStorage.removeItem("openSections"); // Optional: Clear sidebar state on logout
     navigate("/login");
     window.location.reload();
   };
@@ -76,6 +110,7 @@ const Sidebar = () => {
               isActive={checkActivePath("/dashboard")}
             />
 
+            {/* Accounts Section */}
             <SidebarItem
               icon={faUsers}
               title="Accounts"
@@ -102,6 +137,7 @@ const Sidebar = () => {
               />
             </SidebarItem>
 
+            {/* Roles Section */}
             <SidebarItem
               icon={faHandshake}
               title="Roles"
@@ -116,7 +152,8 @@ const Sidebar = () => {
               />
             </SidebarItem>
 
-            {/* Settings */}
+            {/* Settings Section */}
+            {/* Settings Section */}
             <SidebarItem
               icon={faCog}
               title="Settings"
@@ -128,7 +165,7 @@ const Sidebar = () => {
                 icon={faGears}
                 title="Campus"
                 open={openSections.campus}
-                toggleSection={() => toggleSection("campus")}
+                toggleSection={() => toggleSection("campus", "settings")} // Pass "settings" as the parent
               >
                 <SidebarSubItem
                   path="/createCampus"
@@ -149,7 +186,7 @@ const Sidebar = () => {
                 icon={faGears}
                 title="Department"
                 open={openSections.department}
-                toggleSection={() => toggleSection("department")}
+                toggleSection={() => toggleSection("department", "settings")} // Pass "settings" as the parent
               >
                 <SidebarSubItem
                   path="/createdepartments"
@@ -170,7 +207,7 @@ const Sidebar = () => {
                 icon={faGears}
                 title="Academic Year"
                 open={openSections.AcademicYear}
-                toggleSection={() => toggleSection("AcademicYear")}
+                toggleSection={() => toggleSection("AcademicYear", "settings")} // Pass "settings" as the parent
               >
                 <SidebarSubItem
                   path="/academicyear"
@@ -191,7 +228,7 @@ const Sidebar = () => {
                 icon={faGears}
                 title="Event Type"
                 open={openSections.eventtype}
-                toggleSection={() => toggleSection("eventtype")}
+                toggleSection={() => toggleSection("eventtype", "settings")} // Pass "settings" as the parent
               >
                 <SidebarSubItem
                   path="/eventtype"
@@ -212,7 +249,7 @@ const Sidebar = () => {
                 icon={faGears}
                 title="Tags"
                 open={openSections.tags}
-                toggleSection={() => toggleSection("tags")}
+                toggleSection={() => toggleSection("tags", "settings")} // Pass "settings" as the parent
               >
                 <SidebarSubItem
                   path="/createTag"
@@ -229,6 +266,7 @@ const Sidebar = () => {
               </SidebarItem>
             </SidebarItem>
 
+            {/* Events Section */}
             <SidebarItem
               icon={faCalendar}
               title="Events"

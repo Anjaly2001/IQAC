@@ -10,11 +10,16 @@ import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Sidebar from '../../Sidebar';
+import { ToastContainer, toast } from 'react-toastify';
+import { event_list,event_delete } from '../../axios/api';
+
 
 const ListEvents = () => {
   const [pendingReports, setPendingReports] = useState([]);
-  const [filteredReports, setFilteredReports] = useState([]);
+  // const [filteredReports, setFilteredReports] = useState([]);
   const [globalFilter, setGlobalFilter] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
 
@@ -22,14 +27,21 @@ const ListEvents = () => {
     fetchPendingReports();
   }, []);
 
-  const fetchPendingReports = () => {
-    const reports = [
-      { id: 1, title: 'Report 1', department: 'Data Science', collaborators: 'Dhaksh, Arohi', status: 'Pending' },
-      { id: 2, title: 'Report 2', department: 'Language', collaborators: 'Rudre, Jack', status: 'Approved' },
-      { id: 3, title: 'Report 3', department: 'Law', collaborators: 'Albert, Aljo', status: 'Rejected' },
-    ];
-    setPendingReports(reports);
-    setFilteredReports(reports);
+  const fetchPendingReports = async () => {
+    setLoading(true);  // Start loading
+    setError(null);    // Clear previous errors
+
+    try {
+      const reports = await event_list(); // Call the event_list function
+      // console.log(reports)
+      setPendingReports(reports); // Set the reports data
+    } catch (error) {
+      console.error('Error fetching reports:', error);
+      setError('Failed to fetch reports.');
+      console.log(error)
+    } finally {
+      setLoading(false); // End loading
+    }
   };
 
   const handleSearchChange = (e) => {
@@ -44,10 +56,17 @@ const ListEvents = () => {
     console.log('Download report', reportId);
   };
 
-  const deleteReport = (reportId) => {
-    console.log('Delete report', reportId);
+  const deleteEvent = async (id) => {
+    const token = localStorage.getItem('access_token');
+    try {
+      const response = await event_delete(id);
+      setPendingReports(pendingReports.filter(event => event.id !== id)); // Update state
+      toast.success('Event deleted successfully!');
+    } catch (error) {
+      console.error('Error deleting event:', error);
+      toast.error('Failed to delete event. Please try again.');
+    }
   };
-
   const editReport = (reportId) => {
     console.log('Edit report', reportId);
     navigate(`/editreport/${reportId}`);
@@ -66,7 +85,7 @@ const ListEvents = () => {
           <FontAwesomeIcon icon={faEdit} />
         </button>
         {rowData.status !== 'Approved' && (
-          <button className="btn btn-link text-danger" onClick={() => deleteReport(rowData.id)}>
+          <button className="btn btn-link text-danger" onClick={() => deleteEvent(rowData.id)}>
             <FontAwesomeIcon icon={faTrash} />
           </button>
         )}
@@ -104,14 +123,14 @@ const ListEvents = () => {
             </div>
             <div className="mt-4">
               <DataTable 
-                value={filteredReports}
+                value={pendingReports}
                 paginator 
                 rows={10} 
                 dataKey="id" 
                 globalFilter={globalFilter}
                 emptyMessage="No events found."
               >
-                <Column field="title" header="Event Title" filter filterPlaceholder="Search title" style={{ minWidth: '12rem' }} />
+                <Column field="event_title" header="Event Title" filter filterPlaceholder="Search title" style={{ minWidth: '12rem' }} />
                 <Column field="collaborators" header="Collaborators" filter filterPlaceholder="Search collaborators" style={{ minWidth: '12rem' }} />
                 <Column field="status" header="Status" filter filterPlaceholder="Search status" style={{ minWidth: '12rem' }} />
                 <Column header="Actions" body={actionBodyTemplate} style={{ minWidth: '12rem' }} />

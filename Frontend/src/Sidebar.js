@@ -22,6 +22,8 @@ const Sidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [userName, setUserName] = useState("");
+  const [userRole, setUserRole] = useState("");
+  const [userDepartments, setUserDepartments] = useState([]);
   const [openSections, setOpenSections] = useState({
     settings: false,
     campus: false,
@@ -44,10 +46,16 @@ const Sidebar = () => {
 
   useEffect(() => {
     const user = localStorage.getItem("username");
+    const role = localStorage.getItem("user_role");
+    const departments = JSON.parse(localStorage.getItem("user_departments"));
+    console.log(departments);
+
     if (user) {
       const name = user.split("@")[0]; // Extract part before '@'
       setUserName(name);
     }
+    if (role) setUserRole(role);
+    if (departments) setUserDepartments(departments);
   }, []);
 
   useEffect(() => {
@@ -59,36 +67,31 @@ const Sidebar = () => {
 
   const toggleSection = (section, parent = null) => {
     setOpenSections((prev) => {
-      // Check if the current section being toggled is a nested section
-      const isNestedSection = parent !== null;
-  
       const newOpenSections = { ...prev };
   
-      // If it's a nested section, we toggle only the nested section,
-      // and we ensure that the parent section remains open
-      if (isNestedSection) {
-        newOpenSections[parent] = true; // Keep the parent section open
-        newOpenSections[section] = !prev[section]; // Toggle the nested section
-      } else {
-        // If it's not a nested section, we toggle the parent section
-        // and close all other parent sections
-        Object.keys(newOpenSections).forEach((key) => {
-          newOpenSections[key] = key === section ? !prev[section] : false;
-        });
+      // If it's a nested section (like settings), keep the parent section open
+      if (parent !== null) {
+        newOpenSections[parent] = true; // Ensure parent stays open
       }
   
-      // Save the new state to localStorage
+      // Toggle the current section (whether parent or child)
+      newOpenSections[section] = !prev[section];
+  
+      // Save the new openSections state in localStorage
       localStorage.setItem("openSections", JSON.stringify(newOpenSections));
+  
       return newOpenSections;
     });
   };
   
+
   const handleLogout = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
     localStorage.removeItem("user_role");
     localStorage.removeItem("username");
     localStorage.removeItem("openSections"); // Optional: Clear sidebar state on logout
+    localStorage.clear();
     navigate("/login");
     window.location.reload();
   };
@@ -110,32 +113,34 @@ const Sidebar = () => {
               isActive={checkActivePath("/dashboard")}
             />
 
-            {/* Accounts Section */}
-            <SidebarItem
-              icon={faUsers}
-              title="Accounts"
-              open={openSections.accounts}
-              toggleSection={() => toggleSection("accounts")}
-            >
-              <SidebarSubItem
-                path="/registerSingleuser"
-                icon={faPlus}
-                label="New User"
-                isActive={checkActivePath("/registerSingleuser")}
-              />
-              <SidebarSubItem
-                path="/registerMultipleUser"
-                icon={faPlus}
-                label="New Users"
-                isActive={checkActivePath("/registerMultipleUser")}
-              />
-              <SidebarSubItem
-                path="/listuser"
-                icon={faEye}
-                label="Users List"
-                isActive={checkActivePath("/listuser")}
-              />
-            </SidebarItem>
+            {/* Conditionally render based on role */}
+            {userRole === "Admin" && (
+              <SidebarItem
+                icon={faUsers}
+                title="Accounts"
+                open={openSections.accounts}
+                toggleSection={() => toggleSection("accounts")}
+              >
+                <SidebarSubItem
+                  path="/registerSingleuser"
+                  icon={faPlus}
+                  label="New User"
+                  isActive={checkActivePath("/registerSingleuser")}
+                />
+                <SidebarSubItem
+                  path="/registerMultipleUser"
+                  icon={faPlus}
+                  label="New Users"
+                  isActive={checkActivePath("/registerMultipleUser")}
+                />
+                <SidebarSubItem
+                  path="/listuser"
+                  icon={faEye}
+                  label="Users List"
+                  isActive={checkActivePath("/listuser")}
+                />
+              </SidebarItem>
+            )}
 
             {/* Roles Section */}
             <SidebarItem
@@ -287,6 +292,54 @@ const Sidebar = () => {
               />
             </SidebarItem>
 
+            {/* Directly render departments without a parent toggle */}
+            {userRole === "Department" &&
+              Object.keys(userDepartments).length > 0 &&
+              Object.entries(userDepartments).map(
+                ([departmentName, role], index) => (
+                  <SidebarItem
+                    key={index}
+                    icon={faGears}
+                    title={departmentName}
+                    open={openSections[`department_${departmentName}`]} // Use department name as key
+                    toggleSection={() =>
+                      toggleSection(`department_${departmentName}`)
+                    } // Pass department name to toggleSection
+                  >
+                    {/* Conditionally render actions based on the role in this specific department */}
+                    {role === "Department" || role === "campusAdmin" ? (
+                      <>
+                        <SidebarSubItem
+                          path={`/department`}
+                          icon={faPlus}
+                          label="Create Event"
+                          isActive={checkActivePath(`/department`)}
+                        />
+                        <SidebarSubItem
+                          path={`/department/${departmentName}/edit-event`}
+                          icon={faGears}
+                          label="Edit Event"
+                          isActive={checkActivePath(
+                            `/department/${departmentName}/edit-event`
+                          )}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        {/* Add viewer-specific options if applicable */}
+                        <SidebarSubItem
+                          path={`/department/${departmentName}/view-events`}
+                          icon={faEye}
+                          label="View Events"
+                          isActive={checkActivePath(
+                            `/department/${departmentName}/view-events`
+                          )}
+                        />
+                      </>
+                    )}
+                  </SidebarItem>
+                )
+              )}
             <Nav.Item>
               <Nav.Link onClick={handleLogout} className="text-light fw-bold">
                 <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />

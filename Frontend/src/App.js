@@ -58,7 +58,7 @@ const App = () => {
                 ) : (
                     <>
                         {/* Role-based redirection and protected routes */}
-                        <Route path="/dashboard" element={userRole === 'Admin' ? <Dashboard /> : <Navigate to="/login" />} />
+                        <Route path="/dashboard" element={userRole === 'Admin' ? <Dashboard /> : <Dashboard />} />
 
                         {/* Additional routes accessible to all authenticated users */}
               

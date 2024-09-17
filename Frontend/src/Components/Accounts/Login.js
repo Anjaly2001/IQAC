@@ -12,6 +12,8 @@ const Login = () => {
     const [otpSent, setOtpSent] = useState(false);
     const [error, setError] = useState('');
     const [processing, setProcessing] = useState(false); // State to handle processing message
+    const domain = "@christuniversity.in"; // Fixed domain
+
 
     const navigate = useNavigate();
 
@@ -29,16 +31,24 @@ const Login = () => {
         setProcessing(true); // Show processing message
 
         try {
-            const data = { email };
+            const fullEmail = email + domain;;
+            const data = { email: fullEmail };
             const response = await login(data);
             // console.log(response);
 
-            // Simulate delay before showing the OTP sent message
-            setTimeout(() => {
-                setProcessing(false); // Hide processing message
-                setOtpSent(true);
-                toast.success('OTP sent to your email!'); // Display success toast
-            }, 2000); // 2 seconds delay
+            if (response['type'] === 'success') {
+                setTimeout(() => {
+                    setProcessing(false); // Hide processing message
+                    setOtpSent(true);
+                    toast.success(response['message']); // Display success toast
+                }, 2000); // 2 seconds delay
+            } else {
+                setTimeout(() => {
+                    setProcessing(false);
+                    toast.error(response['message']); // Display success toast
+                }, 2000); // 2 seconds delay
+            }
+
 
         } catch (error) {
             console.log(error);
@@ -52,23 +62,22 @@ const Login = () => {
         setError('');
 
         try {
-            const response = await verify_otp({ email, otp });
-            const { access_token, refresh_token } = response.data;
-            const { role } = response;
-            const {user}=response;
-            // const {first_name } = response;
-            // const { access_token, refresh_token, role, first_name } = response.data; 
+            const fullEmail = email + domain;
+            console.log(email)
+            const data = { email: fullEmail, otp };
+            const response = await verify_otp(data);
+            console.log(response);
 
-            localStorage.setItem('access_token', access_token);
-            localStorage.setItem('refresh_token', refresh_token);
-            localStorage.setItem('user_role', role);
-            localStorage.setItem('username', user);
+            const role = response['role'];
 
-             window.dispatchEvent(new Event('storage'));
+            localStorage.setItem('access_token', response['token']['access']);
+            localStorage.setItem('refresh_token', response['token']['refresh']);
+            localStorage.setItem('user_role', response['role']);
+            localStorage.setItem('username', response['user']);
 
-            if (role === 'admin') {
-                navigate('/dashboard');
-            } else if (role === 'staffs') {
+            window.dispatchEvent(new Event('storage'));
+
+            if (role === 'Admin') {
                 navigate('/dashboard');
             } else {
                 setError('Invalid role');
@@ -97,32 +106,46 @@ const Login = () => {
                     {!otpSent ? (
                         <form onSubmit={handleSendOtp}>
                             <div className="form-group">
-                                <label htmlFor="email">Email</label>
-                                <input
-                                    type="email"
-                                    className="form-control"
-                                    id="email"
-                                    name="email"
-                                    value={email}
-                                    onChange={handleEmailChange}
-                                    required
-                                />
+                                <label htmlFor="email" className="mb-1" style={{ fontSize: '14px' }}>Email</label>
+                                <div className="input-group">
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        id="email"
+                                        name="email"
+                                        value={email}
+                                        onChange={handleEmailChange}
+                                        required
+                                        placeholder="Enter your email username"
+                                    />
+                                    <div className="input-group-append">
+                                        <span className="input-group-text" style={{ backgroundColor: '#e9ecef' }}>{domain}</span>
+                                    </div>
+                                </div>
                             </div>
-                            <button type="submit" className="btn btn-primary btn-block mt-3" style={{ backgroundColor: '#1e3a8a', borderColor: '#1e3a8a' }}>Request OTP</button>
+                            <button
+                                type="submit"
+                                className="btn btn-primary btn-block mt-3"
+                                style={{ backgroundColor: '#1e3a8a', borderColor: '#1e3a8a' }}
+                            >
+                                Request OTP
+                            </button>
                         </form>
                     ) : (
                         <form onSubmit={handleVerifyOtp}>
                             <div className="form-group">
-                                <label htmlFor="email">Email</label>
-                                <input
-                                    type="email"
-                                    className="form-control"
-                                    id="email"
-                                    name="email"
-                                    value={email}
-                                    onChange={handleEmailChange}
-                                    required
-                                />
+                                <label htmlFor="email" className="mb-1" style={{ fontSize: '14px' }}>Email</label>
+                                <div className="single-input">
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        id="email"
+                                        name="email"
+                                        value={`${email}${domain}`}
+                                        disabled
+                                    />
+
+                                </div>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="otp">OTP</label>
@@ -136,7 +159,13 @@ const Login = () => {
                                     autoFocus
                                 />
                             </div>
-                            <button type="submit" className="btn btn-primary btn-block mt-3" style={{ backgroundColor: '#1e3a8a', borderColor: '#1e3a8a' }}>Verify OTP</button>
+                            <button
+                                type="submit"
+                                className="btn btn-primary btn-block mt-3"
+                                style={{ backgroundColor: '#1e3a8a', borderColor: '#1e3a8a' }}
+                            >
+                                Verify OTP
+                            </button>
                         </form>
                     )}
                 </div>

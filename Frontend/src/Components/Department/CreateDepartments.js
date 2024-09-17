@@ -3,8 +3,8 @@ import { InputText } from 'primereact/inputtext';
 import { Editor } from 'primereact/editor';
 import { Button } from 'primereact/button';
 import { ToastContainer, toast } from 'react-toastify';
-import { department_register, campus_list } from '../../axios/api';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { department_register, campus_list, department_update } from '../../axios/api';
+import { useNavigate , useLocation} from 'react-router-dom'; // Import useNavigate
 import Sidebar from '../../Sidebar';
 
 const CreateDepartment = ({ onAddDepartment }) => {
@@ -18,9 +18,13 @@ const CreateDepartment = ({ onAddDepartment }) => {
     const [message, setMessage] = useState('');  
     const [messageType, setMessageType] = useState('');
     const [departmentNameError, setDepartmentNameError] = useState('');
+    
 
+    const [isEdit, setIsEdit] = useState(false); // Assuming the component knows if it's in edit mode
+    const [departmentId, setDepartmentId] = useState(null); // Holds the ID if it's in edit mode
 
     const navigate = useNavigate(); // Initialize useNavigate
+    const locationState = useLocation().state; 
 
     const toTitleCase = (str) => {
         return str
@@ -40,7 +44,6 @@ const CreateDepartment = ({ onAddDepartment }) => {
     };
     
 
-
     useEffect(() => {
         const fetchLocations = async () => {
             try {
@@ -57,47 +60,68 @@ const CreateDepartment = ({ onAddDepartment }) => {
         };
         fetchLocations();
     }, []);
-    
-    const handleCreateDepartment = async () => {
-        
+
+
+
+    const handleCreateOrUpdateDepartment = async () => {
         const finalType = type === 'Others' ? customType : type;
         const finalLocation = location === 'Others' ? customLocation : location;
-    
+
         if (departmentName && description && finalType && finalLocation) {
-            const newDepartment = {
-                name: toTitleCase(departmentName),
-                type: finalType,
-                location_id: finalLocation,
-                description,
-            };
-    
+            const formData = new FormData();
+            formData.append('name', toTitleCase(departmentName));
+            formData.append('type', finalType);
+            formData.append('location_id', finalLocation);
+            formData.append('description', description);
+
             try {
-                const response = await department_register(newDepartment);
-                toast.success('Department created successfully!');
-                setMessage('Department created successfully!');
-                setMessageType('success');
-    
-                // Clear form fields after successful submission
-                setDepartmentName('');
-                setDescription('');
-                setType('');
-                setLocation('');
-                setCustomType('');
-                setCustomLocation('');
-    
-                // Redirect to department list page after successful creation
-                navigate('/listdepartment');
+                let response;
+                if (isEdit && departmentId) {
+                    // If edit mode, call the update department API
+                    response = await department_update(departmentId, formData);
+                } else {
+                    // If not in edit mode, create a new department
+                    response = await department_register(formData);
+                }
+
+                // Check if the department already exists
+                if (response && response.exist) {
+                    toast.error('Department name already exists!');
+                } else {
+                    if (isEdit) {
+                        toast.success('Department updated successfully!');
+                    } else {
+                        toast.success('Department created successfully!');
+                    }
+
+                    // Clear form fields after successful submission
+                    setDepartmentName('');
+                    setDescription('');
+                    setType('');
+                    setLocation('');
+                    setCustomType('');
+                    setCustomLocation('');
+                    setIsEdit(false);  // Reset the edit state
+                    setDepartmentId(null);  // Reset department ID for the next create operation
+
+                    // Redirect to department list page after successful creation/update
+                    setTimeout(() => {
+                        navigate('/listdepartment');
+                    }, 2000);
+                }
             } catch (error) {
-                console.error('Failed to create department:', error);
-                toast.error('Failed to create department');
+                console.error('Failed to create/update department:', error);
+                toast.error('Failed to create/update department. Please try again.');
             }
         } else {
             toast.error('Please fill in all fields.');
         }
     };
-    const renderAsterisk = () => (
-        <span style={{ color: 'red' }}>*</span>
-    );
+
+const renderAsterisk = () => (
+    <span style={{ color: 'red' }}>*</span>
+);
+
 
     return (
         <div className="container-fluid">
@@ -109,7 +133,7 @@ const CreateDepartment = ({ onAddDepartment }) => {
                 <div className="col-md-10 mt-5 pt-5">
                     <div className="container mt-3" style={{ maxWidth: '800px' }}>
                         <div className="text-center fw-bold fs-5 mb-4">
-                            Create Department
+                            {isEdit ? 'Update Department' : 'Create Department'}
                         </div>
                         <div className="d-flex flex-column align-items-center mb-4">
                             <div className="p-field w-100 mb-3">
@@ -156,18 +180,7 @@ const CreateDepartment = ({ onAddDepartment }) => {
                                     <option value="Others">Others</option>
                                 </select>
                             </div>
-                            {/* {type === 'Others' && (
-                                <div className="p-field w-100 mb-3">
-                                    <label htmlFor="customType">Enter Type</label>
-                                    <InputText
-                                        id="customType"
-                                        value={customType}
-                                        onChange={(e) => setCustomType(e.target.value)}
-                                        placeholder="Enter type"
-                                        className="w-100"
-                                    />
-                                </div>
-                            )} */}
+                            
                             <div className="p-field w-100 mb-3">
                                 <label htmlFor="location">Location{renderAsterisk()}</label>
                                 <select
@@ -189,21 +202,12 @@ const CreateDepartment = ({ onAddDepartment }) => {
                                     {/* <option value="Others">Others</option> */}
                                 </select>
                             </div>
-                            {/* {location === 'Others' && (
-                                <div className="p-field w-100 mb-3">
-                                    <label htmlFor="customLocation">Enter Location</label>
-                                    <InputText
-                                        id="customLocation"
-                                        value={customLocation}
-                                        onChange={(e) => setCustomLocation(e.target.value)}
-                                        placeholder="Enter location"
-                                        className="w-100"
-                                    />
-                                </div> */}
-                            {/* )} */}
-                            <div className="p-field w-100">
-                                <Button label="Create Department" icon="pi pi-check" onClick={handleCreateDepartment} />
-                            </div>
+                           
+                            <Button
+                                label={isEdit ? 'Update Department' : 'Create Department'}
+                                onClick={handleCreateOrUpdateDepartment}
+                            />
+
                         </div>
                     </div>
                 </div>
@@ -213,8 +217,6 @@ const CreateDepartment = ({ onAddDepartment }) => {
 };
 
 export default CreateDepartment;
-
-
 
 
 

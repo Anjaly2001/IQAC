@@ -37,10 +37,8 @@ const App = () => {
     // Function to determine where to redirect based on the user's role
     const getDefaultRoute = () => {
         switch (userRole) {
-            case 'admin':
+            case 'Admin':
                 return '/dashboard'; // Admin users go to the Admin Dashboard
-            case 'staffs':
-                return '/dashboard'; // Regular users go to their dashboard
             default:
                 return '/login'; // If no role is found, go to the login page
         }
@@ -60,7 +58,7 @@ const App = () => {
                 ) : (
                     <>
                         {/* Role-based redirection and protected routes */}
-                        <Route path="/dashboard" element={userRole === 'admin' ? <Dashboard /> : <Navigate to="/login" />} />
+                        <Route path="/dashboard" element={userRole === 'Admin' ? <Dashboard /> : <Navigate to="/login" />} />
 
                         {/* Additional routes accessible to all authenticated users */}
               

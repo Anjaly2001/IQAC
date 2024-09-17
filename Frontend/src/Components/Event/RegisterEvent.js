@@ -11,6 +11,9 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import Sidebar from "../../Sidebar";
 import { toast } from "react-toastify";
 import './event.css'
+import { Stepper } from "primereact/stepper";
+import { StepperPanel } from "primereact/stepperpanel";
+
 import {
   campus_name_list,
   department_list_by_campus,
@@ -364,6 +367,8 @@ function RegisterEvent() {
               Event Registration Form
               <hr />
             </div>
+            
+
             <form onSubmit={handleSubmit}>
               <div className="mb-3 row">
                 <div className="col">
@@ -587,7 +592,7 @@ function RegisterEvent() {
                 </div>
               </div>
 
-
+                  
 
               <div className="mb-3">
                 <label htmlFor="numberOfActivities" className="form-label">
@@ -602,6 +607,7 @@ function RegisterEvent() {
                   defaultValue={1}
                 />
               </div>
+              
 
               {activities.map((activity, index) => (
                 <div key={index} className="mb-3">

@@ -74,11 +74,10 @@ export const campus_delete = async (campus_id) => {
   }
 };
 
-export const department_register = async (form) => {
+export const department_register = async (data) => {
   try {
     const res = await axiosInstance.post(
-      "department_and_events/department_register/",
-      form
+      "department_and_events/department_register/",data
     );
     return res.data;
   } catch (error) {
@@ -107,6 +106,19 @@ export const department_list = async (form) => {
     return res.data;
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const department_update = async (department_id, updatedDepartmentData) => {
+  try {
+    const res = await axiosInstance.put(
+      `department_and_events/campus_update/${department_id}/`,
+      updatedDepartmentData
+    );
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    // toast.error("campus already exist.");
   }
 };
 

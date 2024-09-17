@@ -44,24 +44,29 @@ const DepartmentList = () => {
             console.error('Error fetching departments:', error);
         }
     };
-
-    const startEditing = (user) => {
-        navigate(`/createdepartments/${user.id}`);
+    
+    const startEditing = (departmentId) => {
+        const selectedDepartmnet= departments.find(department => department.id === departmentId);
+        navigate('/createdepartments', { state: { department: selectedDepartmnet } });
+        
     };
 
+  
+    
     const toggleStatus = async (user) => {
         try {
-            const updatedDepartment = await department_active(user.id);
+            await department_active(user.id);
             setUsers(users.map(u =>
                 u.id === user.id ? { ...u, status: !u.status } : u
             ));
             if (user.status) {
-                toast.success('Department activated successfully!');
-            } else {
                 toast.success('Department deactivated successfully!');
+            } else {
+                toast.success('Department activated successfully!');
             }
         } catch (error) {
             console.error('Error toggling department status:', error);
+            toast.error('Error toggling department status.');
         }
     };
 

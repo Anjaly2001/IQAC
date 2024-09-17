@@ -111,10 +111,7 @@ export const department_list = async (form) => {
 
 export const department_update = async (department_id, updatedDepartmentData) => {
   try {
-    const res = await axiosInstance.put(
-      `department_and_events/campus_update/${department_id}/`,
-      updatedDepartmentData
-    );
+    const res = await axiosInstance.put(`department_and_events/department_update/${department_id}/`, updatedDepartmentData );
     return res.data;
   } catch (error) {
     console.log(error);
@@ -178,6 +175,25 @@ export const multiple_user_register = async (form) => {
 export const users_list = async (form) => {
   try {
     const res = await axiosInstance.get("authentication/user_list/", form);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const get_user_details = async (userId) => {
+  try {
+    const res = await axiosInstance.get(`authentication/get_user_details/${userId}/`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+export const update_user = async (userId, newAcademicYear) => {
+  try {
+    const res = await axiosInstance.put(`/authentication/user_update/${userId}/`, newAcademicYear );
     return res.data;
   } catch (error) {
     console.log(error);
@@ -251,6 +267,17 @@ export const academic_list_campus = async (campus_id) => {
     // toast.error("Failed to Fetch academic year. Please try again.");
   }
 };
+
+export const update_academic_year = async (academicYearId, newAcademicYear) => {
+  try {
+    const res = await axiosInstance.put(`department_and_events/update_academic_year/${academicYearId}/`, newAcademicYear );
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
 export const academic_delete = async (academicYearId) => {
   try {
     const res = await axiosInstance.delete(
@@ -284,6 +311,16 @@ export const event_type_list = async () => {
     // toast.error("Failed to list event types. Please try again.");
   }
 };
+
+export const update_event_type = async (eventTypeId, newEventType) => {
+  try {
+    const res = await axiosInstance.put(`/department_and_events/update_event_type/${eventTypeId}/`, newEventType );
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 
 export const event_type_delete = async (eventType) => {
   try {

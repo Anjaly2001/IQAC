@@ -13,16 +13,33 @@ const Login = () => {
   const [error, setError] = useState("");
   const [processing, setProcessing] = useState(false); // State to handle processing message
   const domain = "@christuniversity.in"; // Fixed domain
+  const [fieldValue, setFieldValue] = useState('');
+  const [fieldError, setFieldError] = useState('');
 
   const navigate = useNavigate();
 
   const handleEmailChange = (e) => {
-    setEmail(e.target.value);
+    const value = e.target.value;
+    setEmail(value);
+    validateField(value);
+    // setEmail(e.target.value);
   };
 
   const handleOtpChange = (value) => {
     setOtp(value);
   };
+
+  const validateField = (email) => {
+    const allowedPattern = /^[a-zA-Z0-9\s]+$/;
+  
+    if (!allowedPattern.test(email)) {
+      setFieldError("Field should contain only alphanumeric characters and spaces. Special characters like '@', '()', etc., are not allowed.");
+    } else {
+      setFieldError(""); // Clear the error if valid
+    }
+  };
+  
+
 
   const handleSendOtp = async (e) => {
     e.preventDefault();
@@ -30,10 +47,11 @@ const Login = () => {
     setProcessing(true); // Show processing message
 
     try {
+
       const fullEmail = email + domain;
       const data = { email: fullEmail };
       const response = await login(data);
-      // console.log(response);
+      console.log(response);
 
       if (response["type"] === "success") {
         setTimeout(() => {
@@ -113,7 +131,7 @@ const Login = () => {
                 <div className="input-group">
                   <input
                     type="text"
-                    className="form-control"
+                    className={`form-control ${fieldError ? 'is-invalid' : ''}`} 
                     id="email"
                     name="email"
                     value={email}
@@ -122,13 +140,11 @@ const Login = () => {
                     placeholder="Enter your email username"
                   />
                   <div className="input-group-append">
-                    <span
-                      className="input-group-text"
-                      style={{ backgroundColor: "#e9ecef" }}
-                    >
+                    <span className="input-group-text" style={{ backgroundColor: "#e9ecef" }}>
                       {domain}
                     </span>
                   </div>
+                  {fieldError && <div className="invalid-feedback">{fieldError}</div>} {/* Display validation error */}
                 </div>
               </div>
               <button

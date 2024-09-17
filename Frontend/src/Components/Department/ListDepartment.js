@@ -46,8 +46,9 @@ const DepartmentList = () => {
     };
     
     const startEditing = (departmentId) => {
-        const selectedDepartmnet= departments.find(department => department.id === departmentId);
-        navigate('/createdepartments', { state: { department: selectedDepartmnet } });
+        console.log(departmentId)
+       
+        navigate('/createdepartments', { state: { department: departmentId } });
         
     };
 

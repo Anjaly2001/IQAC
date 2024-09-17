@@ -105,13 +105,15 @@ class Proposal_Upload(models.Model):
 
 
 class Role(models.Model):
-    users = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
-    role = models.CharField(max_length=20, choices=(
-        ('viewers', 'Viewers'),
+    users = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='roles')
+    ROLE_CHOICES = [
         ('departmentHOD', 'DepartmentHOD'),
         ('IQACuser', 'IQACUser'),
-        ('staffs', 'Staffs'),
-    ), default='staffs')
+        ('staff', 'Staff'),
+        # ('department','Department')
+    ]
+    
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='staffs')
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
     status = models.BooleanField(default=True)
 

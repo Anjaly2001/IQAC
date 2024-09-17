@@ -35,222 +35,165 @@ from rest_framework import status
 @api_view(['POST'])
 def register(request):
     if request.method == 'POST':
-        # Print incoming request data for debugging purposes
-        print(request.data)
-       
-        # Create a copy of request data to modify
-        data = request.data.copy()
+        print(request.data)  # Debugging: Log incoming data
 
-        # Set default values for `is_superuser` and `is_staff` fields
+        # Create a copy of request data and set default user attributes
+        data = request.data.copy()
         data['is_superuser'] = False
         data['is_staff'] = False
-        
-        # Extract department, location, and phone number from request data
+
+        # Extract required fields from request data
         dep_id = request.data.get('department')
         loc_id = request.data.get('location')
         phone_number = request.data.get('phone_number')
-        print(f"Phone number received: {phone_number}")
+        role = request.data.get('role')  # Get the role from the request data
+        print(f"Role from request: {role}")
 
-        # Validate the phone number; raise an error if invalid
-        try:
-            validate_phone_number(phone_number)
-        except ValidationError as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-    
-        # Check if the department is 'others'; if so, create a new department
+        # Handle new department creation if 'others' is selected
         if dep_id == 'others':
-            new_department_name = request.data.get('new_department')  # Get the name for the new department
-            dep_obj = Department.objects.create(name=new_department_name)  # Create and save the new department
-            dep_id = dep_obj.id  # Use the new department ID for the user profile
+            new_department_name = request.data.get('new_department')
+            if not new_department_name:
+                return Response({'error': 'New department name is required.'}, status=status.HTTP_400_BAD_REQUEST)
+            dep_obj = Department.objects.create(name=new_department_name)
+            dep_id = dep_obj.id
         else:
-            # Use the existing department ID
-            dep_id = int(dep_id)  # Ensure it's an integer if needed
+            dep_id = int(dep_id)
 
+        # Prepare user profile data
         data_user_profile = {
             'emp_id': request.data.get('emp_id'),
-            'phone_number': request.data.get('phone_number'),
+            'phone_number': phone_number,
             'department': dep_id,
             'location': loc_id,
         }
-        
-        # Initialize the UserRegistrationSerializer with the modified data
+
+        # Initialize the user serializer
         serializer = UserRegistrationSerializer(data=data)
-        
-        # Check if the serialized data is valid
         if serializer.is_valid():
             try:
-                # Save the new user instance
+                # Save the user and assign the role from the request
                 user = serializer.save()
+                user.role = role  # Set the role from the request
+                user.save()  # Save the user again to commit the role
 
-                # Check if a role entry exists for the user
-                role_entry = Role.objects.filter(users=user).first()
-                if not role_entry:
-                    # Assign a default role and department
-                    role = 'staffs'  # Or whatever default role you prefer
-                    # Get the department instance by ID
-                    default_department = Department.objects.filter(id=dep_id).first()
-                    if not default_department:
-                        return Response({'error': 'Department does not exist'}, status=status.HTTP_400_BAD_REQUEST)
-                    
-                    Role.objects.create(users=user, role=role, department=default_department)
+                # Determine the role to save in the Role table
+                role_to_save = 'staff' if role.lower() == 'department' else role
 
-                # Add the user ID to the user profile data
+                # Assign role to the user
+                default_department = Department.objects.filter(
+                    id=dep_id).first()
+                if not default_department:
+                    return Response({'error': 'Department does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+
+                Role.objects.create(
+                    users=user, role=role_to_save, department=default_department)
+
+                # Add user ID to the profile data
                 data_user_profile['user'] = user.id
 
-                # Initialize the USerProfileSerializer with the profile data
-                user_profile_serializer = USerProfileSerializer(data=data_user_profile)
-                
-                # Check if the profile data is valid
+                # Validate and save user profile
+                user_profile_serializer = USerProfileSerializer(
+                    data=data_user_profile)
                 if user_profile_serializer.is_valid():
-                    # Save the user profile instance
                     user_profile = user_profile_serializer.save()
-                    
-                    # If email is provided, send a confirmation email to the user
+
+                    # Send email if provided
                     email = request.data.get('email')
                     if email:
-                        print(email)
-                        user = CustomUser.objects.get(email=email)  # Fetch the user by email
-                        send_email(email)  # Call function to send email
-                    
-                    # Return a successful response with user and profile data
+                        send_email(email)
+
+                    # Return successful response with user and profile data
                     return Response({
                         'user': UserRegistrationSerializer(user).data,
                         'user_profile': USerProfileSerializer(user_profile).data,
                     }, status=status.HTTP_201_CREATED)
 
-                # If the user profile data is not valid, delete the created user and return errors
+                # If user profile is invalid, delete the created user
                 user.delete()
                 return Response(user_profile_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            
+
             except Exception as e:
                 # Handle unexpected errors
                 return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        # If the user data is not valid, return errors
-        print(serializer.errors)
+        # If user data is invalid, return errors
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # Handle non-POST requests (optional, but should return an error)
+    # Return error for non-POST requests
     return Response({'error': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-
 
 
 @api_view(['POST'])
 def login_with_email(request):
     email = request.data.get('email')
+    email = email.strip().lower()
     if '@christuniversity.in' not in email:
         return Response({'error': 'You are not authorized to login.'}, status=status.HTTP_401_UNAUTHORIZED)
-    if email:
+    elif email == "":
+        return Response({'error': 'Email is required.'}, status=status.HTTP_400_BAD_REQUEST)
+    else:
         print(email)
-        user = CustomUser.objects.get(email=email)
-        send_otp_to_email(email)
-        return Response({'message': 'OTP sent to your email.'}, status=status.HTTP_200_OK)
-    return Response({'error': 'Email is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        if CustomUser.objects.filter(email=email).exists():
+            user = CustomUser.objects.get(email=email)
+            send_otp_to_email(user.email)
+            print(user)
+            return Response({'message': 'OTP sent to your email.', 'type': 'success'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'message': 'You cannot access the system.', 'type': 'error'}, status=status.HTTP_200_OK)
 
-# @api_view(['POST'])
-# def verify_otp(request):
-#     email = request.data.get('email')
-#     otp = request.data.get('otp')
-
-#     if email and otp:
-#         user = CustomUser.objects.filter(email=email).first()
-#         if not user:
-#             return Response({'error': 'No user found with this email.'}, status=status.HTTP_404_NOT_FOUND)
-        
-        
-
-#         otp_entry = OTP.objects.filter(user=user, code=otp)
-#         if otp_entry:
-#             time_difference = timezone.now() - otp_entry.created_at
-#             if time_difference > timedelta(days=1):
-#                 return Response({'error': 'OTP expired.'}, status=status.HTTP_400_BAD_REQUEST)
-            
-#             # OTP is valid, proceed with login
-#             login(request, user)
-#             refresh = RefreshToken.for_user(user)
-#             print("gasjhudf")
-#             # Check if user is superuser and staff
-#             if user.is_superuser and user.is_staff:
-#                 role = 'admin'
-#             else:
-#                 # Fetch existing role entry or create a new one with the default role
-#                 role_entry = Role.objects.filter(user=user).first()
-#                 if role_entry:
-#                     role = role_entry.role
-#                 else:
-#                     # Assign a default role and department
-#                     role = 'staffs'  # Or whatever default role you prefer
-#                     default_department = Department.objects.first()  # Adjust as needed
-#                     Role.objects.create(user=user, role=role, department=default_department)
-            
-#             # If the user is superuser and staff, save the admin role
-#             if user.is_superuser and user.is_staff:
-#                 default_department = Department.objects.first()  # Adjust as needed
-#                 Role.objects.update_or_create(user=user, defaults={'role': 'admin', 'department': default_department})
-            
-#             return Response({
-#                 "data": {
-#                     'access_token': str(refresh.access_token),
-#                     'refresh_token': str(refresh),
-#                 },
-#                 'user': user.username,
-#                 'role': role,
-#                 'first_name': user.first_name,
-#             }, status=status.HTTP_200_OK)
-        
-#         return Response({'error': 'Invalid OTP.'}, status=status.HTTP_400_BAD_REQUEST)
-    
-#     return Response({'error': 'Email and OTP are required.'}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def verify_otp(request):
-    email = request.data.get('email')
+    email = request.data.get('email').lower()
     otp = request.data.get('otp')
+    print(request.data)
+
     if email and otp:
         user = CustomUser.objects.filter(email=email).first()
-        print(user)
         if not user:
             return Response({'error': 'No user found with this email.'}, status=status.HTTP_404_NOT_FOUND)
+
         otp_entry = OTP.objects.filter(user=user, code=otp).first()
         if otp_entry:
             time_difference = timezone.now() - otp_entry.created_at
+            print(time_difference)
             if time_difference > timedelta(days=1):
                 return Response({'error': 'OTP expired.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Log the user in
             login(request, user)
+
+            # Generate JWT tokens for the user
             refresh = RefreshToken.for_user(user)
-            if user.is_superuser and user.is_staff:
-                role = 'admin'
-            else:
-                # Fetch existing role entry or create a new one with the default role
-                role_entry = Role.objects.filter(user=user).first()
-                if role_entry:
-                    role = role_entry.role
-                else:
-                    # Assign a default role and department
-                    role = 'staffs'  # Or whatever default role you prefer
-                    default_department = Department.objects.first()  # Adjust as needed
-                    Role.objects.create(user=user, role=role, department=default_department)
-            
-            # If the user is superuser and staff, save the admin role
-            # if user.is_superuser and user.is_staff:
-            #     default_department = Department.objects.first()  # Adjust as needed
-            #     Role.objects.update_or_create(user=user, defaults={'role': 'admin', 'department': default_department})
-        
-            print(user.email)
-            return Response({
-                "data": {
-                    'access_token': str(refresh.access_token),
-                    'refresh_token': str(refresh),
+
+            # Fetch the user's roles and departments
+            role_entries = Role.objects.filter(users=user)
+
+            # Prepare the response with departments and roles as key-value pairs
+            department_role_map = {}
+            for role_entry in role_entries:
+                # Assuming 'name' is a field in Department
+                department = role_entry.department.name
+                role = role_entry.role
+                department_role_map[department] = role
+
+            # Prepare the response data
+            response_data = {
+                'email': user.email,
+                'token': {
+                    'refresh': str(refresh),
+                    'access': str(refresh.access_token),
                 },
                 'user': user.email,
-                'role': role,
-                'first_name': user.first_name,
-            }, status=status.HTTP_200_OK)
-        
-        else:
-            return Response({'error': 'Invalid OTP.'}, status=status.HTTP_400_BAD_REQUEST)
-    return Response({'error': 'Email and OTP are required.'}, status=status.HTTP_400_BAD_REQUEST)
+                'role': user.role,
+                'departments': department_role_map  # Department and role mapping
+            }
+
+            print(response_data)
+
+            return Response(response_data, status=status.HTTP_200_OK)
+
+    return Response({'error': 'Invalid request.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
@@ -266,7 +209,6 @@ def user_token_refresh(request):
             return Response({"access_token": access_token}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        
 
 
 def get_department_id(department_name):
@@ -276,13 +218,13 @@ def get_department_id(department_name):
     except Department.DoesNotExist:
         return None
 
+
 def get_location_id(location_name):
     try:
         location = Location.objects.get(campus=location_name)
         return location.id
     except Location.DoesNotExist:
         return None
-
 
 
 @api_view(['POST'])
@@ -316,12 +258,15 @@ def multiple_user_registration(request):
             if CustomUser.objects.filter(email=email).exists():
                 error_message += "User already exists. "
 
-            phone_number = row['phone_number'].strip()  # Clean any leading/trailing spaces
-            print(f"Validating phone number: {phone_number}")  # Debugging: print phone number
+            # Clean any leading/trailing spaces
+            phone_number = row['phone_number'].strip()
+            # Debugging: print phone number
+            print(f"Validating phone number: {phone_number}")
 
             # Validate phone number
             try:
-                validate_phone_number(phone_number)  # Validate cleaned phone number
+                # Validate cleaned phone number
+                validate_phone_number(phone_number)
             except ValidationError as e:
                 error_message += str(e) + " "
 
@@ -342,7 +287,7 @@ def multiple_user_registration(request):
                 # No errors, proceed with user registration and profile creation
                 user_data = {
                     'email': email,
-                    'username':email,
+                    'username': email,
                     'first_name': row['first_name'],
                     'last_name': row['last_name'],
                     'role': 'staffs'  # Set default role or modify as needed
@@ -361,14 +306,16 @@ def multiple_user_registration(request):
                         'location': location_id
                     }
 
-                    profile_serializer = USerProfileSerializer(data=profile_data)
+                    profile_serializer = USerProfileSerializer(
+                        data=profile_data)
 
                     if profile_serializer.is_valid():
                         profile_serializer.save()
 
                         # Assign role and department (use correct department logic here)
                         department = Department.objects.get(id=department_id)
-                        Role.objects.create(user=user, role='staffs', department=department)
+                        Role.objects.create(
+                            user=user, role='staffs', department=department)
 
                         success_row = {
                             'email': email,
@@ -417,7 +364,8 @@ def multiple_user_registration(request):
     response_data = {
         "status": "success",
         "total_count": total_count,  # Total number of users in the CSV
-        "success_count": len(success_rows),  # Number of successfully registered users
+        # Number of successfully registered users
+        "success_count": len(success_rows),
         "error_count": len(error_rows),
         "success_file_url": success_file_url,
         "error_file_url": error_file_url,
@@ -439,6 +387,7 @@ def user_logout(request):
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def csv_user_view(request):
@@ -446,9 +395,10 @@ def csv_user_view(request):
     response['Content-Disposition'] = 'attachment; filename="users.csv"'
 
     writer = csv.writer(response)
-    
+
     # Write the header row in the CSV
-    writer.writerow(['Username', 'Email', 'Role', 'Employee ID', 'phone_number', 'Department', 'Location'])
+    writer.writerow(['Username', 'Email', 'Role', 'Employee ID',
+                    'phone_number', 'Department', 'Location'])
 
     # Fetch user data along with the related profile data
     users = CustomUser.objects.select_related('user_profile').all()
@@ -468,7 +418,7 @@ def csv_user_view(request):
     return response
 
 
-#______________USER LIST API__________
+# ______________USER LIST API__________
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def user_list(request):
@@ -497,8 +447,8 @@ def user_list(request):
         user_data.append({
             'id': user.id,
             'username': user.username,
-            'first_name':user.first_name,
-            'last_name':user.last_name,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
             'email': user.email,
             'emp_id': emp_id,
             'phone_number': phone_number,
@@ -513,26 +463,27 @@ def user_list(request):
 
     return Response(user_data)
 
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def user_deactivate(request,id):
+def user_deactivate(request, id):
     if request.method == 'POST':
         user = get_object_or_404(CustomUser, id=id)
         user.is_active = not user.is_active
         user.save()
         serializer = UserRegistrationSerializer(user)
-        return Response({'data': serializer.data, "message": "User status updated successfully."},status=status.HTTP_200_OK)
+        return Response({'data': serializer.data, "message": "User status updated successfully."}, status=status.HTTP_200_OK)
+
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
-def user_delete(request,id):
+def user_delete(request, id):
     if request.method == 'DELETE':
-        user = CustomUser.objects.get(id = id)
+        user = CustomUser.objects.get(id=id)
         user.delete()
         return Response("User deleted successfully")
-    
 
-    
+
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def user_update(request, id):
@@ -542,20 +493,33 @@ def user_update(request, id):
     except User_profile.DoesNotExist:
         return Response({"detail": "User profile not found."}, status=status.HTTP_404_NOT_FOUND)
 
-    user_data = request.data.get('user', {}) 
-    profile_data = request.data.copy() 
-    user_serializer = UserRegistrationSerializer(user, data=user_data, partial=True)
+    user_data = request.data.get('user', {})
+    profile_data = request.data.copy()
+    user_serializer = UserRegistrationSerializer(
+        user, data=user_data, partial=True)
     if user_serializer.is_valid():
         user_serializer.save()
     else:
         return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     # Update the User_profile data
-    profile_data.pop('user', None)  
-    profile_serializer = USerProfileSerializer(profile, data=profile_data, partial=True)
+    profile_data.pop('user', None)
+    profile_serializer = USerProfileSerializer(
+        profile, data=profile_data, partial=True)
     if profile_serializer.is_valid():
         profile_serializer.save()
         data = {**profile_serializer.data, **user_serializer.data}
         return Response(data, status=status.HTTP_200_OK)
     else:
         return Response(profile_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def get_user_details(request, user_id):
+    try:
+        user = CustomUser.objects.get(pk=user_id)
+    except CustomUser.DoesNotExist:
+        return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = UserRegistrationSerializer(user)
+    return Response(serializer.data)

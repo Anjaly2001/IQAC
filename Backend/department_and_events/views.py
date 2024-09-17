@@ -335,6 +335,19 @@ def list_event_type(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_event_type(request,id):
+    if request.method == 'PUT':
+        event_type = Event_type.objects.get(id = id)
+        serializer = EventTypeSerializer(event_type,data = request.data, partial = True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"data":serializer.data,'message':'Updated SUccessfully'})
+        return Response(serializer._errors)
+    
+
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def delete_event_type(request, id):
@@ -581,6 +594,15 @@ def list_tag(request):
         serializer = TagSerializer(tag, many=True)
         return Response(serializer.data)
 
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_tag(request,id):
+    if request.method == 'PUT':
+        tag = Tag.objects.get(id = id)
+        serializer = TagSerializer(tag, data = request.data, partial = True)
+        return Response({'data':serializer.data,'message':'Updated Successfully'})
+    return Response(serializer.errors)
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])

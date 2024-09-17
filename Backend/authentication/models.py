@@ -5,6 +5,15 @@ from department_and_events.models import Department,Location
 
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
+    ROLE_CHOICES = [
+        ('Admin', 'admin'),
+        ('University_Viewer', 'university_viewer'),
+        ('Campus_Admin', 'campus_admin'),
+        ('Campus_Viewer', 'campus_viewer'),
+        ('Department', 'department')
+    ]
+
+    role = models.CharField(max_length=25, choices=ROLE_CHOICES, default='Admin', null= False)
     USERNAME_FIELD = 'email'
     # PASSWORD_FIELD = 'emp_id'
     REQUIRED_FIELDS = ['username']

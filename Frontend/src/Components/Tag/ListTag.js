@@ -9,10 +9,12 @@ import Sidebar from '../../Sidebar';
 import { toast } from 'react-toastify';
 import { list_tags,delete_tag } from '../../axios/api';
 import DOMPurify from 'dompurify'; // Import DOMPurify
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 export default function ListTag() {
     const [tags, setTags] = useState([]);
     const [globalFilter, setGlobalFilter] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchTags();
@@ -33,10 +35,14 @@ export default function ListTag() {
         setGlobalFilter(e.target.value);
     };
 
-    const handleEdit = (tagId) => {
+    const handleEdit = (tag) => {
         // Implement edit functionality
-        console.log('Edit tag with ID:', tagId);
+        console.log('Edit tag with ID:', tag);
+        navigate('/createTag', { state: { tag } }); 
     };
+
+    
+
 
     const handleDelete = async (tagId) => {
         try {
@@ -55,7 +61,7 @@ export default function ListTag() {
             <div>
                 <button
                     className="btn btn-link"
-                    onClick={() => handleEdit(rowData.id)}
+                    onClick={() => handleEdit(rowData)}
                 >
                     <FontAwesomeIcon icon={faEdit} />
                 </button>
@@ -76,6 +82,7 @@ export default function ListTag() {
         );
     };
 
+  
 
     return (
         <div className="container-fluid">

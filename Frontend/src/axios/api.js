@@ -191,9 +191,9 @@ export const get_user_details = async (userId) => {
 };
 
 
-export const update_user = async (userId, newAcademicYear) => {
+export const updateUser = async (userId, userData) => {
   try {
-    const res = await axiosInstance.put(`/authentication/user_update/${userId}/`, newAcademicYear );
+    const res = await axiosInstance.put(`/authentication/user_update/${userId}/`, userData );
     return res.data;
   } catch (error) {
     console.log(error);
@@ -410,6 +410,16 @@ export const list_tags = async () => {
   } catch (error) {
     console.log(error);
     // toast.error("Failed to list tags. Please try again.");
+  }
+};
+
+
+export const update_tag = async (tagId, newTag) => {
+  try {
+    const res = await axiosInstance.put(`/department_and_events/update_tag/${tagId}/`, newTag );
+    return res.data;
+  } catch (error) {
+    console.log(error);
   }
 };
 

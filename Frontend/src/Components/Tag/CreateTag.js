@@ -1,17 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { InputText } from "primereact/inputtext";
 import { Editor } from "primereact/editor";
 import { Button } from "primereact/button";
-import axios from 'axios';  // Import Axios for HTTP requests
-import { create_tag } from '../../axios/api';
+import { useLocation } from "react-router-dom"; // Import useLocation
+import { create_tag, update_tag } from '../../axios/api'; // Assuming you have a separate update API
 import Sidebar from '../../Sidebar';
 import { toast } from "react-toastify";
 
-export default function CreateTag() {
+export default function CreateOrUpdateTag() {
     const [tagName, setTagName] = useState('');
     const [description, setDescription] = useState('');
     const [tagNameError, setTagNameError] = useState('');
     const [descriptionError, setDescriptionError] = useState('');
+    const location = useLocation(); // To get the state if coming for an update
+    const tag = location.state?.tag || null; // Get tag from state if it's passed for editing
+
+    useEffect(() => {
+        // If tag exists (for update), prepopulate form fields
+        if (tag) {
+            setTagName(tag.name);
+            setDescription(tag.description);
+        }
+    }, [tag]);
 
     const validateTagName = (value) => {
         const tagNameRegex = /^[a-zA-Z\s]*$/;
@@ -21,6 +31,7 @@ export default function CreateTag() {
             setTagNameError("");
         }
     };
+
     const toTitleCase = (str) => {
         return str
             .toLowerCase()
@@ -29,58 +40,37 @@ export default function CreateTag() {
             .join(' ');
     };
 
-    // const validateDescription = (value) => {
-    //     if (value == null || value.trim() === '') {
-    //         setDescriptionError('Description is required.');
-    //     } else {
-    //         setDescriptionError('');
-    //     }
-    // };
-
     const handleSave = async () => {
-        // Validate inputs before attempting to save
-        // validateTagName(tagName);
-        // validateDescription(description);
-    
-        // Check if there are validation errors or if fields are empty
         if (tagNameError || descriptionError || !tagName || !description) {
-            // toast.warning('Please fill in all the fields correctly.');
-            return; // Exit the function if validation fails
+            toast.warning('Please fill in all the fields correctly.');
+            return;
         }
-    
-        // Proceed with saving if validation passes
+
+        const tagData = { name: toTitleCase(tagName), description: description };
+
         try {
-            const response = await create_tag({ name: toTitleCase(tagName), description: description });
-            console.log('Tag created successfully:', response);
-            toast.success('Registered Successfully');
-            // Optionally, reset form or handle success
+            if (tag) {
+                // If tag exists, update it
+                const response = await update_tag(tag.id, tagData); // Assuming update_tag takes ID and data
+                toast.success('Tag updated successfully');
+            } else {
+                // If no tag, create a new one
+                const response = await create_tag(tagData);
+                toast.success('Tag created successfully');
+            }
+
+            // Optionally, reset form or navigate away after saving
             setTagName('');
             setDescription('');
         } catch (error) {
-            console.error('Error creating tag:', error);
-            toast.error('Error occurred while creating the tag.');
+            console.error('Error saving tag:', error);
+            toast.error('Error occurred while saving the tag.');
         }
     };
-    
-
-
-
-    // const handleSave = async () => {
-    //     try {
-    //         const response = await create_tag({ name: tagName, description: description })
-    //         console.log('Tag created successfully:', response);
-    //         toast.success('Registered Successfully');
-    //         // Optionally, handle success (e.g., reset form or show a success message)
-    //     } catch (error) {
-    //         console.error('Error creating tag:', error);
-    //         // Optionally, handle error (e.g., show an error message)
-    //     }
-    // };
 
     const renderAsterisk = () => (
         <span style={{ color: 'red' }}>*</span>
     );
-
 
     return (
         <div className="container-fluid">
@@ -91,7 +81,7 @@ export default function CreateTag() {
                 <div className="col-md-10 mt-5 pt-5">
                     <div className="container mt-3 p-6">
                         <div className="d-flex flex-column align-items-center mb-4">
-                            <h2>Create Tag</h2>
+                            <h2>{tag ? 'Update Tag' : 'Create Tag'}</h2>
                             <div className="p-field w-100 mb-3">
                                 <label htmlFor="tagName">Tag Name{renderAsterisk()}</label>
                                 <InputText
@@ -103,7 +93,7 @@ export default function CreateTag() {
                                     }}
                                     placeholder="Enter tag name"
                                     className="w-100"
-                                    />
+                                />
                                 {tagNameError && <div className="text-danger">{tagNameError}</div>} {/* Display validation error */}
                             </div>
                             <div className="p-field w-100 mb-3">
@@ -113,7 +103,6 @@ export default function CreateTag() {
                                     value={description}
                                     onTextChange={(e) => {
                                         setDescription(e.htmlValue);
-                                        // validateDescription(e.htmlValue);
                                     }}
                                     style={{ height: '320px' }}
                                     placeholder="Enter description here..."
@@ -122,7 +111,7 @@ export default function CreateTag() {
                                 {descriptionError && <div className="text-danger">{descriptionError}</div>} {/* Display validation error */}
                             </div>
                             <div className="p-field w-100">
-                                <Button label="Save" icon="pi pi-check" onClick={handleSave} />
+                                <Button label={tag ? 'Update' : 'Save'} icon="pi pi-check" onClick={handleSave} />
                             </div>
                         </div>
                     </div>

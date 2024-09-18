@@ -4,6 +4,10 @@ import { multiple_user_register } from '../../axios/api';
 import { toast } from 'react-toastify';
 import homeURL from '../../axios/homeurl';
 import Sidebar from '../../Sidebar';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faDownload } from '@fortawesome/free-solid-svg-icons';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
 
 // FileInput Component
 const FileInput = ({ onFileChange }) => {
@@ -17,6 +21,7 @@ const FileInput = ({ onFileChange }) => {
                 className="form-control"
                 id="csvFile"
                 onChange={onFileChange}
+                accept=".csv"
             />
         </div>
     );
@@ -49,28 +54,44 @@ const CSVPreviewTable = ({ previewData }) => {
     ) : null;
 };
 
-// MessageDisplay Component
-const MessageDisplay = ({ error, success, errorFileLink, successFileLink }) => {
-    return (
-        <div>
-            {error && <div className="text-danger">{error}</div>}
-            {success && <div className="text-success">{success}</div>}
-            {errorFileLink}
-            {successFileLink}
-        </div>
-    );
-};
+// UploadSummaryTable Component
+const UploadSummaryTable = ({ totalCount, successCount, errorCount }) => {
+    // Prepare data for the DataTable
+    const summaryData = [
+        {
+            total: totalCount,
+            success: successCount,
+            error: errorCount,
+        },
+    ];
 
-// UploadSummary Component
-const UploadSummary = ({ totalCount, successCount, errorCount }) => {
-    return totalCount > 0 ? (
-        <div className="mt-3">
-            <h5>Upload Summary</h5>
-            <p>Total Count: {totalCount}</p>
-            <p>Success Count: {successCount}</p>
-            <p>Error Count: {errorCount}</p>
-        </div>
-    ) : null;
+    return (
+        totalCount > 0 && (
+            <div className="mt-3">
+                <h5>Upload Summary</h5>
+                <DataTable value={summaryData} tableStyle={{ minWidth: '50rem' }}>
+                    <Column
+                        field="total"
+                        header="Total Count"
+                        style={{ width: '33%' }}
+                        bodyStyle={{ textAlign: 'center' }}
+                    ></Column>
+                    <Column
+                        field="success"
+                        header="Success Count"
+                        style={{ width: '33%' }}
+                        bodyStyle={{ textAlign: 'center' }}
+                    ></Column>
+                    <Column
+                        field="error"
+                        header="Error Count"
+                        style={{ width: '33%' }}
+                        bodyStyle={{ textAlign: 'center' }}
+                    ></Column>
+                </DataTable>
+            </div>
+        )
+    );
 };
 
 // Main Component: RegisterMultipleUser
@@ -84,6 +105,7 @@ const RegisterMultipleUser = () => {
     const [totalCount, setTotalCount] = useState(0);
     const [successCount, setSuccessCount] = useState(0);
     const [errorCount, setErrorCount] = useState(0);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleFileChange = (e) => {
         const selectedFile = e.target.files[0];
@@ -105,7 +127,8 @@ const RegisterMultipleUser = () => {
     const transformRows = (rows) => {
         return rows.map((row, index) => {
             if (index === 0) return row;
-            row[1] = toTitleCase(row[1]);
+            row[1] = toTitleCase(row[1]); // first_name
+            row[2] = toTitleCase(row[2]); // last_name
             return row;
         });
     };
@@ -131,13 +154,17 @@ const RegisterMultipleUser = () => {
             const formData = new FormData();
             formData.append('file', file);
 
+            setIsSubmitting(true);
+
             try {
-                const response = await multiple_user_register(formData);
+                const response = await multiple_user_register(formData); // 30 seconds
                 if (response.status === 201) {
                     handleSuccess(response);
                 }
             } catch (err) {
                 handleError(err);
+            } finally {
+                setIsSubmitting(false);
             }
         } else {
             setError("Please upload a CSV file.");
@@ -145,7 +172,7 @@ const RegisterMultipleUser = () => {
     };
 
     const handleSuccess = (response) => {
-        setSuccess("Users registered successfully!");
+        setSuccess("Registration Complete! Users were successfully registered.");
         setTotalCount(response.data.total_count || 0);
         setSuccessCount(response.data.success_count || 0);
         setErrorCount(response.data.error_count || 0);
@@ -155,19 +182,29 @@ const RegisterMultipleUser = () => {
         }
         if (response.data.error_file_url) {
             setErrorFileLink(renderFileLink(response.data.error_file_url, "Download Error Report", "text-danger"));
-            setError("Some users could not be registered. Please download the error report.");
+            setError("Some users could not be registered.");
         }
     };
 
     const handleError = (err) => {
-        setError(err.response ? err.response.data : "Failed to register users. Please check the CSV file format.");
-        toast.error("Failed to register users. Please check the CSV file format.");
+        if (err.code === 'ECONNABORTED') {
+            setError("Request timed out. Please try again later.");
+            toast.error("Request timed out. Please try again later.");
+        } else if (err.response && err.response.data) {
+            setError(err.response.data.error || "Failed to register users. Please check the CSV file format.");
+            toast.error(err.response.data.error || "Failed to register users. Please check the CSV file format.");
+        } else {
+            console.log(err)
+            setError("Failed to register users. Please check the CSV file format.");
+            toast.error("Failed to register users. Please check the CSV file format.");
+        }
+        console.log(err); // Log the error for debugging
     };
 
     const renderFileLink = (url, text, className) => {
         return (
             <a href={`${homeURL}${url}`} download className={`${className} mx-5`}>
-                {text}
+                {text} <FontAwesomeIcon icon={faDownload} />
             </a>
         );
     };
@@ -196,7 +233,7 @@ const RegisterMultipleUser = () => {
 
                                 {/* Disclaimer */}
                                 <div className="text-muted mb-6">
-                                    The file should include the following columns in the same order: email, first_name, last_name, emp_id, ph, department, location.
+                                    The file should include the following columns in the same order: email, first_name, last_name, emp_id, phone_number, department, location, role.
                                 </div>
 
                                 {/* CSV Preview */}
@@ -205,22 +242,47 @@ const RegisterMultipleUser = () => {
                                 {/* Upload button */}
                                 <div className="row mb-3">
                                     <div className="col-md-2">
-                                        <button className="btn btn-primary btn-sm w-100" onClick={handleFileUpload}>
-                                            Upload CSV File
+                                        <button className="btn btn-primary btn-sm w-100" onClick={handleFileUpload} disabled={isSubmitting}>
+                                            {isSubmitting ? "Uploading..." : "Upload CSV File"}
                                         </button>
                                     </div>
-                                </div>
+                                </div>  
 
-                                {/* Error/Success message display */}
-                                <MessageDisplay
-                                    error={error}
-                                    success={success}
-                                    errorFileLink={errorFileLink}
-                                    successFileLink={successFileLink}
-                                />
+                                <div className="d-flex justify-content-between align-items-center">
+                                                                        
+                                        {/* Error Message and Download Link (Left) */}
+                                        <div className="d-flex flex-column align-items-start">
+                                            {error && (
+                                                <>
+                                                    <div className="text-danger mb-2">{error}</div>
+                                                    {errorFileLink && (
+                                                        <div className="box-style text-danger">
+                                                            {errorFileLink}
+                                                        </div>
+                                                    )}
+                                                </>
+                                            )}
+                                        </div>
+
+                                        {/* Success Message and Download Link (Right) */}
+                                        <div className="d-flex flex-column align-items-end">
+                                            {success && (
+                                                <>
+                                                    <div className="text-success mb-2">{success}</div>
+                                                    {successFileLink && (
+                                                        <div className="box-style text-success">
+                                                            {successFileLink}
+                                                        </div>
+                                                    )}
+                                                </>
+                                            )}
+                                        </div>
+                                    </div>
+
+
 
                                 {/* Upload Summary */}
-                                <UploadSummary
+                                <UploadSummaryTable
                                     totalCount={totalCount}
                                     successCount={successCount}
                                     errorCount={errorCount}

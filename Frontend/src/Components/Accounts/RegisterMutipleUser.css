@@ -1,0 +1,16 @@
+.box-style {
+    padding: 8px 12px;
+    border: 1px solid currentColor;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.05);
+    transition: background-color 0.3s ease;
+}
+
+.box-style:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.mb-2 {
+    margin-bottom: 0.5rem; /* Margin between message and download link */
+}

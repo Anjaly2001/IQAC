@@ -8,6 +8,7 @@ import {
   user_register,
   campus_list,
   department_list_by_campus,
+  updateUser
 } from "../../axios/api";
 import Sidebar from "../../Sidebar";
 
@@ -28,6 +29,10 @@ const RegisterSingleUser = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [userRole, setUserRole] = useState('');
   const [userRoleError, setUserRoleError] = useState('');
+
+  const [userId, setUserId] = useState(null); // For local state
+  
+
 
 
 
@@ -71,7 +76,7 @@ const RegisterSingleUser = () => {
   };
   
 
-  const createUser = async () => {
+  const createOrUpdateUser = async () => {
     setIsSubmitting(true);
     let isValid = true;
 
@@ -113,7 +118,7 @@ const RegisterSingleUser = () => {
 
     const [firstName, lastName] = userName.split(" "); // Split the userName by space
 
-    const newUser = {
+    const userData = {
       first_name: toTitleCase(firstName), // Assign first part to first_name
       last_name: toTitleCase(lastName) || "", // Assign second part to last_name or set it to an empty string if not provided
       username: userEmail,
@@ -125,25 +130,27 @@ const RegisterSingleUser = () => {
       role:userRole,
     };
 
-    console.log("Payload to be sent:", newUser);
+    console.log("Payload to be sent:", userData);
 
     try {
-      const response = await user_register(newUser);
-      console.log("User created successfully:", response);
-      toast.success("User created successfully!");
-      // Reset the form fields
-      setUserName("");
-      setUserEmpId("");
-      setUserEmail("");
-      setUserPhoneNumber("");
-      setUserDepartment("");
-      setCustomDepartment("");
-      setUserCampus("");
-      navigate("/listuser");
-      setIsSubmitting(false);
+      let response;
+  
+      // Check if you are updating or creating based on the presence of userId
+      if (userId) {
+        // Call the update API
+        response = await updateUser(userId, userData);
+        toast.success("User updated successfully!");
+      } else {
+        // Call the create API
+        response = await user_register(userData);
+        toast.success("User created successfully!");
+      }
+  
+      navigate("/listuser"); // Redirect to user list after success
     } catch (error) {
-      console.error("Failed to create user:", error);
-      toast.error("Failed to create user.");
+      toast.error("Failed to process user.");
+    } finally {
+      setIsSubmitting(false); // Ensure the submitting flag is reset
     }
   };
 
@@ -430,9 +437,13 @@ const RegisterSingleUser = () => {
                   </div>
                 </div>
                 <div className="text-left">
-                  <button className="btn btn-primary" onClick={createUser} disabled={isSubmitting}>
-                    {isSubmitting ? "Submitting..." : " Register User"}
-                  </button>
+                <button
+                  className="btn btn-primary"
+                  onClick={createOrUpdateUser}
+                  disabled={isSubmitting}
+                >
+                  {userId ? "Update User" : "Register User"}
+                </button>
                 </div>
               </div>
             </div>

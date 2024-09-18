@@ -35,13 +35,13 @@ const ListUser = () => {
     fetchUsers();
   }, []);
 
-  const startEditing = (userId) => {
+  const startEditing = (user) => {
     // const selectedUser = users.find((user) => user.id === userId);
-    console.log(userId)
-    navigate("/registerSingleuser", { state: { user: userId } });
+    console.log(user)
+    navigate("/registerSingleuser", { state: { user } });
   };
 
- 
+
 
   const handleDeleteUser = async (id) => {
     try {
@@ -73,7 +73,7 @@ const ListUser = () => {
     <div>
       <FaEdit
         className="text-warning me-3 cursor-pointer"
-        onClick={() => startEditing(rowData.id)}
+        onClick={() => startEditing(rowData)}
         title="Edit"
       />
       <FaTrash

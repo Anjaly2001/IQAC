@@ -8,7 +8,7 @@ import Sidebar from '../../Sidebar';
 // import axios from 'axios';
 import { toast } from 'react-toastify';
 import { list_tags,delete_tag } from '../../axios/api';
-import DOMPurify from 'dompurify'; // Import DOMPurify
+//import DOMPurify from 'dompurify'; // Import DOMPurify
 
 export default function ListTag() {
     const [tags, setTags] = useState([]);

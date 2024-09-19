@@ -233,7 +233,7 @@ const RegisterMultipleUser = () => {
 
                                 {/* Disclaimer */}
                                 <div className="text-muted mb-6">
-                                    The file should include the following columns in the same order: email, first_name, last_name, emp_id, phone_number, department, location, role.
+                                    The file should include the following columns in the same order: email, first_name, last_name, emp_id, phone_number, department, location.
                                 </div>
 
                                 {/* CSV Preview */}

@@ -740,6 +740,7 @@ function AddReport() {
                       File uploads of the event
                     </h3>
                     <div>
+
                       {/* Poster Upload */}
                       <FileUpload
                         label="Upload Poster"

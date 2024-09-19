@@ -74,11 +74,10 @@ export const campus_delete = async (campus_id) => {
   }
 };
 
-export const department_register = async (form) => {
+export const department_register = async (data) => {
   try {
     const res = await axiosInstance.post(
-      "department_and_events/department_register/",
-      form
+      "department_and_events/department_register/",data
     );
     return res.data;
   } catch (error) {
@@ -107,6 +106,16 @@ export const department_list = async (form) => {
     return res.data;
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const department_update = async (department_id, updatedDepartmentData) => {
+  try {
+    const res = await axiosInstance.put(`department_and_events/department_update/${department_id}/`, updatedDepartmentData );
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    // toast.error("campus already exist.");
   }
 };
 
@@ -166,6 +175,25 @@ export const multiple_user_register = async (form) => {
 export const users_list = async (form) => {
   try {
     const res = await axiosInstance.get("authentication/user_list/", form);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const get_user_details = async (userId) => {
+  try {
+    const res = await axiosInstance.get(`authentication/get_user_details/${userId}/`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+export const updateUser = async (userId, userData) => {
+  try {
+    const res = await axiosInstance.put(`/authentication/user_update/${userId}/`, userData );
     return res.data;
   } catch (error) {
     console.log(error);
@@ -239,6 +267,17 @@ export const academic_list_campus = async (campus_id) => {
     // toast.error("Failed to Fetch academic year. Please try again.");
   }
 };
+
+export const update_academic_year = async (academicYearId, newAcademicYear) => {
+  try {
+    const res = await axiosInstance.put(`department_and_events/update_academic_year/${academicYearId}/`, newAcademicYear );
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
 export const academic_delete = async (academicYearId) => {
   try {
     const res = await axiosInstance.delete(
@@ -273,6 +312,16 @@ export const event_type_list = async () => {
   }
 };
 
+export const update_event_type = async (eventTypeId, newEventType) => {
+  try {
+    const res = await axiosInstance.put(`/department_and_events/update_event_type/${eventTypeId}/`, newEventType );
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
 export const event_type_delete = async (eventType) => {
   try {
     const res = await axiosInstance.delete(
@@ -287,11 +336,10 @@ export const event_type_delete = async (eventType) => {
 
 // role
 
-export const campus_name_list = async (form) => {
+export const campus_name_list = async () => {
   try {
     const res = await axiosInstance.get(
-      "department_and_events/campus_name_list/",
-      form
+      "department_and_events/campus_name_list/"
     );
     return res.data;
   } catch (error) {
@@ -365,6 +413,16 @@ export const list_tags = async () => {
   }
 };
 
+
+export const update_tag = async (tagId, newTag) => {
+  try {
+    const res = await axiosInstance.put(`/department_and_events/update_tag/${tagId}/`, newTag );
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const delete_tag = async (tag_id) => {
   try {
     const res = await axiosInstance.delete( `department_and_events/delete_tag/${tag_id}/`);
@@ -393,5 +451,25 @@ export const proposal_file_upload=async(form,event_id)=>{
   } catch (error) {
     console.log(error);
     // toast.error("Failed to create proposal file. Please try again.");
+  }
+};
+
+export const event_list= async () => {
+  try {
+    const res = await axiosInstance.get( "department_and_events/event_list/",);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    // toast.error("Failed to list event types. Please try again.");
+  }
+};
+
+
+export const event_delete = async (eventId) => {
+  try {
+    const response = await axiosInstance.delete(`/department_and_events/event_delete/${eventId}/`);
+    return response.data;
+  } catch (error) {
+    throw new Error("Error deleting role");
   }
 };

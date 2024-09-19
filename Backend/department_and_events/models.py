@@ -21,7 +21,7 @@ class Department(models.Model):
         ('Cell', 'cell'),
         ('Others', 'others'),
     ]
-    name = models.CharField(unique=True, max_length=250)
+    name = models.CharField(max_length=250)
     type = models.CharField(max_length=20, choices=TYPE_CHOICES, default='others')
     description = models.CharField(max_length=250, null=True)
     location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='loc')
@@ -42,12 +42,12 @@ class Academic_year(models.Model):
 
 
 class Tag(models.Model):
-    name = models.CharField(max_length=250, null=True)
+    name = models.CharField(max_length=250, unique=True)
     description = models.TextField()
 
 
 class Event_type(models.Model):
-    title = models.CharField(max_length=250)
+    title = models.CharField(max_length=250, unique=True)
     description = models.TextField()
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='created')
     created_on = models.DateTimeField(auto_now_add=True)
@@ -57,10 +57,11 @@ class Event_Register(models.Model):
     location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='locate')
     department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='dpt')
     event_title = models.CharField(max_length=350)
+    description = models.TextField()
     no_of_activities = models.IntegerField()
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
-    venue = models.TextField(max_length=250)
+    # venue = models.TextField(max_length=250)
     academic_year = models.ForeignKey(Academic_year, on_delete=models.CASCADE, related_name='year')
     event_type = models.ForeignKey(Event_type, on_delete=models.CASCADE, related_name='event')
     tags = models.ManyToManyField(Tag, related_name='events', blank=True)
@@ -73,7 +74,10 @@ class Activity(models.Model):
     event = models.ForeignKey(Event_Register, on_delete=models.CASCADE)
     activity_title = models.CharField(max_length=350)
     activity_description = models.TextField()
-    activity_date = models.DateTimeField()
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
     venue = models.TextField(max_length=250)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -101,13 +105,15 @@ class Proposal_Upload(models.Model):
 
 
 class Role(models.Model):
-    users = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
-    role = models.CharField(max_length=20, choices=(
-        ('viewers', 'Viewers'),
+    users = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='roles')
+    ROLE_CHOICES = [
         ('departmentHOD', 'DepartmentHOD'),
         ('IQACuser', 'IQACUser'),
-        ('staffs', 'Staffs'),
-    ), default='staffs')
+        ('staff', 'Staff'),
+        # ('department','Department')
+    ]
+    
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='staffs')
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
     status = models.BooleanField(default=True)
 
@@ -126,12 +132,26 @@ class EventStatus(models.Model):
 
 class EventReport(models.Model):
     event = models.ForeignKey(Event_Register, on_delete=models.CASCADE)
+    blog_link= models.TextField(null = True)
     target_audience = models.TextField(null = True)
     external_members_or_agencies_with_affiliation = models.TextField(null = True)
     website_contact_of_external_members = models.TextField(null = True)
     organizing_committee_details = models.TextField(null = True)
     no_of_student_volunteers = models.TextField(null = True)
     no_of_attendees_or_participants = models.TextField(null = True)
+
+class EventReportFileUpload(models.Model):
+    event = models.ForeignKey(Event_Register, on_delete=models.CASCADE)
+    poster = models.FileField(upload_to=custom_upload_to, blank=True, null=True)
+    brochure = models.FileField(upload_to=custom_upload_to, blank=True, null=True)
+    detailed_report = models.FileField(upload_to=custom_upload_to, blank=True, null=True)
+    photographs = models.FileField(upload_to=custom_upload_to, blank=True, null=True)
+    registration_list = models.FileField(upload_to=custom_upload_to, blank=True, null=True)
+    certificate_participants = models.FileField(upload_to=custom_upload_to, blank=True, null=True)
+    certificate_winners = models.FileField(upload_to=custom_upload_to,  blank=True, null=True)
+    proposal = models.FileField(upload_to=custom_upload_to, blank=True, null=True)
+    budget = models.FileField(upload_to=custom_upload_to, blank=True, null=True)
+    email_communication = models.FileField(upload_to=custom_upload_to, blank=True, null=True)
 
 class EventReportFinal(models.Model):
     summary_of_the_overall_event = models.TextField()
@@ -154,6 +174,8 @@ class ReportStatus(models.Model):
 
     def __str__(self):
         return f"Report Status: {self.status} for {self.report}"
+    
+
 
 #
 # # Create your models here.

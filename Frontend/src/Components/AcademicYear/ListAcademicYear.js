@@ -13,6 +13,7 @@ const ListAcademicYear = () => {
     const [academicYears, setAcademicYears] = useState([]);
     const [error, setError] = useState(null);
     const history = useNavigate();
+    const navigate = useNavigate();
 
     // Fetch academic years from the backend API
     useEffect(() => {
@@ -29,10 +30,19 @@ const ListAcademicYear = () => {
         fetchAcademicYears();
     }, []);
 
-    const handleEdit = (year) => {
+    const handleEdit = (yearId) => {
+        console.log(yearId)
         // Navigate to CreateAcademicYear page with pre-filled details
-        history('/academicyear', { state: { academicYear: year } });
+        navigate('/academicyear', { state: { academicYear: yearId } });
     };
+
+    // const startEditing = (departmentId) => {
+    //     console.log(departmentId)
+       
+    //     navigate('/createdepartments', { state: { department: departmentId } });
+        
+    // };
+
 
     const handleDelete = async (id) => {
         try {
@@ -55,7 +65,7 @@ const ListAcademicYear = () => {
                     <Sidebar />
                 </div>
                 <div className="col-md-10 mt-5 pt-6">
-                    <div className="container mt-4 p-6 text-center text-bold">
+                    <div className="container mt-4 p-6 text-center">
                         <h3>Academic Years</h3>
                         <table className="table table-striped mt-5">
                             <thead>

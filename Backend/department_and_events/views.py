@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, parser_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
@@ -8,9 +8,11 @@ from authentication.emails import send_event_register
 from authentication.models import CustomUser, User_profile
 from authentication.serializers import UserRegistrationSerializer
 from .models import Academic_year, Collaborators, Event_Register, Event_type, EventReport, EventStatus, Location, Department, Role, Tag
-from .serializers import AcademicyearSerializer, CollaboratorSerializer, DepartmentSerializer,  DepartmentSerializer, EventListSerializer, EventRegisterSerializer, EventReportSerializer, EventStatusSerializer, EventTypeSerializer, LocationSerializer, MultiRoleSerializer, ProposalFileSerializer, RoleSerializer, TagSerializer
+from .serializers import AcademicyearSerializer, CollaboratorSerializer, DepartmentSerializer,  DepartmentSerializer, EventListSerializer, EventRegisterSerializer, EventReportFileUploadSerializer, EventReportSerializer, EventStatusSerializer, EventTypeSerializer, LocationSerializer, MultiRoleSerializer, ProposalFileSerializer, RoleSerializer, TagSerializer
 from django.contrib.auth.models import User
 from .emails import send_event_status_email
+
+from rest_framework.parsers import MultiPartParser, FormParser
 
 
 # _____________DEPARTMENT API_________
@@ -136,19 +138,26 @@ def department_list_by_campus(request, id):
 def users_list_of_each_department(request, id):
     if request.method == 'GET':
         try:
-            department = Department.objects.get(id=id)
-        except Department.DoesNotExist:
-            return Response({"error": "Department not found."}, status=status.HTTP_404_NOT_FOUND)
+            # Fetch department from Role table using department ID
+            department_roles = Role.objects.filter(department__id=id)
+            if not department_roles.exists():
+                return Response({"error": "Department not found."}, status=status.HTTP_404_NOT_FOUND)
 
-        user_profiles = User_profile.objects.filter(department=department)
-        users = [profile.user for profile in user_profiles]
-        user_serializer = UserRegistrationSerializer(users, many=True)
-        user_data = [{'id': user.get('id'), 'username': user['username']} for user in user_serializer.data]
+            # Extract users associated with the department roles
+            users = [role.users for role in department_roles]
+            user_serializer = UserRegistrationSerializer(users, many=True)
+            user_data = [{'id': user.get('id'), 'username': user['username']} for user in user_serializer.data]
+
+            # Get department name from the first Role object
+            department_name = department_roles.first().department.name
     
-        return Response({
-            'department': department.name,
-            'users': user_data
-        }, status=status.HTTP_200_OK)
+            return Response({
+                'department': department_name,
+                'users': user_data
+            }, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['GET'])
@@ -325,6 +334,19 @@ def list_event_type(request):
         serializer = EventTypeSerializer(event_type, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_event_type(request,id):
+    if request.method == 'PUT':
+        event_type = Event_type.objects.get(id = id)
+        serializer = EventTypeSerializer(event_type,data = request.data, partial = True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"data":serializer.data,'message':'Updated SUccessfully'})
+        return Response(serializer._errors)
+    
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
@@ -573,6 +595,15 @@ def list_tag(request):
         return Response(serializer.data)
 
 
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_tag(request,id):
+    if request.method == 'PUT':
+        tag = Tag.objects.get(id = id)
+        serializer = TagSerializer(tag, data = request.data, partial = True)
+        return Response({'data':serializer.data,'message':'Updated Successfully'})
+    return Response(serializer.errors)
+
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def delete_tag(request, id):
@@ -602,8 +633,17 @@ def event_report_create(request, id):
             serializer.save()
             return Response({'data': serializer.data, 'message': 'Details saved successfully'}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 
-
+@api_view(['POST'])
+@parser_classes([MultiPartParser, FormParser])
+def upload_event_report_files(request):
+    if request.method == 'POST':
+        serializer = EventReportFileUploadSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # ____________COLLABORATORS API________
 
@@ -628,14 +668,7 @@ def delete_collaborators(request, id):
 # def department_list(request):
 #     if request.method == 'GET':
 #         if not request.user.is_superuser and request.user.is_staff:
-#             return Response({"error": "Only admin can list departments"})
-#         obj = Department.objects.all()
-#         serializer = DepartmentSerializer(obj, many=True)
-#         return Response(serializer.data)
-
-
-# @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
+#             return Response({"error":ff797871-c3e4-486e-bc7e-7bf0f978922e/
 # def department_register(request):
 #     if request.method == 'POST':
 #         if not request.user.is_superuser and not request.user.is_staff:

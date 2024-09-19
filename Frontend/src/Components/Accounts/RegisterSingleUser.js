@@ -8,6 +8,7 @@ import {
   user_register,
   campus_list,
   department_list_by_campus,
+  updateUser
 } from "../../axios/api";
 import Sidebar from "../../Sidebar";
 
@@ -26,6 +27,13 @@ const RegisterSingleUser = () => {
   const [userEmailError, setUserEmailError] = useState("");
   const [userPhoneNumberError, setUserPhoneNumberError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [userRole, setUserRole] = useState('');
+  const [userRoleError, setUserRoleError] = useState('');
+
+  const [userId, setUserId] = useState(null); // For local state
+  
+
+
 
 
   const navigate = useNavigate();
@@ -59,14 +67,16 @@ const RegisterSingleUser = () => {
   }, [userCampus]); // Add userCampus as a dependency
 
   const toTitleCase = (str) => {
+    if (!str) return ""; // Handle undefined or null values
     return str
       .toLowerCase()
       .split(" ")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
   };
+  
 
-  const createUser = async () => {
+  const createOrUpdateUser = async () => {
     setIsSubmitting(true);
     let isValid = true;
 
@@ -108,7 +118,7 @@ const RegisterSingleUser = () => {
 
     const [firstName, lastName] = userName.split(" "); // Split the userName by space
 
-    const newUser = {
+    const userData = {
       first_name: toTitleCase(firstName), // Assign first part to first_name
       last_name: toTitleCase(lastName) || "", // Assign second part to last_name or set it to an empty string if not provided
       username: userEmail,
@@ -117,27 +127,30 @@ const RegisterSingleUser = () => {
       phone_number: userPhoneNumber,
       department: department,
       location: userCampus,
+      role:userRole,
     };
 
-    console.log("Payload to be sent:", newUser);
+    console.log("Payload to be sent:", userData);
 
     try {
-      const response = await user_register(newUser);
-      console.log("User created successfully:", response);
-      toast.success("User created successfully!");
-      // Reset the form fields
-      setUserName("");
-      setUserEmpId("");
-      setUserEmail("");
-      setUserPhoneNumber("");
-      setUserDepartment("");
-      setCustomDepartment("");
-      setUserCampus("");
-      navigate("/listuser");
-      setIsSubmitting(false);
+      let response;
+  
+      // Check if you are updating or creating based on the presence of userId
+      if (userId) {
+        // Call the update API
+        response = await updateUser(userId, userData);
+        toast.success("User updated successfully!");
+      } else {
+        // Call the create API
+        response = await user_register(userData);
+        toast.success("User created successfully!");
+      }
+  
+      navigate("/listuser"); // Redirect to user list after success
     } catch (error) {
-      console.error("Failed to create user:", error);
-      toast.error("Failed to create user.");
+      toast.error("Failed to process user.");
+    } finally {
+      setIsSubmitting(false); // Ensure the submitting flag is reset
     }
   };
 
@@ -403,10 +416,34 @@ const RegisterSingleUser = () => {
                     </div>
                   )}
                 </div>
+                {/* Role Input */}
+                <div className="row mb-3">
+                  <div className="col-md-6">
+                    <label htmlFor="userRole">Role {renderAsterisk()}</label>
+                    <select
+                      id="userRole"
+                      className="form-select"
+                      value={userRole}
+                      onChange={(e) => setUserRole(e.target.value)}
+                    >
+                      <option value="">Select Role</option>
+                      <option value="Admin">Admin</option>
+                      <option value="University_Viewer">University Viewer</option>
+                      <option value="Campus_Admin">Campus Admin</option>
+                      <option value="Campus_Viewer">Campus Viewer</option>
+                      <option value="Department">Department</option>
+
+                    </select>
+                  </div>
+                </div>
                 <div className="text-left">
-                  <button className="btn btn-primary" onClick={createUser}disabled={isSubmitting}>
-                  {isSubmitting ? "Submitting..." : " Register User"}
-                  </button>
+                <button
+                  className="btn btn-primary"
+                  onClick={createOrUpdateUser}
+                  disabled={isSubmitting}
+                >
+                  {userId ? "Update User" : "Register User"}
+                </button>
                 </div>
               </div>
             </div>

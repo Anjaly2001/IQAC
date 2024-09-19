@@ -1,5 +1,7 @@
 
 # from .serializers import generate_otp
+from datetime import *
+from django.utils import timezone
 from .models import OTP
 from django.core.mail import send_mail
 from django.conf import settings
@@ -18,6 +20,7 @@ def send_otp_to_email(email):
     otp_code = generate_otp()
     otp_instance, created = OTP.objects.get_or_create(user=user)
     otp_instance.code = otp_code
+    otp_instance.created_at = timezone.now() 
     otp_instance.save()
 
     subject = 'Your OTP Code'

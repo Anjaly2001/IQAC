@@ -36,13 +36,20 @@ const AddRole = () => {
   const [roles, setRoles] = useState([]); // Add state to store user roles
 
   // Fetch campuses when the component is mounted
+
   useEffect(() => {
     const fetchCampuses = async () => {
-      const data = await campus_name_list();
-      setCampuses(
-        data.map((campus) => ({ label: campus.name, value: campus.id }))
-      );
+      try {
+        const data = await campus_name_list();
+        setCampuses(
+          data.map((campus) => ({ label: campus.name, value: campus.id }))
+        );
+      } catch (error) {
+        console.error('Error fetching campuses:', error);
+        // Optionally, you can show a user-friendly message or handle the error state
+      }
     };
+
     fetchCampuses();
   }, []);
 

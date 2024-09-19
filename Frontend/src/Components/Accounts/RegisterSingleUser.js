@@ -16,6 +16,7 @@ const RegisterSingleUser = () => {
   const [userName, setUserName] = useState("");
   const [userEmpId, setUserEmpId] = useState("");
   const [userEmail, setUserEmail] = useState("");
+  const domain = "@christuniversity.in"; // Fixed domain
   const [userPhoneNumber, setUserPhoneNumber] = useState("");
   const [userDepartment, setUserDepartment] = useState("");
   const [customDepartment, setCustomDepartment] = useState("");
@@ -29,7 +30,7 @@ const RegisterSingleUser = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [userRole, setUserRole] = useState('');
   const [userRoleError, setUserRoleError] = useState('');
-
+  const [fieldError, setFieldError] = useState('');
   const [userId, setUserId] = useState(null); // For local state
   
 
@@ -74,6 +75,17 @@ const RegisterSingleUser = () => {
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
   };
+
+  const validateField = (email) => {
+    const allowedPattern = /^[a-zA-Z0-9\s]+$/;
+  
+    if (!allowedPattern.test(email)) {
+      setFieldError("Field should contain only alphanumeric characters and spaces. Special characters like '@', '()', etc., are not allowed.");
+    } else {
+      setFieldError(""); // Clear the error if valid
+    }
+  };
+  
 
   const validateForm = () => {
     let isValid = true;

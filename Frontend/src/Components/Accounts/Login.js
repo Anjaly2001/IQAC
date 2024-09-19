@@ -115,7 +115,7 @@ const Login = () => {
 
           {/* Show processing message while OTP is being sent */}
           {processing && (
-            <div className="alert alert-info text-center">Processing...</div>
+            <div className="alert alert-info text-center">Processing....</div>
           )}
 
           {!otpSent ? (

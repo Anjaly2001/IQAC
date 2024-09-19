@@ -34,9 +34,6 @@ const RegisterSingleUser = () => {
   const [userId, setUserId] = useState(null); // For local state
   
 
-
-
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -76,15 +73,15 @@ const RegisterSingleUser = () => {
       .join(" ");
   };
 
-  const validateField = (email) => {
-    const allowedPattern = /^[a-zA-Z0-9\s]+$/;
+  // const validateField = (email) => {
+  //   const allowedPattern = /^[a-zA-Z0-9\s]+$/;
   
-    if (!allowedPattern.test(email)) {
-      setFieldError("Field should contain only alphanumeric characters and spaces. Special characters like '@', '()', etc., are not allowed.");
-    } else {
-      setFieldError(""); // Clear the error if valid
-    }
-  };
+  //   if (!allowedPattern.test(email)) {
+  //     setFieldError("Field should contain only alphanumeric characters and spaces. Special characters like '@', '()', etc., are not allowed.");
+  //   } else {
+  //     setFieldError(""); // Clear the error if valid
+  //   }
+  // };
   
 
   const validateForm = () => {

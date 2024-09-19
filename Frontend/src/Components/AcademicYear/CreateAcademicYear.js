@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { campus_list, academic_register, update_academic_year } from '../../axios/api'; // Import update function
+import { campus_list, academic_register, update_academic_year } from '../../axios/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Sidebar from '../../Sidebar';
@@ -13,6 +13,7 @@ const CreateAcademicYear = () => {
     const [campuses, setCampuses] = useState([]);
     const [error, setError] = useState('');
     const [yearError, setYearError] = useState('');
+    const [dateError, setDateError] = useState('');
     const [isEdit, setIsEdit] = useState(false);
     const [academicYearId, setAcademicYearId] = useState(null);
 
@@ -39,7 +40,7 @@ const CreateAcademicYear = () => {
     useEffect(() => {
         if (locationState && locationState.academicYear) {
             const { academicYear } = locationState;
-            setCampus(academicYear.location.id); // Populate state with current data
+            setCampus(academicYear.location.id);
             setLabel(academicYear.label);
             setStartDate(academicYear.start_date);
             setEndDate(academicYear.end_date);
@@ -65,6 +66,47 @@ const CreateAcademicYear = () => {
         }
     };
 
+    const validateDates = () => {
+        if (startDate && endDate && label) {
+            const [startYear, endYear] = label.split('-').map(Number);
+            const [startDateYear] = startDate.split('-').map(Number);
+            const [endDateYear] = endDate.split('-').map(Number);
+
+            if (startDateYear !== startYear || endDateYear !== endYear) {
+                setDateError(`The start date should be within ${startYear} and the end date should be within ${endYear}.`);
+                return false;
+            }
+
+            if (new Date(startDate) > new Date(endDate)) {
+                setDateError('End date must be after start date.');
+                return false;
+            }
+
+            setDateError('');
+            return true;
+        }
+        return false;
+    };
+
+    const handleLabelChange = (e) => {
+        const newLabel = e.target.value;
+        setLabel(newLabel);
+        validateYear(newLabel); // Validate year on label change
+        validateDates(); // Validate dates on label change
+    };
+
+    const handleStartDateChange = (e) => {
+        const newStartDate = e.target.value;
+        setStartDate(newStartDate);
+        validateDates(); // Validate dates on start date change
+    };
+
+    const handleEndDateChange = (e) => {
+        const newEndDate = e.target.value;
+        setEndDate(newEndDate);
+        validateDates(); // Validate dates on end date change
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -73,8 +115,12 @@ const CreateAcademicYear = () => {
             return;
         }
 
+        if (!validateDates()) {
+            return;
+        }
+
         const newAcademicYear = {
-            location_id: location_id, // Sending location_id as an array
+            location_id: location_id,
             label,
             start_date: startDate,
             end_date: endDate
@@ -83,22 +129,18 @@ const CreateAcademicYear = () => {
         try {
             let response;
             if (isEdit && academicYearId) {
-                console.log('Updating academic year with ID:', academicYearId);
-                console.log('Payload:', newAcademicYear);
-                response = await update_academic_year(academicYearId, newAcademicYear); // Update API call
+                response = await update_academic_year(academicYearId, newAcademicYear);
             } else {
-                response = await academic_register(newAcademicYear); // Create API call
+                response = await academic_register(newAcademicYear);
             }
             console.log('Academic Year processed:', response);
 
-            // Reset the form
             setCampus('');
             setLabel('');
             setStartDate('');
             setEndDate('');
             setError('');
 
-            // Navigate to ListAcademicYear page
             history('/listacademicyear');
         } catch (error) {
             console.error('Error processing academic year:', error);
@@ -154,10 +196,7 @@ const CreateAcademicYear = () => {
                                             className="form-control"
                                             value={label}
                                             placeholder="e.g., 2023-2024"
-                                            onChange={(e) => {
-                                                setLabel(e.target.value);
-                                                validateYear(e.target.value); // Call the year validation function
-                                            }}
+                                            onChange={handleLabelChange}
                                             required
                                         />
                                         {yearError && <small className="text-danger">{yearError}</small>}
@@ -174,7 +213,7 @@ const CreateAcademicYear = () => {
                                             id="startDate"
                                             className="form-control"
                                             value={startDate}
-                                            onChange={(e) => setStartDate(e.target.value)}
+                                            onChange={handleStartDateChange}
                                             required
                                         />
                                         <small className="form-text text-muted">Enter the start date for this academic year.</small>
@@ -188,12 +227,13 @@ const CreateAcademicYear = () => {
                                             id="endDate"
                                             className="form-control"
                                             value={endDate}
-                                            onChange={(e) => setEndDate(e.target.value)}
+                                            onChange={handleEndDateChange}
                                             required
                                         />
                                         <small className="form-text text-muted">Enter the end date for this academic year.</small>
                                     </div>
                                 </div>
+                                {dateError && <div className="text-danger mb-3">{dateError}</div>}
                                 {error && <div className="text-danger mb-3">{error}</div>}
                                 <div className="d-flex justify-content-start">
                                     <button type="submit" className="btn btn-primary">
@@ -205,6 +245,7 @@ const CreateAcademicYear = () => {
                     </div>
                 </div>
             </div>
+            <ToastContainer />
         </div>
     );
 };

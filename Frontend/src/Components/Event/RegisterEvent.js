@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect , useRef} from "react";
 import { useNavigate } from "react-router-dom"; // Use useNavigate instead of useHistory
 import EventSummary from "./EventSummary"; // Import the EventSummary component
 import { InputText } from "primereact/inputtext";
@@ -11,8 +11,11 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import Sidebar from "../../Sidebar";
 import { toast } from "react-toastify";
 import './event.css'
-import { Stepper } from "primereact/stepper";
-import { StepperPanel } from "primereact/stepperpanel";
+
+import { Stepper } from 'primereact/stepper';
+import { StepperPanel } from 'primereact/stepperpanel';
+import { Button } from "primereact/button";
+        
 
 import {
   campus_name_list,
@@ -64,6 +67,11 @@ function RegisterEvent() {
 
   const [eventTitleError, setEventTitleError] = useState("");
   const [isFormValid, setIsFormValid] = useState(false);
+  const stepperRef = useRef(null);
+  // const [descriptionError, setDescriptionError] = useState(""); // Check if you're using setDescriptionError somewhere
+  const [descriptionError] = useState("");
+
+
 
   // Validate a single field
 
@@ -357,520 +365,323 @@ function RegisterEvent() {
 
   return (
     <div className="container-fluid">
-      <div className="row">
-        <div className="col-3">
-          <Sidebar />
-        </div>
-        <div className="col-7 mt-1 pt-2 d-flex justify-content-center">
-          <div className="container" style={{ maxWidth: "800px" }}>
-            <div className="text-center fw-bolder fs-5 mt-5">
-              Event Registration Form
-              <hr />
-            </div>
-            
+    <div className="row">
+      <div className="col-3">
+        <Sidebar />
+      </div>
+      <div className="col-7 mt-1 pt-2 d-flex justify-content-center">
+        <div className="container" style={{ maxWidth: '800px' }}>
+          <div className="text-center fw-bolder fs-5 mt-5">
+            Event Registration Form
+            <hr />
+          </div>
 
-            <form onSubmit={handleSubmit}>
-              <div className="mb-3 row">
-                <div className="col">
-                  <label htmlFor="campus" className="form-label">
-                    Campus {renderAsterisk()}
-                  </label>
-                  <select
-                    id="campus"
-                    className="form-select"
-                    value={campus}
-                    onChange={(e) => setCampus(e.target.value)} // Update selected campus
-                  >
-                    <option value="" disabled>
-                      Select Campus
-                    </option>
-                    {campuses.map((campus) => (
-                      <option key={campus.id} value={campus.id}>
-                        {campus.name}
-                      </option>
-                    ))}
-                  </select>
+          <Stepper ref={stepperRef} style={{ flexBasis: '50rem' }}>
+            <StepperPanel header=" ">
+              <form onSubmit={handleSubmit}>
+                <div className="mb-3 row">
+                  <div className="col">
+                    <label htmlFor="campus" className="form-label">
+                      Campus {renderAsterisk()}
+                    </label>
+                    <select
+                      id="campus"
+                      className="form-select"
+                      value={campus}
+                      onChange={(e) => setCampus(e.target.value)} 
+                    >
+                      <option value="" disabled>Select Campus</option>
+                      {campuses.map((campus) => (
+                        <option key={campus.id} value={campus.id}>
+                          {campus.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="col">
+                    <label htmlFor="department" className="form-label">
+                      Department {renderAsterisk()}
+                    </label>
+                    <select
+                      id="department"
+                      className="form-select"
+                      value={department}
+                      onChange={(e) => setDepartment(e.target.value)} 
+                      disabled={!campus} 
+                    >
+                      <option value="" disabled>Select Department</option>
+                      {departments.map((dept) => (
+                        <option key={dept.id} value={dept.id}>
+                          {dept.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
 
-                <div className="col">
-                  <label htmlFor="department" className="form-label">
-                    Department {renderAsterisk()}
-                  </label>
-                  <select
-                    id="department"
-                    className="form-select"
-                    value={department}
-                    onChange={(e) => setDepartment(e.target.value)} // Update selected department
-                    disabled={!campus} // Disable if no campus is selected
-                  >
-                    <option value="" disabled>
-                      Select Department
-                    </option>
-                    {departments.map((dept) => (
-                      <option key={dept.id} value={dept.id}>
-                        {dept.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
+                <div className="mb-3">
+                  <label className="form-label">Collaborators</label>
+                  {collaborators.map((collaborator, index) => (
+                    <div key={index} className="row mb-2 align-items-center">
+                      <div className="col">
+                        <select
+                          className="form-select"
+                          value={collaborator.campus}
+                          onChange={async (e) => {
+                            const selectedCampus = e.target.value;
+                            handleCollaboratorChange(index, 'campus', selectedCampus);
+                            const departments = await department_list_by_campus(selectedCampus);
+                            handleCollaboratorChange(index, 'departments', departments);
+                          }}
+                        >
+                          <option value="" disabled>Select Campus</option>
+                          {campuses.map((campus) => (
+                            <option key={campus.id} value={campus.id}>
+                              {campus.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
 
-              <div className="mb-3">
-                <label className="form-label">Collaborators</label>
-                {collaborators.map((collaborator, index) => (
-                  <div key={index} className="row mb-2 align-items-center">
-                    {/* Campus Dropdown */}
-                    <div className="col">
-                      <select
-                        className="form-select"
-                        value={collaborator.campus}
-                        onChange={async (e) => {
-                          const selectedCampus = e.target.value;
-                          handleCollaboratorChange(
-                            index,
-                            "campus",
-                            selectedCampus
-                          );
-                          // Fetch departments for the selected campus
-                          const departments = await department_list_by_campus(
-                            selectedCampus
-                          );
-                          handleCollaboratorChange(
-                            index,
-                            "departments",
-                            departments
-                          );
-                        }}
-                      >
-                        <option value="" disabled>
-                          Select Campus
-                        </option>
-                        {campuses.map((campus) => (
-                          <option key={campus.id} value={campus.id}>
-                            {campus.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    {/* Department Dropdown */}
-                    <div className="col">
-                      <select
-                        className="form-select"
-                        value={collaborator.department}
-                        onChange={async (e) => {
-                          const selectedDept = e.target.value;
-                          handleCollaboratorChange(
-                            index,
-                            "department",
-                            selectedDept
-                          );
-                          // Fetch users for the selected department
-                          const response = await user_list_by_department(
-                            selectedDept
-                          );
-                          const users = response.users; // Assuming `users` is the array from the response
-                          handleCollaboratorChange(index, "users", users);
-                        }}
-                        disabled={!collaborator.campus} // Disable until a campus is selected
-                      >
-                        <option value="" disabled>
-                          Select Department
-                        </option>
-                        {collaborator.departments &&
-                          collaborator.departments.map((dept) => (
+                      <div className="col">
+                        <select
+                          className="form-select"
+                          value={collaborator.department}
+                          onChange={async (e) => {
+                            const selectedDept = e.target.value;
+                            handleCollaboratorChange(index, 'department', selectedDept);
+                            const response = await user_list_by_department(selectedDept);
+                            const users = response.users;
+                            handleCollaboratorChange(index, 'users', users);
+                          }}
+                          disabled={!collaborator.campus}
+                        >
+                          <option value="" disabled>Select Department</option>
+                          {collaborator.departments.map((dept) => (
                             <option key={dept.id} value={dept.id}>
                               {dept.name}
                             </option>
                           ))}
-                      </select>
-                    </div>
+                        </select>
+                      </div>
 
-                    {/* Name (User) Dropdown */}
-                    <div className="col">
-                      <select
-                        className="form-select"
-                        value={collaborator.name}
-                        onChange={(e) =>
-                          handleCollaboratorChange(
-                            index,
-                            "name",
-                            e.target.value
-                          )
-                        }
-                        disabled={!collaborator.department} // Disable until a department is selected
-                      >
-                        <option value="" disabled>
-                          Select Name
-                        </option>
-                        {collaborator.users &&
-                          collaborator.users.map((user) => (
+                      <div className="col">
+                        <select
+                          className="form-select"
+                          value={collaborator.name}
+                          onChange={(e) => handleCollaboratorChange(index, 'name', e.target.value)}
+                          disabled={!collaborator.department}
+                        >
+                          <option value="" disabled>Select Name</option>
+                          {collaborator.users.map((user) => (
                             <option key={user.id} value={user.id}>
                               {user.username}
                             </option>
                           ))}
-                      </select>
-                    </div>
+                        </select>
+                      </div>
 
-                    {/* Add/Remove Buttons */}
-                    <div className="col-auto">
-                      <i
-                        className="bi bi-plus-circle"
-                        style={{ cursor: "pointer", marginRight: "10px" }}
-                        onClick={addCollaborator}
-                      ></i>
-                      {collaborators.length > 1 && (
+                      <div className="col-auto">
                         <i
-                          className="bi bi-trash"
-                          style={{ cursor: "pointer" }}
-                          onClick={() => removeCollaborator(index)}
-                        ></i>
-                      )}
+                          className="bi bi-plus-circle"
+                          style={{ cursor: 'pointer', marginRight: '10px' }}
+                          onClick={addCollaborator}
+                        />
+                        {collaborators.length > 1 && (
+                          <i
+                            className="bi bi-trash"
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => removeCollaborator(index)}
+                          />
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
 
-              <div className="mb-3">
-                <label htmlFor="eventTitle" className="form-label">
-                  Event Title{renderAsterisk()}
-                </label>
-                <InputText
-                  id="eventTitle"
-                  value={eventTitle}
-                  onChange={(e) => {
-                    setEventTitle(e.target.value);
-                    // validateEventTitle(e.target.value);
-                  }}
-                  placeholder="Enter event title"
-                  className={`w-100 ${eventTitleError ? "is-invalid" : ""}`} // Add invalid class if there's an error
-                />
-                {/* {eventTitleError && (
-                    <div className="invalid-feedback">{eventTitleError}</div>
-                  )} */}
-              </div>
-
-              <div className="mb-3">
-                <label htmlFor="description" className="form-label">
-                  Description{renderAsterisk()}
-                </label>
-                <Editor
-                  id="description"
-                  value={description}
-                  onTextChange={(e) => setDescription(e.htmlValue)}
-                  style={{ height: "150px" }}
-                  placeholder="Enter description here..."
-                />
-              </div>
-
-              {/* Start Date and End Date in one row */}
-              <div className="row mb-3">
-                <div className="col">
-                  <label htmlFor="startDate" className="form-label">
-                    Start Date{renderAsterisk()}
+                <div className="mb-3">
+                  <label htmlFor="eventTitle" className="form-label">
+                    Event Title {renderAsterisk()}
                   </label>
                   <InputText
-                    id="startDate"
-                    type="date"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
+                    id="eventTitle"
+                    value={eventTitle}
+                    onChange={(e) => setEventTitle(e.target.value)}
+                    placeholder="Enter event title"
                     className="w-100"
                   />
                 </div>
 
-                <div className="col">
-                  <label htmlFor="endDate" className="form-label">
-                    End Date{renderAsterisk()}
+                <div className="mb-3">
+                  <label htmlFor="description" className="form-label">
+                    Description {renderAsterisk()}
                   </label>
-                  <InputText
-                    id="endDate"
-                    type="date"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                    className="w-100"
+                  <Editor
+                    id="description"
+                    value={description}
+                    onTextChange={(e) => setDescription(e.htmlValue)}
+                    style={{ height: '150px' }}
+                    placeholder="Enter description here..."
                   />
                 </div>
-              </div>
 
-                  
-
-              <div className="mb-3">
-                <label htmlFor="numberOfActivities" className="form-label">
-                  Number of Activities{renderAsterisk()}
-                </label>
-                <InputText
-                  id="numberOfActivities"
-                  type="number"
-                  value={numberOfActivities} // Ensure only positive numbers
-                  onChange={handleNumberOfActivitiesChange}
-                  className="w-100"
-                  defaultValue={1}
-                />
-              </div>
-              
-
-              {activities.map((activity, index) => (
-                <div key={index} className="mb-3">
-                  <label
-                    htmlFor={`activityTitle-${index}`}
-                    className="form-label"
-                  >
-                    Activity {index + 1} Title {renderAsterisk()}
-                  </label>
-                  <InputText
-                    id={`activityTitle-${index}`}
-                    value={activity.title}
-                    onChange={(e) =>
-                      handleActivitiesChange(index, "title", e.target.value)
-                    }
-                    placeholder="Enter activity title"
-                    className="w-100"
-                  />
-                  <div className="mt-3">
-                    <label htmlFor={`activityDescription-${index}`} className="form-label">
-                      Description {renderAsterisk()}
+                <div className="row mb-3">
+                  <div className="col">
+                    <label htmlFor="startDate" className="form-label">
+                      Start Date {renderAsterisk()}
                     </label>
-                    <Editor
-                      id={`activityDescription-${index}`}
-                      value={activity.description}
-                      onTextChange={(e) =>
-                        handleActivitiesChange(index, "description", e.htmlValue)
-                      }
-                      placeholder="Enter activity description"
+                    <InputText
+                      id="startDate"
+                      type="date"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
                       className="w-100"
-                      style={{ height: "100px" }}
                     />
                   </div>
 
-                  <div className="row mt-3">
-                    <div className="col">
-                      <label
-                        htmlFor={`startDate-${index}`}
-                        className="form-label"
-                      >
-                        Start Date{renderAsterisk()}
-                      </label>
-                      <InputText
-                        id={`startDate-${index}`}
-                        type="date"
-                        value={activity.startDate}
-                        onChange={(e) =>
-                          handleActivitiesChange(
-                            index,
-                            "startDate",
-                            e.target.value
-                          )
-                        }
-                        className="w-100"
-                      />
-                    </div>
-                    <div className="col">
-                      <label
-                        htmlFor={`endDate-${index}`}
-                        className="form-label"
-                      >
-                        End Date{renderAsterisk()}
-                      </label>
-                      <InputText
-                        id={`endDate-${index}`}
-                        type="date"
-                        value={activity.endDate}
-                        onChange={(e) =>
-                          handleActivitiesChange(
-                            index,
-                            "endDate",
-                            e.target.value
-                          )
-                        }
-                        className="w-100"
-                      />
-                    </div>
-                  </div>
-
-
-
-                  <div className="row mt-3">
-                    <div className="col">
-                      <label
-                        htmlFor={`startTime-${index}`}
-                        className="form-label"
-                      >
-                        Start Time{renderAsterisk()}
-                      </label>
-                      <InputText
-                        id={`startTime-${index}`}
-                        type="time"
-                        value={activity.startTime}
-                        onChange={(e) =>
-                          handleActivitiesChange(
-                            index,
-                            "startTime",
-                            e.target.value
-                          )
-                        }
-                        className="w-100"
-                      />
-                    </div>
-                    <div className="col">
-                      <label
-                        htmlFor={`endTime-${index}`}
-                        className="form-label"
-                      >
-                        End Time{renderAsterisk()}
-                      </label>
-                      <InputText
-                        id={`endTime-${index}`}
-                        type="time"
-                        value={activity.endTime}
-                        onChange={(e) =>
-                          handleActivitiesChange(
-                            index,
-                            "endTime",
-                            e.target.value
-                          )
-                        }
-                        className="w-100"
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="venue" className="form-label">
-                        Venue{renderAsterisk()}
-                      </label>
-                      <InputText
-                        id="venue"
-                        value={activity.venue}
-                        onChange={(e) => handleActivitiesChange(
-                          index,
-                          "venue",
-                          e.target.value
-                        )
-                        }
-                        placeholder="Enter venue"
-                        className="w-100"
-                      />
-                    </div>
+                  <div className="col">
+                    <label htmlFor="endDate" className="form-label">
+                      End Date {renderAsterisk()}
+                    </label>
+                    <InputText
+                      id="endDate"
+                      type="date"
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                      className="w-100"
+                    />
                   </div>
                 </div>
-              ))}
 
-              {/* Academic Year Dropdown */}
-              <div className="mb-3">
-                <label htmlFor="academicYear" className="form-label">
-                  Academic Year{renderAsterisk()}
-                </label>
-                <Dropdown
-                  id="academicYear"
-                  value={academicYear}
-                  options={academicYearOptions}
-                  onChange={(e) => setAcademicYear(e.value)}
-                  placeholder="Select academic year"
-                  className="w-100"
-                />
-              </div>
-
-              {/* Event Type Dropdown */}
-              <div className="mb-3">
-                <label htmlFor="eventType" className="form-label">
-                  Event Type{renderAsterisk()}
-                </label>
-                <Dropdown
-                  id="eventType"
-                  value={eventType}
-                  options={eventTypeOptions}
-                  onChange={(e) => setEventType(e.value)}
-                  placeholder="Select event type"
-                  className="w-100"
-                />
-              </div>
-
-              <div>
                 <div className="mb-3">
-                  <label htmlFor="proposal" className="form-label">
-                    Upload Proposal{renderAsterisk()}
+                  <label htmlFor="numberOfActivities" className="form-label">
+                    Number of Activities {renderAsterisk()}
                   </label>
-                  <div className="d-flex flex-wrap">
-                    {files.map((file, index) => (
-                      <div
-                        key={index}
-                        className="file-box p-3 me-2 mb-2 border border-primary"
-                      >
-                        <span>{file.name}</span>
-                      </div>
-                    ))}
-                    <div
-                      className="file-box p-3 me-2 mb-2 border border-primary d-flex align-items-center justify-content-center"
-                      onClick={handleAddFile}
-                    >
-                      <FontAwesomeIcon icon={faPlus} />
-                    </div>
-                  </div>
-                  <input
-                    id="fileInput"
-                    type="file"
-                    accept=".pdf"
-                    onChange={handleFileChange}
-                    className="d-none"
+                  <InputText
+                    id="numberOfActivities"
+                    type="number"
+                    value={numberOfActivities}
+                    onChange={handleNumberOfActivitiesChange}
+                    min="1"
+                    max="10"
+                    className="w-100"
                   />
                 </div>
-                {error && <div className="text-danger">{error}</div>}
-              </div>
+              </form>
+            </StepperPanel>
 
-              <div className="mb-3">
-                <label htmlFor="tags" className="form-label">
-                  Tags
-                </label>
 
-                {/* MultiSelect for tag selection */}
-                <MultiSelect
-                  id="tags"
-                  value={tags} // Selected tags
-                  options={tagOptions} // Fetched options
-                  onChange={(e) => setTags(e.value)} // Handle tag selection
-                  placeholder="Select Tags"
-                  className="w-100"
-                  filter // Enable filter for searching tags
-                />
+            <StepperPanel header=" ">
+            {/* Dynamically render StepperPanel based on the number of activities */}
+            {activities.map((activity, index) => (
+                <StepperPanel key={index} header={`Activity ${index + 1} Details`}>
+                  <div className="mb-3">
+                    <label htmlFor={`activityTitle${index}`} className="form-label">
+                      Activity Title {renderAsterisk()}
+                    </label>
+                    <InputText
+                      id={`activityTitle${index}`}
+                      value={activity.title}
+                      onChange={(e) => handleActivitiesChange(index, 'title', e.target.value)}
+                      placeholder="Enter activity title"
+                      className="w-100"
+                    />
+                  </div>
 
-                {/* Display selected tags as small boxes (chips) */}
-                <div className="mt-2">
-                  {tags.length > 0 && (
-                    <div className="tag-boxes">
-                      {tags.map((tagId) => {
-                        // Find the corresponding tag name from tagOptions
-                        const tag = tagOptions.find(
-                          (option) => option.value === tagId
-                        );
-                        return (
-                          <div key={tagId} className="tag-chip">
-                            {tag.label}
-                            <button
+                  <div className="mb-3">
+                    <label htmlFor={`activityDescription${index}`} className="form-label">
+                      Description {renderAsterisk()}
+                    </label>
+                    <Editor
+                      id={`activityDescription${index}`}
+                      value={activity.description}
+                      onTextChange={(e) => handleActivitiesChange(index, 'description', e.htmlValue)}
+                      style={{ height: '150px' }}
+                      placeholder="Enter activity description here..."
+                    />
+                  </div>
 
-                              className="close-btn"
-                              onClick={() => removeTag(tagId)}
-                            >
-                              &times; {/* Close button symbol */}
-                            </button>
-                          </div>
-                        );
-                      })}
+                  <div className="row mb-3">
+                    <div className="col">
+                      <label htmlFor={`activityStartDate${index}`} className="form-label">
+                        Start Date {renderAsterisk()}
+                      </label>
+                      <InputText
+                        id={`activityStartDate${index}`}
+                        type="date"
+                        value={activity.startDate}
+                        onChange={(e) => handleActivitiesChange(index, 'startDate', e.target.value)}
+                        className="w-100"
+                      />
                     </div>
-                  )}
-                </div>
-              </div>
 
-              <button
-                type="submit"
-                className="btn btn-primary"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? "Submitting..." : "Submit"}
-              </button>
-            </form>
+                    <div className="col">
+                      <label htmlFor={`activityEndDate${index}`} className="form-label">
+                        End Date {renderAsterisk()}
+                      </label>
+                      <InputText
+                        id={`activityEndDate${index}`}
+                        type="date"
+                        value={activity.endDate}
+                        onChange={(e) => handleActivitiesChange(index, 'endDate', e.target.value)}
+                        className="w-100"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="row mb-3">
+                    <div className="col">
+                      <label htmlFor={`activityStartTime${index}`} className="form-label">
+                        Start Time {renderAsterisk()}
+                      </label>
+                      <InputText
+                        id={`activityStartTime${index}`}
+                        type="time"
+                        value={activity.startTime}
+                        onChange={(e) => handleActivitiesChange(index, 'startTime', e.target.value)}
+                        className="w-100"
+                      />
+                    </div>
+
+                    <div className="col">
+                      <label htmlFor={`activityEndTime${index}`} className="form-label">
+                        End Time {renderAsterisk()}
+                      </label>
+                      <InputText
+                        id={`activityEndTime${index}`}
+                        type="time"
+                        value={activity.endTime}
+                        onChange={(e) => handleActivitiesChange(index, 'endTime', e.target.value)}
+                        className="w-100"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mb-3">
+                    <label htmlFor={`activityVenue${index}`} className="form-label">
+                      Venue {renderAsterisk()}
+                    </label>
+                    <InputText
+                      id={`activityVenue${index}`}
+                      value={activity.venue}
+                      onChange={(e) => handleActivitiesChange(index, 'venue', e.target.value)}
+                      placeholder="Enter activity venue"
+                      className="w-100"
+                    />
+                  </div>
+                  </StepperPanel>
+              ))}
+
+              {/* Add more steps as needed */}
+              </StepperPanel>
+            </Stepper>
           </div>
         </div>
       </div>
     </div>
+   
   );
-}
+};
 
 export default RegisterEvent;

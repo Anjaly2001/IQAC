@@ -67,33 +67,37 @@ const RegisterSingleUser = () => {
   }, [userCampus]); // Add userCampus as a dependency
 
   const toTitleCase = (str) => {
-    if (!str) return ""; // Handle undefined or null values
+    if (!str) return "";
     return str
       .toLowerCase()
       .split(" ")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
   };
-  
 
-  const createOrUpdateUser = async () => {
-    setIsSubmitting(true);
+  const validateForm = () => {
     let isValid = true;
 
+    // Clear previous error messages
+    setUserNameError("");
+    setUserEmpIdError("");
+    setUserEmailError("");
+    setUserPhoneNumberError("");
+
     if (!userName) {
-      toast.error("Please enter the user name.");
+      setUserNameError("Name is required.");
       isValid = false;
     }
     if (!userEmpId) {
-      toast.error("Please enter the employee ID.");
+      setUserEmpIdError("Emp ID is required.");
       isValid = false;
     }
     if (!userEmail) {
-      toast.error("Please enter the email address.");
+      setUserEmailError("Email is required.");
       isValid = false;
     }
     if (!userPhoneNumber || userPhoneNumber.length !== 10) {
-      toast.error("Please enter a valid 10-digit phone number.");
+      setUserPhoneNumberError("Phone number must be 10 digits.");
       isValid = false;
     }
     if (!userCampus) {
@@ -109,9 +113,13 @@ const RegisterSingleUser = () => {
       isValid = false;
     }
 
-    if (!isValid) {
-      return; // Stop execution if the form is not valid
-    }
+    return isValid;
+  };
+
+  const createOrUpdateUser = async () => {
+    if (!validateForm()) return;
+
+    setIsSubmitting(true);
 
     const department =
       userDepartment === "Others" ? customDepartment : userDepartment;
@@ -127,32 +135,31 @@ const RegisterSingleUser = () => {
       phone_number: userPhoneNumber,
       department: department,
       location: userCampus,
-      role:userRole,
+      role: userRole,
     };
 
     console.log("Payload to be sent:", userData);
 
     try {
       let response;
-  
+
       // Check if you are updating or creating based on the presence of userId
       if (userId) {
-        // Call the update API
         response = await updateUser(userId, userData);
         toast.success("User updated successfully!");
       } else {
-        // Call the create API
         response = await user_register(userData);
         toast.success("User created successfully!");
       }
-  
+
       navigate("/listuser"); // Redirect to user list after success
     } catch (error) {
       toast.error("Failed to process user.");
     } finally {
-      setIsSubmitting(false); // Ensure the submitting flag is reset
+      setIsSubmitting(false);
     }
   };
+
 
   const renderAsterisk = () => <span style={{ color: "red" }}>*</span>;
   // Validation functions
@@ -437,13 +444,13 @@ const RegisterSingleUser = () => {
                   </div>
                 </div>
                 <div className="text-left">
-                <button
-                  className="btn btn-primary"
-                  onClick={createOrUpdateUser}
-                  disabled={isSubmitting}
-                >
-                  {userId ? "Update User" : "Register User"}
-                </button>
+                 <button
+                      className="btn btn-primary"
+                      onClick={createOrUpdateUser}
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? "Submitting..." : "Register"}
+                    </button>
                 </div>
               </div>
             </div>

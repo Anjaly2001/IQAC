@@ -73,7 +73,7 @@ const ListUser = () => {
     <div>
       <FaEdit
         className="text-warning me-3 cursor-pointer"
-        onClick={() => startEditing(rowData)}
+        onClick={() => startEditing(rowData.id)}
         title="Edit"
       />
       <FaTrash

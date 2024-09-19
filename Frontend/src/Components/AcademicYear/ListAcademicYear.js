@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
 import { useNavigate } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -36,20 +38,12 @@ const ListAcademicYear = () => {
         navigate('/academicyear', { state: { academicYear: yearId } });
     };
 
-    // const startEditing = (departmentId) => {
-    //     console.log(departmentId)
-       
-    //     navigate('/createdepartments', { state: { department: departmentId } });
-        
-    // };
-
-
     const handleDelete = async (id) => {
         try {
             const response = await academic_delete(id); 
             setAcademicYears(academicYears.filter(year => year.id !== id));
             console.log(response);
-            toast.success('User deleted successfully!');
+            toast.success('Academic year deleted successfully!');
         } catch (error) {
             console.error('Error deleting academic year:', error);
             console.log(error)

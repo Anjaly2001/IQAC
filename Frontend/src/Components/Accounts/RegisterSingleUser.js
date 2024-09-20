@@ -73,17 +73,6 @@ const RegisterSingleUser = () => {
       .join(" ");
   };
 
-  // const validateField = (email) => {
-  //   const allowedPattern = /^[a-zA-Z0-9\s]+$/;
-  
-  //   if (!allowedPattern.test(email)) {
-  //     setFieldError("Field should contain only alphanumeric characters and spaces. Special characters like '@', '()', etc., are not allowed.");
-  //   } else {
-  //     setFieldError(""); // Clear the error if valid
-  //   }
-  // };
-  
-
   const validateForm = () => {
     let isValid = true;
 
@@ -221,7 +210,7 @@ const RegisterSingleUser = () => {
               <div className="text-center fw-bold fs-5 mb-4">Register User</div>
               <div className="register mt-5">
                 <div className="user-actions mb-4">
-                  <div className="row mb-3">
+                  <div className="row mb-4">
                     <div className="col-md-6">
                       <OverlayTrigger
                         placement="top"
@@ -280,7 +269,7 @@ const RegisterSingleUser = () => {
                       )}
                     </div>
                   </div>
-                  <div className="row mb-3">
+                  <div className="row mb-4">
                     <div className="col-md-6">
                       <OverlayTrigger
                         placement="top"
@@ -433,7 +422,7 @@ const RegisterSingleUser = () => {
                   )}
                 </div>
                 {/* Role Input */}
-                <div className="row mb-3">
+                <div className="row mb-4">
                   <div className="col-md-6">
                     <label htmlFor="userRole">Role {renderAsterisk()}</label>
                     <select

@@ -171,20 +171,23 @@ const RegisterMultipleUser = () => {
         }
     };
 
-    const handleSuccess = (response) => {
-        setSuccess("Registration Complete! Users were successfully registered.");
-        setTotalCount(response.data.total_count || 0);
-        setSuccessCount(response.data.success_count || 0);
-        setErrorCount(response.data.error_count || 0);
+// In the handleSuccess function
+const handleSuccess = (response) => {
+    setSuccess("Registration Complete! Users were successfully registered.");
+    setTotalCount(response.data.total_count || 0);
+    setSuccessCount(response.data.success_count || 0);
+    setErrorCount(response.data.error_count || 0);
 
-        if (response.data.success_file_url) {
-            setSuccessFileLink(renderFileLink(response.data.success_file_url, "Download Success Report", "text-success"));
-        }
-        if (response.data.error_file_url) {
-            setErrorFileLink(renderFileLink(response.data.error_file_url, "Download Error Report", "text-danger"));
-            setError("Some users could not be registered.");
-        }
-    };
+    if (response.data.success_file_url) {
+        setSuccessFileLink(renderFileLink(
+            response.data.success_file_url, "Download Success Report", "btn-success"));
+    }
+    if (response.data.error_file_url) {
+        setErrorFileLink(renderFileLink(
+            response.data.error_file_url, "Download Error Report", "btn-danger"));
+        setError("Some users could not be registered.");
+    }
+};
 
     const handleError = (err) => {
         if (err.code === 'ECONNABORTED') {
@@ -203,9 +206,12 @@ const RegisterMultipleUser = () => {
 
     const renderFileLink = (url, text, className) => {
         return (
-            <a href={`${homeURL}${url}`} download className={`${className} mx-5`}>
+            <button 
+                className={`btn ${className} mx-5`} 
+                onClick={() => window.open(`${homeURL}${url}`)}
+            >
                 {text} <FontAwesomeIcon icon={faDownload} />
-            </a>
+            </button>
         );
     };
 

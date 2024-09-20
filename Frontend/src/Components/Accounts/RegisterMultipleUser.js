@@ -74,19 +74,19 @@ const UploadSummaryTable = ({ totalCount, successCount, errorCount }) => {
                         field="total"
                         header="Total Count"
                         style={{ width: '33%' }}
-                        bodyStyle={{ textAlign: 'center' }}
+                        bodyStyle={{ alignContent: 'center' }}
                     ></Column>
                     <Column
                         field="success"
                         header="Success Count"
                         style={{ width: '33%' }}
-                        bodyStyle={{ textAlign: 'center' }}
+                        bodyStyle={{ alignContent: 'center' }}
                     ></Column>
                     <Column
                         field="error"
                         header="Error Count"
                         style={{ width: '33%' }}
-                        bodyStyle={{ textAlign: 'center' }}
+                        bodyStyle={{ alignContent: 'center' }}
                     ></Column>
                 </DataTable>
             </div>
@@ -278,8 +278,6 @@ const RegisterMultipleUser = () => {
                                             )}
                                         </div>
                                     </div>
-
-
 
                                 {/* Upload Summary */}
                                 <UploadSummaryTable

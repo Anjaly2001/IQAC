@@ -568,8 +568,18 @@ function RegisterEvent() {
                   />
                 </div>
               </form>
+
+              <div className="flex pt-4 justify-content-end">
+                    <Button
+                      label="Next"
+                      icon="pi pi-arrow-right"
+                      iconPos="right"
+                      onClick={() => stepperRef.current.nextCallback()}
+                    />
+                  </div>
+
             </StepperPanel>
-            
+
             <StepperPanel header=" ">
             {/* Dynamically render StepperPanel based on the number of activities */}
             {activities.map((activity, index) => (
@@ -668,10 +678,25 @@ function RegisterEvent() {
                       className="w-100"
                     />
                   </div>
+                  
                   </StepperPanel>
               ))}
 
               {/* Add more steps as needed */}
+              <div className="flex pt-4 justify-content-between">
+                    <Button
+                      label="Back"
+                      severity="secondary"
+                      icon="pi pi-arrow-left"
+                      onClick={() => stepperRef.current.prevCallback()}
+                    />
+                    <Button
+                      label="Next"
+                      icon="pi pi-arrow-right"
+                      iconPos="right"
+                      onClick={() => stepperRef.current.nextCallback()}
+                    />
+                  </div>
               </StepperPanel>
             </Stepper>
           </div>

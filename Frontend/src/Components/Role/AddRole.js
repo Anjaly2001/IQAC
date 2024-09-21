@@ -160,7 +160,7 @@ const AddRole = () => {
       setSelectedNewDepartment(null);
       setShowAdditionalFields(false); // Hide the additional fields again
        // Refresh the page after saving
-       await handleUserSelect(selectedUser);
+      await handleUserSelect(selectedUser);
     } catch (error) {
       console.error("Error assigning role:", error);
       toast.error("Failed to assign role. Please try again.");
@@ -191,15 +191,18 @@ const handleDeleteRole = async (roleId) => {
         <div className="col-md-2 bg-light p-3">
           <Sidebar />
         </div>
-        <div className="col-md-10 p-7">
+        <div className="col-md-10 p-7 ">
           <h1 className="text-center fw-bold fs-5 mb-4">Role Settings</h1>
 
-          <div className="row mt-6">
-            {/* Top Dropdown for Default Campus and Department */}
-            <div className="col-md-4">
-              <label htmlFor="campus" className="form-label mx-2">
+{/* Top Dropdown for Default Campus and Department */}
+          <div className="row mt-8">
+          <div className="col-md-4">
+          <label htmlFor="campus" className="form-label mx-2">
                 Current Campus
               </label>
+            
+            <div className="col-md-4"></div>
+              
               <Dropdown
                 id="currentCampus"
                 value={currentCampus}
@@ -212,6 +215,7 @@ const handleDeleteRole = async (roleId) => {
               <label htmlFor="department" className="form-label mx-2">
                 Current Department
               </label>
+              <div className="col-md-4"></div>
               <Dropdown
                 id="currentDepartment"
                 value={currentDepartment}
@@ -221,10 +225,12 @@ const handleDeleteRole = async (roleId) => {
                 disabled={!currentCampus}
               />
             </div>
+            
             <div className="col-md-4">
               <label htmlFor="user" className="form-label mx-2">
                 User
               </label>
+              <div className="col-md-4"></div>
               <Dropdown
                 id="user"
                 value={selectedUser}
@@ -280,6 +286,7 @@ const handleDeleteRole = async (roleId) => {
                   <label htmlFor="role" className="form-label mx-2">
                     Role
                   </label>
+                  <div className="col-md-4"></div>
                   <Dropdown
                     id="role"
                     value={selectedRole}
@@ -287,7 +294,7 @@ const handleDeleteRole = async (roleId) => {
                       { label: "Department HOD", value: "departmentHOD" },
                       { label: "IQAC User", value: "IQACuser" },
                       { label: "Staffs", value: "Staffs" },
-   
+  
                       // Add more roles as needed
                     ]} // Sample roles
                     onChange={(e) => setSelectedRole(e.value)}
@@ -298,6 +305,7 @@ const handleDeleteRole = async (roleId) => {
                   <label htmlFor="newCampus" className="form-label mx-2">
                     New Campus
                   </label>
+                  <div className="col-md-4"></div>
                   <Dropdown
                     id="newCampus"
                     value={selectedNewCampus}
@@ -310,6 +318,7 @@ const handleDeleteRole = async (roleId) => {
                   <label htmlFor="newDepartment" className="form-label mx-2">
                     New Department
                   </label>
+                  <div className="col-md-4"></div>
                   <Dropdown
                     id="newDepartment"
                     value={selectedNewDepartment}
@@ -320,7 +329,7 @@ const handleDeleteRole = async (roleId) => {
                 </div>
               </div>
 
-              <div className="row mt-3">
+              <div className="row mt-6">
                 <div className="col-md-12 text-start">
                   <button className="btn btn-primary" onClick={handleSave}>
                     <FontAwesomeIcon icon={faSave} /> Save

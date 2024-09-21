@@ -32,6 +32,7 @@ const RegisterSingleUser = () => {
   const [userRoleError, setUserRoleError] = useState('');
   const [fieldError, setFieldError] = useState('');
   const [userId, setUserId] = useState(null); // For local state
+  const [email, setEmail] = useState("");
   
 
   const navigate = useNavigate();
@@ -72,6 +73,25 @@ const RegisterSingleUser = () => {
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
   };
+
+  const handleEmailChange = (e) => {
+    const value = e.target.value;
+    setEmail(value);
+    validateField(value);
+    // setEmail(e.target.value);
+  };
+
+  const validateField = (email) => {
+    const allowedPattern = /^[a-zA-Z0-9\s]+$/;
+  
+    if (!allowedPattern.test(email)) {
+      setFieldError("Field should contain only alphanumeric characters and spaces. Special characters like '@', '()', etc., are not allowed.");
+    } else {
+      setFieldError(""); // Clear the error if valid
+    }
+  };
+  const fullEmail = email + domain;
+  const data = { email: fullEmail };
 
   const validateForm = () => {
     let isValid = true;

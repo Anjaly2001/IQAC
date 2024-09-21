@@ -243,26 +243,38 @@ const handleDeleteRole = async (roleId) => {
           </div>
 
           <div className="my-3">
-          {roles.length > 0 && (
+            {roles.length > 0 && (
             <div className="mt-3">
-              <h5>User Roles:</h5>
-              <ul>
-                {roles.map((role, index) => (
-                  <li key={index} className="mt-3">
-                    <strong>Department:</strong> {role.department},{" "}
-                    <strong>Role:</strong> {role.role}
-                    {/* Add a delete button next to each role */}
-                    <button
-                      className="btn btn-danger ms-2 fs-6 "
-                      onClick={() => handleDeleteRole(role.id)} // Assuming `role.id` uniquely identifies the role
-                    >
-                      <FontAwesomeIcon icon={faTrash} /> 
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+            <h5>User Roles:</h5>
+            <table className="table">
+            <thead>
+          <tr>
+              <th>Department</th>
+              <th>Role</th>
+              <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {roles.map((role, index) => (
+            <tr key={index}>
+              <td>{role.department}</td>
+              <td>{role.role}</td>
+              <td>
+                <button
+                  className="btn btn-danger btn-sm"
+                  onClick={() => handleDeleteRole(role.id)} // Assuming `role.id` uniquely identifies the role
+                >
+                  <FontAwesomeIcon icon={faTrash} />
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )}
+
+
 
           {selectedUser && roles.length === 0 && <p>No roles assigned to this user.</p>}
         </div>

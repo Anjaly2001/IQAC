@@ -553,7 +553,33 @@ function RegisterEvent() {
                     />
                   </div>
                 </div>
+                <div className="row mb-3">
+                  <div className="col">
+                    <label htmlFor="startTime" className="form-label">
+                      Start Time {renderAsterisk()}
+                    </label>
+                    <InputText
+                      id="startTime"
+                      type="time"
+                      value={startTime}
+                      onChange={(e) => setStartTime(e.target.value)}
+                      className="w-100"
+                    />
+                  </div>
 
+                  <div className="col">
+                    <label htmlFor="endTime" className="form-label">
+                      End Time {renderAsterisk()}
+                    </label>
+                    <InputText
+                      id="endTime"
+                      type="time"
+                      value={endTime}
+                      onChange={(e) => setEndTime(e.target.value)}
+                      className="w-100"
+                    />
+                  </div>
+                  </div>
                 <div className="mb-3">
                   <label htmlFor="numberOfActivities" className="form-label">
                     Number of Activities {renderAsterisk()}

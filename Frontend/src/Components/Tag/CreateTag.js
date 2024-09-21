@@ -80,7 +80,8 @@ export default function CreateOrUpdateTag() {
                 </div>
                 <div className="col-md-10 mt-5 pt-5">
                     <div className="container mt-3 p-6">
-                        <div className="d-flex flex-column align-items-center mb-4">
+                        <h1 className="tag text-center">Tags</h1>
+                        <div className="d-flex flex-column align-items-center mb-4 mt-6">
                             <div className="p-field w-100 mb-3">
                                 <label htmlFor="tagName">Tag Name{renderAsterisk()}</label>
                                 <InputText

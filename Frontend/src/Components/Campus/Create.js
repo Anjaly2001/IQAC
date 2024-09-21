@@ -6,6 +6,7 @@ import { campus_register, campus_update } from '../../axios/api';
 import Sidebar from '../../Sidebar';
 import FormField from './FormField';
 import FileInput from './FileInput';
+//import { FaTimes } from 'react-icons/fa';   
 
 const CreateCampus = () => {
     const location = useLocation();

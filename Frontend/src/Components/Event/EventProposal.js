@@ -1,13 +1,12 @@
-import React, { useState, useEffect , useRef} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { InputText } from "primereact/inputtext";
 import { Editor } from "primereact/editor";
 import Sidebar from "../../Sidebar";
 import { toast } from "react-toastify";
-import './event.css'
-import { Stepper } from 'primereact/stepper';
-import { StepperPanel } from 'primereact/stepperpanel';
+import "./event.css";
+import { Stepper } from "primereact/stepper";
+import { StepperPanel } from "primereact/stepperpanel";
 import { Button } from "primereact/button";
-        
 
 import {
   campus_name_list,
@@ -41,7 +40,14 @@ function EventProposal() {
   const [eventTitle, setEventTitle] = useState("");
   const [numberOfActivities, setNumberOfActivities] = useState(1);
   const [activities, setActivities] = useState([
-    { title: "", date: "", startTime: "", endTime: "", description: "", venue: "" },
+    {
+      title: "",
+      date: "",
+      startTime: "",
+      endTime: "",
+      description: "",
+      venue: "",
+    },
   ]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -62,8 +68,6 @@ function EventProposal() {
   const stepperRef = useRef(null);
   // const [descriptionError, setDescriptionError] = useState(""); // Check if you're using setDescriptionError somewhere
   const [descriptionError] = useState("");
-
-
 
   // Validate a single field
 
@@ -216,7 +220,7 @@ function EventProposal() {
   };
 
   const handleActivitiesChange = (index, field, value) => {
-    console.log(value)
+    console.log(value);
     const updatedActivities = [...activities];
     updatedActivities[index][field] = value;
     setActivities(updatedActivities);
@@ -250,7 +254,7 @@ function EventProposal() {
       activity_title: activity.title,
       activity_description: activity.description,
       // activity_date: new Date(activity.date).toISOString(),
-      start_date: new Date(activity.startDate).toISOString(),  // Convert to ISO string if required by the backend
+      start_date: new Date(activity.startDate).toISOString(), // Convert to ISO string if required by the backend
       end_date: new Date(activity.endDate).toISOString(),
       start_time: activity.startTime,
       end_time: activity.endTime,
@@ -269,7 +273,7 @@ function EventProposal() {
       description: description,
       no_of_activities: numberOfActivities,
       start_date: startDate, // Event-level start date
-      end_date: endDate, // 
+      end_date: endDate, //
       // venue: venue,
       academic_year_id: academicYear,
       event_type_id: eventType,
@@ -277,7 +281,7 @@ function EventProposal() {
       activities_data: activitiesData,
       collaborators_data: collaboratorsData,
     };
-    console.log(activitiesData)
+    console.log(activitiesData);
 
     try {
       const response = await register_event(requestData);
@@ -338,7 +342,7 @@ function EventProposal() {
 
   const renderAsterisk = () => <span style={{ color: "red" }}>*</span>;
 
-  const handleFileChange = (e) => {
+const handleFileChange = (e) => {
     const newFile = e.target.files[0];
 
     // Validate if the file is a PDF
@@ -357,346 +361,432 @@ function EventProposal() {
 
   return (
     <div className="container-fluid">
-    <div className="row">
-      <div className="col-3">
-        <Sidebar />
-      </div>
-      <div className="col-7 mt-1 pt-2 d-flex justify-content-center">
-        <div className="container" style={{ maxWidth: '800px' }}>
-          <div className="text-center fw-bolder fs-5 mt-5">
-            Event Registration Form
-            <hr />
-          </div>
+      <div className="row">
+        <div className="col-3">
+          <Sidebar />
+        </div>
+        <div className="col-7 mt-1 pt-2 d-flex justify-content-center">
+          <div className="container" style={{ maxWidth: "800px" }}>
+            <div className="text-center fw-bolder fs-5 mt-5">
+              Event Registration Form
+              <hr />
+            </div>
 
-          <Stepper ref={stepperRef} style={{ flexBasis: '50rem' }}>
-            <StepperPanel header=" ">
-              <form onSubmit={handleSubmit}>
-                <div className="mb-3 row">
-                  <div className="col">
-                    <label htmlFor="campus" className="form-label">
-                      Campus {renderAsterisk()}
-                    </label>
-                    <select
-                      id="campus"
-                      className="form-select"
-                      value={campus}
-                      onChange={(e) => setCampus(e.target.value)} 
-                    >
-                      <option value="" disabled>Select Campus</option>
-                      {campuses.map((campus) => (
-                        <option key={campus.id} value={campus.id}>
-                          {campus.name}
+            <Stepper ref={stepperRef} style={{ flexBasis: "50rem" }}>
+              <StepperPanel header=" ">
+                <form onSubmit={handleSubmit}>
+                  <div className="mb-3 row">
+                    <div className="col">
+                      <label htmlFor="campus" className="form-label">
+                        Campus {renderAsterisk()}
+                      </label>
+                      <select
+                        id="campus"
+                        className="form-select"
+                        value={campus}
+                        onChange={(e) => setCampus(e.target.value)}
+                      >
+                        <option value="" disabled>
+                          Select Campus
                         </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="col">
-                    <label htmlFor="department" className="form-label">
-                      Department {renderAsterisk()}
-                    </label>
-                    <select
-                      id="department"
-                      className="form-select"
-                      value={department}
-                      onChange={(e) => setDepartment(e.target.value)} 
-                      disabled={!campus} 
-                    >
-                      <option value="" disabled>Select Department</option>
-                      {departments.map((dept) => (
-                        <option key={dept.id} value={dept.id}>
-                          {dept.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                <div className="mb-3">
-                  <label className="form-label">Collaborators</label>
-                  {collaborators.map((collaborator, index) => (
-                    <div key={index} className="row mb-2 align-items-center">
-                      <div className="col">
-                        <select
-                          className="form-select"
-                          value={collaborator.campus}
-                          onChange={async (e) => {
-                            const selectedCampus = e.target.value;
-                            handleCollaboratorChange(index, 'campus', selectedCampus);
-                            const departments = await department_list_by_campus(selectedCampus);
-                            handleCollaboratorChange(index, 'departments', departments);
-                          }}
-                        >
-                          <option value="" disabled>Select Campus</option>
-                          {campuses.map((campus) => (
-                            <option key={campus.id} value={campus.id}>
-                              {campus.name}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-
-                      <div className="col">
-                        <select
-                          className="form-select"
-                          value={collaborator.department}
-                          onChange={async (e) => {
-                            const selectedDept = e.target.value;
-                            handleCollaboratorChange(index, 'department', selectedDept);
-                            const response = await user_list_by_department(selectedDept);
-                            const users = response.users;
-                            handleCollaboratorChange(index, 'users', users);
-                          }}
-                          disabled={!collaborator.campus}
-                        >
-                          <option value="" disabled>Select Department</option>
-                          {collaborator.departments.map((dept) => (
-                            <option key={dept.id} value={dept.id}>
-                              {dept.name}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-
-                      <div className="col">
-                        <select
-                          className="form-select"
-                          value={collaborator.name}
-                          onChange={(e) => handleCollaboratorChange(index, 'name', e.target.value)}
-                          disabled={!collaborator.department}
-                        >
-                          <option value="" disabled>Select Name</option>
-                          {collaborator.users.map((user) => (
-                            <option key={user.id} value={user.id}>
-                              {user.username}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-
-                      <div className="col-auto">
-                        <i
-                          className="bi bi-plus-circle"
-                          style={{ cursor: 'pointer', marginRight: '10px' }}
-                          onClick={addCollaborator}
-                        />
-                        {collaborators.length > 1 && (
-                          <i
-                            className="bi bi-trash"
-                            style={{ cursor: 'pointer' }}
-                            onClick={() => removeCollaborator(index)}
-                          />
-                        )}
-                      </div>
+                        {campuses.map((campus) => (
+                          <option key={campus.id} value={campus.id}>
+                            {campus.name}
+                          </option>
+                        ))}
+                      </select>
                     </div>
-                  ))}
-                </div>
 
-                <div className="mb-3">
-                  <label htmlFor="eventTitle" className="form-label">
-                    Event Title {renderAsterisk()}
-                  </label>
-                  <InputText
-                    id="eventTitle"
-                    value={eventTitle}
-                    onChange={(e) => setEventTitle(e.target.value)}
-                    placeholder="Enter event title"
-                    className="w-100"
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label htmlFor="description" className="form-label">
-                    Description {renderAsterisk()}
-                  </label>
-                  <Editor
-                    id="description"
-                    value={description}
-                    onTextChange={(e) => setDescription(e.htmlValue)}
-                    style={{ height: '150px' }}
-                    placeholder="Enter description here..."
-                  />
-                </div>
-
-                <div className="row mb-3">
-                  <div className="col">
-                    <label htmlFor="startDate" className="form-label">
-                      Start Date {renderAsterisk()}
-                    </label>
-                    <InputText
-                      id="startDate"
-                      type="date"
-                      value={startDate}
-                      onChange={(e) => setStartDate(e.target.value)}
-                      className="w-100"
-                    />
-                  </div>
-
-                  <div className="col">
-                    <label htmlFor="endDate" className="form-label">
-                      End Date {renderAsterisk()}
-                    </label>
-                    <InputText
-                      id="endDate"
-                      type="date"
-                      value={endDate}
-                      onChange={(e) => setEndDate(e.target.value)}
-                      className="w-100"
-                    />
-                  </div>
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="numberOfActivities" className="form-label">
-                    Number of Activities {renderAsterisk()}
-                  </label>
-                  <InputText
-                    id="numberOfActivities"
-                    type="number"
-                    value={numberOfActivities}
-                    onChange={handleNumberOfActivitiesChange}
-                    min="1"
-                    max="10"
-                    className="w-100"
-                  />
-                </div>
-              </form>
-
-              <div className="flex pt-4 justify-content-end">
-                    <Button
-                      label="Next"
-                      icon="pi pi-arrow-right"
-                      iconPos="right"
-                      onClick={() => stepperRef.current.nextCallback()}
-                    />
-                  </div>
-
-            </StepperPanel>
-
-            <StepperPanel header=" ">
-            {/* Dynamically render StepperPanel based on the number of activities */}
-            {activities.map((activity, index) => (
-                <StepperPanel key={index} header={`Activity ${index + 1} Details`}>
-                  <div className="mb-3">
-                    <label htmlFor={`activityTitle${index}`} className="form-label">
-                      Activity Title {renderAsterisk()}
-                    </label>
-                    <InputText
-                      id={`activityTitle${index}`}
-                      value={activity.title}
-                      onChange={(e) => handleActivitiesChange(index, 'title', e.target.value)}
-                      placeholder="Enter activity title"
-                      className="w-100"
-                    />
+                    <div className="col">
+                      <label htmlFor="department" className="form-label">
+                        Department {renderAsterisk()}
+                      </label>
+                      <select
+                        id="department"
+                        className="form-select"
+                        value={department}
+                        onChange={(e) => setDepartment(e.target.value)}
+                        disabled={!campus}
+                      >
+                        <option value="" disabled>
+                          Select Department
+                        </option>
+                        {departments.map((dept) => (
+                          <option key={dept.id} value={dept.id}>
+                            {dept.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
 
                   <div className="mb-3">
-                    <label htmlFor={`activityDescription${index}`} className="form-label">
+                    <label className="form-label">Collaborators</label>
+                    {collaborators.map((collaborator, index) => (
+                      <div key={index} className="row mb-2 align-items-center">
+                        <div className="col">
+                          <select
+                            className="form-select"
+                            value={collaborator.campus}
+                            onChange={async (e) => {
+                              const selectedCampus = e.target.value;
+                              handleCollaboratorChange(
+                                index,
+                                "campus",
+                                selectedCampus
+                              );
+                              const departments =
+                                await department_list_by_campus(selectedCampus);
+                              handleCollaboratorChange(
+                                index,
+                                "departments",
+                                departments
+                              );
+                            }}
+                          >
+                            <option value="" disabled>
+                              Select Campus
+                            </option>
+                            {campuses.map((campus) => (
+                              <option key={campus.id} value={campus.id}>
+                                {campus.name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        <div className="col">
+                          <select
+                            className="form-select"
+                            value={collaborator.department}
+                            onChange={async (e) => {
+                              const selectedDept = e.target.value;
+                              handleCollaboratorChange(
+                                index,
+                                "department",
+                                selectedDept
+                              );
+                              const response = await user_list_by_department(
+                                selectedDept
+                              );
+                              const users = response.users;
+                              handleCollaboratorChange(index, "users", users);
+                            }}
+                            disabled={!collaborator.campus}
+                          >
+                            <option value="" disabled>
+                              Select Department
+                            </option>
+                            {collaborator.departments.map((dept) => (
+                              <option key={dept.id} value={dept.id}>
+                                {dept.name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        <div className="col">
+                          <select
+                            className="form-select"
+                            value={collaborator.name}
+                            onChange={(e) =>
+                              handleCollaboratorChange(
+                                index,
+                                "name",
+                                e.target.value
+                              )
+                            }
+                            disabled={!collaborator.department}
+                          >
+                            <option value="" disabled>
+                              Select Name
+                            </option>
+                            {collaborator.users.map((user) => (
+                              <option key={user.id} value={user.id}>
+                                {user.username}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        <div className="col-auto">
+                          <i
+                            className="bi bi-plus-circle"
+                            style={{ cursor: "pointer", marginRight: "10px" }}
+                            onClick={addCollaborator}
+                          />
+                          {collaborators.length > 1 && (
+                            <i
+                              className="bi bi-trash"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => removeCollaborator(index)}
+                            />
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mb-3">
+                    <label htmlFor="eventTitle" className="form-label">
+                      Event Title {renderAsterisk()}
+                    </label>
+                    <InputText
+                      id="eventTitle"
+                      value={eventTitle}
+                      onChange={(e) => setEventTitle(e.target.value)}
+                      placeholder="Enter event title"
+                      className="w-100"
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label htmlFor="description" className="form-label">
                       Description {renderAsterisk()}
                     </label>
                     <Editor
-                      id={`activityDescription${index}`}
-                      value={activity.description}
-                      onTextChange={(e) => handleActivitiesChange(index, 'description', e.htmlValue)}
-                      style={{ height: '150px' }}
-                      placeholder="Enter activity description here..."
+                      id="description"
+                      value={description}
+                      onTextChange={(e) => setDescription(e.htmlValue)}
+                      style={{ height: "150px" }}
+                      placeholder="Enter description here..."
                     />
                   </div>
 
                   <div className="row mb-3">
                     <div className="col">
-                      <label htmlFor={`activityStartDate${index}`} className="form-label">
+                      <label htmlFor="startDate" className="form-label">
                         Start Date {renderAsterisk()}
                       </label>
                       <InputText
-                        id={`activityStartDate${index}`}
+                        id="startDate"
                         type="date"
-                        value={activity.startDate}
-                        onChange={(e) => handleActivitiesChange(index, 'startDate', e.target.value)}
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
                         className="w-100"
                       />
                     </div>
 
                     <div className="col">
-                      <label htmlFor={`activityEndDate${index}`} className="form-label">
+                      <label htmlFor="endDate" className="form-label">
                         End Date {renderAsterisk()}
                       </label>
                       <InputText
-                        id={`activityEndDate${index}`}
+                        id="endDate"
                         type="date"
-                        value={activity.endDate}
-                        onChange={(e) => handleActivitiesChange(index, 'endDate', e.target.value)}
+                        value={endDate}
+                        onChange={(e) => setEndDate(e.target.value)}
                         className="w-100"
                       />
                     </div>
                   </div>
-
-                  <div className="row mb-3">
-                    <div className="col">
-                      <label htmlFor={`activityStartTime${index}`} className="form-label">
-                        Start Time {renderAsterisk()}
-                      </label>
-                      <InputText
-                        id={`activityStartTime${index}`}
-                        type="time"
-                        value={activity.startTime}
-                        onChange={(e) => handleActivitiesChange(index, 'startTime', e.target.value)}
-                        className="w-100"
-                      />
-                    </div>
-
-                    <div className="col">
-                      <label htmlFor={`activityEndTime${index}`} className="form-label">
-                        End Time {renderAsterisk()}
-                      </label>
-                      <InputText
-                        id={`activityEndTime${index}`}
-                        type="time"
-                        value={activity.endTime}
-                        onChange={(e) => handleActivitiesChange(index, 'endTime', e.target.value)}
-                        className="w-100"
-                      />
-                    </div>
-                  </div>
-
                   <div className="mb-3">
-                    <label htmlFor={`activityVenue${index}`} className="form-label">
-                      Venue {renderAsterisk()}
+                    <label htmlFor="numberOfActivities" className="form-label">
+                      Number of Activities {renderAsterisk()}
                     </label>
                     <InputText
-                      id={`activityVenue${index}`}
-                      value={activity.venue}
-                      onChange={(e) => handleActivitiesChange(index, 'venue', e.target.value)}
-                      placeholder="Enter activity venue"
+                      id="numberOfActivities"
+                      type="number"
+                      value={numberOfActivities}
+                      onChange={handleNumberOfActivitiesChange}
+                      min="1"
+                      max="10"
                       className="w-100"
                     />
                   </div>
-                  
-                  </StepperPanel>
-              ))}
+                </form>
 
-              {/* Add more steps as needed */}
-              <div className="flex pt-4 justify-content-between">
-                    <Button
-                      label="Back"
-                      severity="secondary"
-                      icon="pi pi-arrow-left"
-                      onClick={() => stepperRef.current.prevCallback()}
-                    />
-                    <Button
-                      label="Next"
-                      icon="pi pi-arrow-right"
-                      iconPos="right"
-                      onClick={() => stepperRef.current.nextCallback()}
-                    />
-                  </div>
+                <div className="flex pt-4 justify-content-end">
+                  <Button
+                    label="Next"
+                    icon="pi pi-arrow-right"
+                    iconPos="right"
+                    onClick={() => stepperRef.current.nextCallback()}
+                  />
+                </div>
+              </StepperPanel>
+
+              <StepperPanel header=" ">
+                {/* Dynamically render StepperPanel based on the number of activities */}
+                {activities.map((activity, index) => (
+                  <StepperPanel
+                    key={index}
+                    header={`Activity ${index + 1} Details`}
+                  >
+                    <div className="mb-3">
+                      <label
+                        htmlFor={`activityTitle${index}`}
+                        className="form-label"
+                      >
+                        Activity Title {renderAsterisk()}
+                      </label>
+                      <InputText
+                        id={`activityTitle${index}`}
+                        value={activity.title}
+                        onChange={(e) =>
+                          handleActivitiesChange(index, "title", e.target.value)
+                        }
+                        placeholder="Enter activity title"
+                        className="w-100"
+                      />
+                    </div>
+
+                    <div className="mb-3">
+                      <label
+                        htmlFor={`activityDescription${index}`}
+                        className="form-label"
+                      >
+                        Description {renderAsterisk()}
+                      </label>
+                      <Editor
+                        id={`activityDescription${index}`}
+                        value={activity.description}
+                        onTextChange={(e) =>
+                          handleActivitiesChange(
+                            index,
+                            "description",
+                            e.htmlValue
+                          )
+                        }
+                        style={{ height: "150px" }}
+                        placeholder="Enter activity description here..."
+                      />
+                    </div>
+
+                    <div className="row mb-3">
+                      <div className="col">
+                        <label
+                          htmlFor={`activityStartDate${index}`}
+                          className="form-label"
+                        >
+                          Start Date {renderAsterisk()}
+                        </label>
+                        <InputText
+                          id={`activityStartDate${index}`}
+                          type="date"
+                          value={activity.startDate}
+                          onChange={(e) =>
+                            handleActivitiesChange(
+                              index,
+                              "startDate",
+                              e.target.value
+                            )
+                          }
+                          className="w-100"
+                        />
+                      </div>
+
+                      <div className="col">
+                        <label
+                          htmlFor={`activityEndDate${index}`}
+                          className="form-label"
+                        >
+                          End Date {renderAsterisk()}
+                        </label>
+                        <InputText
+                          id={`activityEndDate${index}`}
+                          type="date"
+                          value={activity.endDate}
+                          onChange={(e) =>
+                            handleActivitiesChange(
+                              index,
+                              "endDate",
+                              e.target.value
+                            )
+                          }
+                          className="w-100"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="row mb-3">
+                      <div className="col">
+                        <label
+                          htmlFor={`activityStartTime${index}`}
+                          className="form-label"
+                        >
+                          Start Time {renderAsterisk()}
+                        </label>
+                        <InputText
+                          id={`activityStartTime${index}`}
+                          type="time"
+                          value={activity.startTime}
+                          onChange={(e) =>
+                            handleActivitiesChange(
+                              index,
+                              "startTime",
+                              e.target.value
+                            )
+                          }
+                          className="w-100"
+                        />
+                      </div>
+
+                      <div className="col">
+                        <label
+                          htmlFor={`activityEndTime${index}`}
+                          className="form-label"
+                        >
+                          End Time {renderAsterisk()}
+                        </label>
+                        <InputText
+                          id={`activityEndTime${index}`}
+                          type="time"
+                          value={activity.endTime}
+                          onChange={(e) =>
+                            handleActivitiesChange(
+                              index,
+                              "endTime",
+                              e.target.value
+                            )
+                          }
+                          className="w-100"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="mb-3">
+                      <label
+                        htmlFor={`activityVenue${index}`}
+                        className="form-label"
+                      >
+                        Venue {renderAsterisk()}
+                      </label>
+                      <InputText
+                        id={`activityVenue${index}`}
+                        value={activity.venue}
+                        onChange={(e) =>
+                          handleActivitiesChange(index, "venue", e.target.value)
+                        }
+                        placeholder="Enter activity venue"
+                        className="w-100"
+                      />
+                    </div>
+                  </StepperPanel>
+                ))}
+
+                {/* Add more steps as needed */}
+                <div className="flex pt-4 justify-content-between">
+                  <Button
+                    label="Back"
+                    severity="secondary"
+                    icon="pi pi-arrow-left"
+                    onClick={() => stepperRef.current.prevCallback()}
+                  />
+                  <Button
+                    label="Next"
+                    icon="pi pi-arrow-right"
+                    iconPos="right"
+                    onClick={() => stepperRef.current.nextCallback()}
+                  />
+                </div>
               </StepperPanel>
             </Stepper>
           </div>
         </div>
       </div>
     </div>
-   
   );
-};
+}
 
 export default EventProposal;

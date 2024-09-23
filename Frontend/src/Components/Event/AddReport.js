@@ -253,20 +253,31 @@ function AddReport() {
     setForm({ ...form, outcomes: newOutcomes });
   };
 
-  const handleNumberOfActivitiesChange = (e) => {
-    const value = parseInt(e.target.value, 10);
-    setNumberOfActivities(value);
-    const newActivities = [...activities];
-    while (newActivities.length < value) {
-      newActivities.push({ title: "", date: "", startTime: "", endTime: "" });
-    }
-    setActivities(newActivities);
-  };
-
   const handleActivitiesChange = (index, field, value) => {
+    console.log(value)
     const updatedActivities = [...activities];
     updatedActivities[index][field] = value;
     setActivities(updatedActivities);
+  };
+
+  const handleNumberOfActivitiesChange = (e) => {
+    const value = parseInt(e.target.value, 10);
+    setNumberOfActivities(value);
+
+    if (value > activities.length) {
+      const additionalActivities = Array.from(
+        { length: value - activities.length },
+        () => ({
+          title: "",
+          date: "",
+          startTime: "",
+          endTime: "",
+        })
+      );
+      setActivities([...activities, ...additionalActivities]);
+    } else {
+      setActivities(activities.slice(0, value));
+    }
   };
 
   const handleSubmit = (e) => {
@@ -445,41 +456,39 @@ function AddReport() {
                     <Editor
                       value={description}
                       onTextChange={(e) => setDescription(e.htmlValue)}
-                      style={{ height: "200px" }}
+                      style={{ height: "120px" }}
                     />
                   </div>
 
                   <div className="mb-3">
-                    <label htmlFor="numberOfActivities" className="form-label">
-                      Number of Activities{renderAsterisk()}
+                  <label htmlFor="numberOfActivities" className="form-label">
+                    Number of Activities {renderAsterisk()}
+                  </label>
+                  <InputText
+                    id="numberOfActivities"
+                    type="number"
+                    value={numberOfActivities}
+                    onChange={handleNumberOfActivitiesChange}
+                    min="1"
+                    max="10"
+                    className="w-100"
+                  />
+                </div>
+
+                {activities.map((activity, index) => (
+                    <div key={index} header={`Activity ${index + 1} Details`}>
+                    <div className="mb-3">
+                    <label htmlFor={`activityTitle${index}`} className="form-label">
+                      Activity Title {renderAsterisk()}
                     </label>
                     <InputText
-                      id="numberOfActivities"
-                      type="number"
-                      value={numberOfActivities > 0 ? numberOfActivities : 1} // Ensure only positive numbers
-                      onChange={handleNumberOfActivitiesChange}
+                      id={`activityTitle${index}`}
+                      value={activity.title}
+                      onChange={(e) => handleActivitiesChange(index, 'title', e.target.value)}
+                      placeholder="Enter activity title"
                       className="w-100"
-                      min="1"
                     />
                   </div>
-
-                  {activities.map((activity, index) => (
-                    <div key={index} className="mb-3">
-                      <label
-                        htmlFor={`activityTitle-${index}`}
-                        className="form-label"
-                      >
-                        Activity {index + 1} Title {renderAsterisk()}
-                      </label>
-                      <InputText
-                        id={`activityTitle-${index}`}
-                        value={activity.title}
-                        onChange={(e) =>
-                          handleActivitiesChange(index, "title", e.target.value)
-                        }
-                        placeholder="Enter activity title"
-                        className="w-100"
-                      />
 
                       <label
                         htmlFor={`activityDate-${index}`}

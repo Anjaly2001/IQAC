@@ -8,7 +8,7 @@ import {
   user_register,
   campus_list,
   department_list_by_campus,
-  updateUser
+  updateUser,
 } from "../../axios/api";
 import Sidebar from "../../Sidebar";
 
@@ -16,6 +16,7 @@ const RegisterSingleUser = () => {
   const [userName, setUserName] = useState("");
   const [userEmpId, setUserEmpId] = useState("");
   const [userEmail, setUserEmail] = useState("");
+  const [userEmailError, setUserEmailError] = useState("");
   const domain = "@christuniversity.in"; // Fixed domain
   const [userPhoneNumber, setUserPhoneNumber] = useState("");
   const [userDepartment, setUserDepartment] = useState("");
@@ -25,15 +26,13 @@ const RegisterSingleUser = () => {
   const [departments, setDepartments] = useState([]);
   const [userNameError, setUserNameError] = useState("");
   const [userEmpIdError, setUserEmpIdError] = useState("");
-  const [userEmailError, setUserEmailError] = useState("");
   const [userPhoneNumberError, setUserPhoneNumberError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [userRole, setUserRole] = useState('');
-  const [userRoleError, setUserRoleError] = useState('');
-  const [fieldError, setFieldError] = useState('');
+  const [userRole, setUserRole] = useState("");
+  const [userRoleError, setUserRoleError] = useState("");
+  const [fieldError, setFieldError] = useState("");
   const [userId, setUserId] = useState(null); // For local state
   const [email, setEmail] = useState("");
-  
 
   const navigate = useNavigate();
 
@@ -74,22 +73,31 @@ const RegisterSingleUser = () => {
       .join(" ");
   };
 
-  const handleEmailChange = (e) => {
-    const value = e.target.value;
-    setEmail(value);
-    validateField(value);
-    // setEmail(e.target.value);
-  };
-
   const validateField = (email) => {
     const allowedPattern = /^[a-zA-Z0-9\s]+$/;
-  
+
     if (!allowedPattern.test(email)) {
-      setFieldError("Field should contain only alphanumeric characters and spaces. Special characters like '@', '()', etc., are not allowed.");
+      setFieldError(
+        "Field should contain only alphanumeric characters and spaces. Special characters like '@', '()', etc., are not allowed."
+      );
     } else {
       setFieldError(""); // Clear the error if valid
     }
   };
+
+  const handleEmailChange = (e) => {
+    const value = e.target.value;
+
+    // Remove the domain before validating
+    const localPart = value.split("@")[0];
+    setUserEmail(value);
+    validateEmail(value);
+
+    // Set the complete email with the fixed domain
+    const fullEmail = localPart + domain;
+    console.log("Full Email:", fullEmail); // Debugging: Log the full email
+  };
+
   const fullEmail = email + domain;
   const data = { email: fullEmail };
 
@@ -178,7 +186,6 @@ const RegisterSingleUser = () => {
     }
   };
 
-
   const renderAsterisk = () => <span style={{ color: "red" }}>*</span>;
   // Validation functions
   const validateUserName = (value) => {
@@ -200,6 +207,7 @@ const RegisterSingleUser = () => {
   };
 
   const validateEmail = (value) => {
+    // Allow only lowercase alphanumeric characters and a single '@'
     const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
     if (!emailRegex.test(value)) {
       setUserEmailError("Email must be lowercase and contain only one '@'.");
@@ -300,7 +308,7 @@ const RegisterSingleUser = () => {
                         }
                       >
                         <label htmlFor="userEmail">
-                          Email {renderAsterisk()}
+                          Email {/* Your renderAsterisk function can go here */}
                         </label>
                       </OverlayTrigger>
                       <input
@@ -309,10 +317,7 @@ const RegisterSingleUser = () => {
                         id="userEmail"
                         placeholder="Email"
                         value={userEmail}
-                        onChange={(e) => {
-                          setUserEmail(e.target.value);
-                          validateEmail(e.target.value);
-                        }}
+                        onChange={handleEmailChange}
                       />
                       {userEmailError && (
                         <div className="text-danger">{userEmailError}</div>
@@ -453,22 +458,23 @@ const RegisterSingleUser = () => {
                     >
                       <option value="">Select Role</option>
                       <option value="Admin">Admin</option>
-                      <option value="University_Viewer">University Viewer</option>
+                      <option value="University_Viewer">
+                        University Viewer
+                      </option>
                       <option value="Campus_Admin">Campus Admin</option>
                       <option value="Campus_Viewer">Campus Viewer</option>
                       <option value="Department">Department</option>
-
                     </select>
                   </div>
                 </div>
                 <div className="text-left">
-                 <button
-                      className="btn btn-primary"
-                      onClick={createOrUpdateUser}
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? "Submitting..." : "Register"}
-                    </button>
+                  <button
+                    className="btn btn-primary"
+                    onClick={createOrUpdateUser}
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "Submitting..." : "Register"}
+                  </button>
                 </div>
               </div>
             </div>

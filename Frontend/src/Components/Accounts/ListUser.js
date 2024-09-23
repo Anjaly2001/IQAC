@@ -19,6 +19,7 @@ const ListUser = () => {
     last_name: { value: null, matchMode: "contains" }, // Add filter for last_name
     emp_id: { value: null, matchMode: "contains" },
     email: { value: null, matchMode: "contains" },
+    // ph_number:{ value:null, matchMode:"contains"},
     campus: { value: null, matchMode: "contains" },
     department: { value: null, matchMode: "contains" },
   });
@@ -186,6 +187,12 @@ const ListUser = () => {
                     filter
                     filterPlaceholder="Search email"
                   />
+                  {/* <Column
+                    field="phone number"
+                    header="Phone Number"
+                    filter
+                    filterPlaceholder="Search Phone Number"
+                  /> */}
                   <Column
                     field="campus"
                     header="Campus"

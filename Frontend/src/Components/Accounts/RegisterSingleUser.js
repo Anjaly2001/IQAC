@@ -73,18 +73,6 @@ const RegisterSingleUser = () => {
       .join(" ");
   };
 
-  const validateField = (email) => {
-    const allowedPattern = /^[a-zA-Z0-9\s]+$/;
-
-    if (!allowedPattern.test(email)) {
-      setFieldError(
-        "Field should contain only alphanumeric characters and spaces. Special characters like '@', '()', etc., are not allowed."
-      );
-    } else {
-      setFieldError(""); // Clear the error if valid
-    }
-  };
-
   const handleEmailChange = (e) => {
     const value = e.target.value;
 
@@ -100,6 +88,18 @@ const RegisterSingleUser = () => {
 
   const fullEmail = email + domain;
   const data = { email: fullEmail };
+
+  const validateField = (email) => {
+    const allowedPattern = /^[a-zA-Z0-9\s]+$/;
+
+    if (!allowedPattern.test(email)) {
+      setFieldError(
+        "Field should contain only alphanumeric characters and spaces. Special characters like '@', '()', etc., are not allowed."
+      );
+    } else {
+      setFieldError(""); // Clear the error if valid
+    }
+  };
 
   const validateForm = () => {
     let isValid = true;
@@ -296,33 +296,48 @@ const RegisterSingleUser = () => {
                         <div className="text-danger">{userEmpIdError}</div>
                       )}
                     </div>
-                  </div>
-                  <div className="row mb-4">
-                    <div className="col-md-6">
-                      <OverlayTrigger
-                        placement="top"
-                        overlay={
-                          <Tooltip id="tooltip-userEmail">
-                            Enter the user's email address.
-                          </Tooltip>
-                        }
-                      >
-                        <label htmlFor="userEmail">
-                          Email {/* Your renderAsterisk function can go here */}
-                        </label>
-                      </OverlayTrigger>
-                      <input
-                        type="email"
-                        className="form-control"
-                        id="userEmail"
-                        placeholder="Email"
-                        value={userEmail}
-                        onChange={handleEmailChange}
-                      />
-                      {userEmailError && (
-                        <div className="text-danger">{userEmailError}</div>
-                      )}
-                    </div>
+                    <div className="row mb-4">
+                      <div className="col-md-6">
+                        {/* Tooltip for Email Field */}
+                        <OverlayTrigger
+                          placement="top"
+                          overlay={
+                            <Tooltip id="tooltip-userEmail">
+                              Enter the user's email address.
+                            </Tooltip>
+                          }
+                        >
+                          <label htmlFor="userEmail">
+                            Email{" "}
+                            {/* You can add a function like `renderAsterisk` if required */}
+                          </label>
+                        </OverlayTrigger>
+
+                        <div className="single-input input-group">
+                          {/* Email Input Field for Username */}
+                    
+                          <input
+                            type="text"
+                            className={`form-control ${
+                              userEmailError ? "is-invalid" : ""
+                            }`} // Highlight input field if error
+                            id="userEmail"
+                            name="userEmail"
+                            placeholder="Enter email ID"
+                            value={userEmail} // Username part (before '@') 
+                            onChange={handleEmailChange} // Change handler for email input
+                            required
+                          />
+                          
+                        </div>
+
+                        {/* Error Message for Invalid Input */}
+                        {userEmailError && (
+                          <div className="text-danger">{userEmailError}</div>
+                        )}
+                      </div>
+                    
+
                     <div className="col-md-6">
                       <OverlayTrigger
                         placement="top"
@@ -360,6 +375,7 @@ const RegisterSingleUser = () => {
                           {userPhoneNumberError}
                         </div>
                       )}
+                    </div>
                     </div>
                   </div>
                   <div className="row mb-3">

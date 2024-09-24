@@ -1,0 +1,140 @@
+/* Container for the form */
+.event-proposal-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+  }
+  
+  /* Logo Upload */
+  .logo-upload-container {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .logo-placeholder {
+    width: 150px;
+    height: 150px;
+    border: 2px dashed #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    margin-bottom: 10px;
+  }
+  
+  .logo {
+    max-width: 150px;
+    height: auto;
+    margin-bottom: 10px;
+  }
+  
+  .logo-upload-input {
+    margin-top: 10px;
+  }
+  
+  /* Blue Line */
+  .blue-line {
+    border: 0;
+    height: 2px;
+    background-color: #003366;
+    margin-bottom: 20px;
+  }
+  
+  /* Title styling */
+  .event-proposal-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  /* Table styling */
+  .event-info-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+    margin-bottom: 40px;
+  }
+  
+  .event-info-table th, .event-info-table td {
+    border: 1px solid black;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .table-header {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .event-info-table td:first-child {
+    width: 30%;
+    font-weight: bold;
+  }
+  
+  .event-info-table td {
+    width: 70%;
+  }
+  
+  /* RESPONSIVENESS */
+  
+  /* Adjustments for tablets */
+  @media screen and (max-width: 768px) {
+    .logo-container {
+      text-align: center;
+    }
+  
+    .logo {
+      max-width: 120px;
+    }
+  
+    .event-proposal-title {
+      font-size: 20px;
+    }
+  
+    .event-info-table th, .event-info-table td {
+      padding: 8px;
+    }
+  
+    .event-info-table td:first-child, .event-info-table td {
+      width: 100%;
+      display: block;
+      text-align: center;
+    }
+  
+    .event-info-table tr {
+      display: block;
+      margin-bottom: 10px;
+    }
+  
+    .event-info-table th {
+      display: none;
+    }
+  }
+  
+  /* Adjustments for mobile screens */
+  @media screen and (max-width: 480px) {
+    .event-proposal-container {
+      padding: 10px;
+    }
+  
+    .logo {
+      max-width: 100px;
+    }
+  
+    .event-proposal-title {
+      font-size: 18px;
+    }
+  
+    .event-info-table td {
+      padding: 6px;
+    }
+  
+    .event-info-table td:first-child {
+      font-size: 16px;
+      font-weight: bold;
+    }
+  }  

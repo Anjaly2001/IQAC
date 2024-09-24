@@ -83,7 +83,19 @@ const App = () => {
                         <Route path="/eventtype" element={<EventType />} />
                         <Route path="/eventtypelist" element={<EventTypeList />} />
                         <Route path="/eventsummary" component={EventSummary} />
-                        <Route path="/eventproposal" component={EventProposal} />
+                        <Route path="//* The `eventproposal` route in the provided code is defining a
+                        route for the component `EventProposal`. When a user navigates
+                        to the `/eventproposal` path in the application, the
+                        `EventProposal` component will be rendered on the screen. This
+                        component likely contains the functionality related to
+                        creating or managing event proposals within the application. */
+                        /* The `eventproposal` route in the provided code is defining a
+                        route for the component `EventProposal`. When a user navigates
+                        to the `/eventproposal` path in the application, the
+                        `EventProposal` component will be rendered on the screen. This
+                        component likely contains the functionality related to
+                        creating or managing event proposals within the application. */
+                        eventproposal" component={EventProposal} />
 
                         {/* Fallback route for authenticated users */}
                         <Route path="/" element={<Navigate to={getDefaultRoute()} />} />

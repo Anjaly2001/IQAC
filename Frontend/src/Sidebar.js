@@ -285,6 +285,12 @@ const Sidebar = () => {
                 isActive={checkActivePath("/registerEvent")}
               />
               <SidebarSubItem
+                path="/eventproposal"
+                icon={faPlus}
+                label="Event Proposal"
+                isActive={checkActivePath("/eventproposal")}
+              />
+              <SidebarSubItem
                 path="/listevents"
                 icon={faEye}
                 label="Events List"

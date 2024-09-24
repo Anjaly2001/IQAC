@@ -328,7 +328,9 @@ const RegisterSingleUser = () => {
                             onChange={handleEmailChange} // Change handler for email input
                             required
                           />
-                          
+                                <span className="input-group-text" style={{ backgroundColor: "#e9ecef" }}>
+                      {domain}
+                    </span>
                         </div>
 
                         {/* Error Message for Invalid Input */}

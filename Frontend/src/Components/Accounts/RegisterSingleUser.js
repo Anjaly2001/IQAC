@@ -296,7 +296,7 @@ const RegisterSingleUser = () => {
                         <div className="text-danger">{userEmpIdError}</div>
                       )}
                     </div>
-                    <div className="row mb-4">
+                    <div className="row mb-4 mt-5">
                       <div className="col-md-6">
                         {/* Tooltip for Email Field */}
                         <OverlayTrigger
@@ -308,7 +308,7 @@ const RegisterSingleUser = () => {
                           }
                         >
                           <label htmlFor="userEmail">
-                            Email{" "}
+                            Email{renderAsterisk()}
                             {/* You can add a function like `renderAsterisk` if required */}
                           </label>
                         </OverlayTrigger>

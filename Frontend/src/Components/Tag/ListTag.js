@@ -82,7 +82,6 @@ export default function ListTag() {
         );
     };
 
-  
 
     return (
         <div className="container-fluid">

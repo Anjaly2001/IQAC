@@ -202,7 +202,7 @@ const CreateDepartment = ({ onAddDepartment }) => {
                                     {/* <option value="Others">Others</option> */}
                                 </select>
                             </div>
-                          
+                        
                             <Button
                                 label={isEdit ? 'Update Department' : 'Create Department'}
                                 onClick={handleCreateOrUpdateDepartment}

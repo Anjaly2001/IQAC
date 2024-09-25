@@ -839,8 +839,8 @@ function RegisterEvent() {
                 </div>
               </StepperPanel>
               <StepperPanel header="">
-                  <div>
-                    <div className="mb-3">
+                <div>
+                  <div className="mb-3">
                     <label htmlFor="academicYear" className="form-label">
                       Academic Year{renderAsterisk()}
                     </label>
@@ -868,71 +868,71 @@ function RegisterEvent() {
                       filter
                     />
                   </div>
-                      {/* Proposal and Planning Document Upload */}
-                      <FileUpload
-                        label="Upload Proposal and Planning Document"
-                        files={proposalFiles}
-                        setFiles={setProposalFiles}
-                        inputId="proposalFileInput"
-                      />
+                  {/* Proposal and Planning Document Upload */}
+                  <FileUpload
+                    label="Upload Proposal and Planning Document"
+                    files={proposalFiles}
+                    setFiles={setProposalFiles}
+                    inputId="proposalFileInput"
+                  />
 
 
-                        {/* MultiSelect for tag selection */}
-                        <MultiSelect
-                        id="tags"
-                        value={tags} // Selected tags
-                        options={tagOptions} // Fetched options
-                        onChange={(e) => setTags(e.value)} // Handle tag selection
-                        placeholder="Select Tags"
-                        className="w-100"
-                        filter // Enable filter for searching tags
-                      />
+                  {/* MultiSelect for tag selection */}
+                  <MultiSelect
+                    id="tags"
+                    value={tags} // Selected tags
+                    options={tagOptions} // Fetched options
+                    onChange={(e) => setTags(e.value)} // Handle tag selection
+                    placeholder="Select Tags"
+                    className="w-100"
+                    filter // Enable filter for searching tags
+                  />
 
-                      {/* Display selected tags as small boxes (chips) */}
-                <div className="mt-2">
-                  {tags.length > 0 && (
-                    <div className="tag-boxes">
-                      {tags.map((tagId) => {
-                        // Find the corresponding tag name from tagOptions
-                        const tag = tagOptions.find(
-                          (option) => option.value === tagId
-                        );
-                        return (
-                          <div key={tagId} className="tag-chip">
-                            {tag.label}
-                            <button
+                  {/* Display selected tags as small boxes (chips) */}
+                  <div className="mt-2">
+                    {tags.length > 0 && (
+                      <div className="tag-boxes">
+                        {tags.map((tagId) => {
+                          // Find the corresponding tag name from tagOptions
+                          const tag = tagOptions.find(
+                            (option) => option.value === tagId
+                          );
+                          return (
+                            <div key={tagId} className="tag-chip">
+                              {tag.label}
+                              <button
 
-                              className="close-btn"
-                              onClick={() => removeTag(tagId)}
-                            >
-                              &times; {/* Close button symbol */}
-                            </button>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
+                                className="close-btn"
+                                onClick={() => removeTag(tagId)}
+                              >
+                                &times; {/* Close button symbol */}
+                              </button>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
 
-              <div className="flex pt-4 justify-content-between">
-                      <Button
-                        label="Back"
-                        severity="secondary"
-                        icon="pi pi-arrow-left"
-                        onClick={() => stepperRef.current.prevCallback()}
-                      />
-                      <Button
-                        label="Next"
-                        icon="pi pi-arrow-right"
-                        iconPos="right"
-                        onClick={() => stepperRef.current.nextCallback()}
-                      />
+                  <div className="flex pt-4 justify-content-between">
+                    <Button
+                      label="Back"
+                      severity="secondary"
+                      icon="pi pi-arrow-left"
+                      onClick={() => stepperRef.current.prevCallback()}
+                    />
+                    <Button
+                      label="Next"
+                      icon="pi pi-arrow-right"
+                      iconPos="right"
+                      onClick={() => stepperRef.current.nextCallback()}
+                    />
 
-                       
 
-                    </div>
+
                   </div>
-                </StepperPanel>
+                </div>
+              </StepperPanel>
 
             </Stepper>
           </div>

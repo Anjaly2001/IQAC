@@ -876,6 +876,9 @@ function RegisterEvent() {
                         inputId="proposalFileInput"
                       />
                 {/* MultiSelect for tag selection */}
+                <label htmlFor="tags" className="form-label">
+                      Tags{renderAsterisk()}
+                    </label>
                 <MultiSelect
                         id="tags"
                         value={tags} // Selected tags
@@ -921,11 +924,10 @@ function RegisterEvent() {
                         onClick={() => stepperRef.current.prevCallback()}
                       />
                       <Button
-                        label="Next"
-                        icon="pi pi-arrow-right"
-                        iconPos="right"
-                        onClick={() => stepperRef.current.nextCallback()}
-                      />
+                      label="Submit"
+                      iconPos="right"
+                      onClick={() => stepperRef.current.nextCallback()}
+                    />
                     </div>
                   </div>
                 </StepperPanel>

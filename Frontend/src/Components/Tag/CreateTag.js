@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { InputText } from "primereact/inputtext";
 import { Editor } from "primereact/editor";
 import { Button } from "primereact/button";
-import { useLocation } from "react-router-dom"; // Import useLocation
+import { useLocation,useNavigate } from "react-router-dom"; // Import useLocation
 import { create_tag, update_tag } from '../../axios/api'; // Assuming you have a separate update API
 import Sidebar from '../../Sidebar';
 import { toast } from "react-toastify";
@@ -14,6 +14,7 @@ export default function CreateOrUpdateTag() {
     const [descriptionError, setDescriptionError] = useState('');
     const location = useLocation(); // To get the state if coming for an update
     const tag = location.state?.tag || null; // Get tag from state if it's passed for editing
+    const navigate = useNavigate();
 
     useEffect(() => {
         // If tag exists (for update), prepopulate form fields
@@ -62,6 +63,7 @@ export default function CreateOrUpdateTag() {
             // Optionally, reset form or navigate away after saving
             setTagName('');
             setDescription('');
+            navigate('/listtag');
         } catch (error) {
             console.error('Error saving tag:', error);
             toast.error('Error occurred while saving the tag.');

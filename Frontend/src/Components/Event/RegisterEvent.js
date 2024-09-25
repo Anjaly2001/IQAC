@@ -676,7 +676,7 @@ function RegisterEvent() {
                         htmlFor={`activityTitle${index}`}
                         className="form-label"
                       >
-                        Activity Title {renderAsterisk()}
+                         Activity {index + 1} Title {renderAsterisk()}
                       </label>
                       <InputText
                         id={`activityTitle${index}`}

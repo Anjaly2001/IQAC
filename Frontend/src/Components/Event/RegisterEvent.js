@@ -662,7 +662,10 @@ function RegisterEvent() {
                     onClick={() => stepperRef.current.nextCallback()}
                   />
                 </div>
+                
               </StepperPanel>
+
+
 
               <StepperPanel header=" ">
                 {/* Dynamically render StepperPanel based on the number of activities */}
@@ -926,8 +929,7 @@ function RegisterEvent() {
                       onClick={() => stepperRef.current.prevCallback()}
                     />
                     <Button
-                      label="Next"
-                      icon="pi pi-arrow-right"
+                      label="Submit"
                       iconPos="right"
                       onClick={() => stepperRef.current.nextCallback()}
                     />

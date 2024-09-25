@@ -32,8 +32,21 @@ function AddReport() {
     { title: "", date: "", startTime: "", endTime: "" },
   ]);
   const [summary, setSummary] = useState("");
+  const [Participants,setParticipants]=useState("");
+  const [Audience,setAudience ] = useState("");
+  const [ExternalMembers, setExternalMembers] = useState("");
+  const [Website, setWebsite] = useState("");
+  const [Committee, setCommittee] = useState("");
+  const [studentVolunteers, setstudentVolunteers] = useState("");
   const [files, setFiles] = useState([]);
   const [error, setError] = useState(null);
+  const [tags, setTags] = useState([]); // For holding the selected tags
+
+    // Function to remove a selected tag
+    const removeTag = (tagValue) => {
+      setTags((prevTags) => prevTags.filter((tag) => tag !== tagValue));
+    };
+  
 
   const FileUpload = ({ label, files, setFiles, inputId }) => (
     <div className="mb-3">
@@ -629,15 +642,42 @@ function AddReport() {
                     <label htmlFor="tags" className="form-label">
                       Tags{renderAsterisk()}
                     </label>
+
+                    {/* MultiSelect for tag selection */}
                     <MultiSelect
-                      id="Tags"
-                      value={tag}
-                      options={tagOptions}
-                      onChange={(e) => setTag(e.value)}
+                      id="tags"
+                      value={tags} // Selected tags
+                      options={tagOptions} // Fetched options
+                      onChange={(e) => setTags(e.value)} // Handle tag selection
                       placeholder="Select Tags"
                       className="w-100"
-                      filter
+                      filter // Enable filter for searching tags
                     />
+
+                    {/* Display selected tags as small boxes (chips) */}
+                    <div className="mt-2">
+                      {tags.length > 0 && (
+                        <div className="tag-boxes">
+                          {tags.map((tagId) => {
+                            // Find the corresponding tag name from tagOptions
+                            const tag = tagOptions.find(
+                              (option) => option.value === tagId
+                            );
+                            return (
+                              <div key={tagId} className="tag-chip">
+                                {tag.label}
+                                <button
+                                  className="close-btn"
+                                  onClick={() => removeTag(tagId)}
+                                >
+                                  &times; {/* Close button symbol */}
+                                </button>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   <div className="flex pt-4 justify-content-end">
@@ -672,8 +712,8 @@ function AddReport() {
                       Target Audience{renderAsterisk()}
                     </label>
                     <Editor
-                      value={description}
-                      onTextChange={(e) => setDescription(e.htmlValue)}
+                      value={Audience}
+                      onTextChange={(e) => setAudience(e.htmlValue)}
                       style={{ height: "80px" }}
                     />
                   </div>
@@ -682,8 +722,8 @@ function AddReport() {
                       External Members/ Agencies with Affiliation
                     </label>
                     <Editor
-                      value={description}
-                      onTextChange={(e) => setDescription(e.htmlValue)}
+                      value={ExternalMembers}
+                      onTextChange={(e) => setExternalMembers(e.htmlValue)}
                       style={{ height: "80px" }}
                     />
                   </div>
@@ -692,8 +732,8 @@ function AddReport() {
                       Website/Contact of External Members
                     </label>
                     <Editor
-                      value={description}
-                      onTextChange={(e) => setDescription(e.htmlValue)}
+                      value={Website}
+                      onTextChange={(e) => setWebsite(e.htmlValue)}
                       style={{ height: "80px" }}
                     />
                   </div>
@@ -702,8 +742,8 @@ function AddReport() {
                       Organizing Committee Details{renderAsterisk()}
                     </label>
                     <Editor
-                      value={description}
-                      onTextChange={(e) => setDescription(e.htmlValue)}
+                      value={Committee}
+                      onTextChange={(e) => setCommittee(e.htmlValue)}
                       style={{ height: "80px" }}
                     />
                   </div>
@@ -712,8 +752,8 @@ function AddReport() {
                       No of Student Volunteers{renderAsterisk()}
                     </label>
                     <Editor
-                      value={description}
-                      onTextChange={(e) => setDescription(e.htmlValue)}
+                      value={studentVolunteers}
+                      onTextChange={(e) => setstudentVolunteers(e.htmlValue)}
                       style={{ height: "80px" }}
                     />
                   </div>
@@ -722,8 +762,8 @@ function AddReport() {
                       No of Attendees/ Participants{renderAsterisk()}
                     </label>
                     <Editor
-                      value={description}
-                      onTextChange={(e) => setDescription(e.htmlValue)}
+                      value={Participants}
+                      onTextChange={(e) => setParticipants(e.htmlValue)}
                       style={{ height: "80px" }}
                     />
                   </div>
@@ -766,13 +806,7 @@ function AddReport() {
                         inputId="brochureFileInput"
                       />
 
-                      {/* Detailed Report Upload */}
-                      <FileUpload
-                        label="Upload Detailed Report"
-                        files={reportFiles}
-                        setFiles={setReportFiles}
-                        inputId="reportFileInput"
-                      />
+                      
 
                       {/* Photographs of Event Upload */}
                       <FileUpload

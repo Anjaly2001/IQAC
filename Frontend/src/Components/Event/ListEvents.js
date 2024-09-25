@@ -10,6 +10,7 @@ import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Sidebar from '../../Sidebar';
+import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons'; // Ensure this line is present
 import { ToastContainer, toast } from 'react-toastify';
 import { event_list,event_delete } from '../../axios/api';
 
@@ -41,6 +42,42 @@ const ListEvents = () => {
       console.log(error)
     } finally {
       setLoading(false); // End loading
+    }
+  };
+
+  const approveEvent = (id) => {
+    try {
+      // Assuming you will make an API call to approve the event in the future
+      // const response = await event_update_status(id, 'Approved');
+      
+      // For now, just update the state locally
+      setPendingReports(
+        pendingReports.map(event =>
+          event.id === id ? { ...event, status: 'Approved' } : event
+        )
+      );
+      toast.success('Event approved successfully!');
+    } catch (error) {
+      console.error('Error approving event:', error);
+      toast.error('Failed to approve event. Please try again.');
+    }
+  };
+  
+  const rejectEvent = (id) => {
+    try {
+      // Assuming you will make an API call to reject the event in the future
+      // const response = await event_update_status(id, 'Rejected');
+      
+      // For now, just update the state locally
+      setPendingReports(
+        pendingReports.map(event =>
+          event.id === id ? { ...event, status: 'Rejected' } : event
+        )
+      );
+      toast.success('Event rejected successfully!');
+    } catch (error) {
+      console.error('Error rejecting event:', error);
+      toast.error('Failed to reject event. Please try again.');
     }
   };
 
@@ -84,6 +121,17 @@ const ListEvents = () => {
         <button className="btn btn-link" onClick={() => editReport(rowData.id)}>
           <FontAwesomeIcon icon={faEdit} />
         </button>
+        {rowData.status === 'Pending' && (
+        <>
+<button className="btn btn-link text-success" onClick={() => approveEvent(rowData.id)} style={{ border: '1px solid red' }}>
+  <FontAwesomeIcon icon={faCheck} />
+</button>
+
+          <button className="btn btn-link text-danger" onClick={() => rejectEvent(rowData.id)}>
+            <FontAwesomeIcon icon={faTimes} />
+          </button>
+        </>
+      )}
         {rowData.status !== 'Approved' && (
           <button className="btn btn-link text-danger" onClick={() => deleteEvent(rowData.id)}>
             <FontAwesomeIcon icon={faTrash} />

@@ -75,31 +75,22 @@ const RegisterSingleUser = () => {
 
   const handleEmailChange = (e) => {
     const value = e.target.value;
-
-    // Remove the domain before validating
+  
+    // Remove the domain before validating and store only the local part
     const localPart = value.split("@")[0];
-    setUserEmail(value);
-    validateEmail(value);
-
-    // Set the complete email with the fixed domain
+    setUserEmail(localPart); // Only store the part before "@"
+  
+    validateEmail(localPart); // Validate the local part
+  
     const fullEmail = localPart + domain;
     console.log("Full Email:", fullEmail); // Debugging: Log the full email
   };
+  
+  
 
   const fullEmail = email + domain;
   const data = { email: fullEmail };
 
-  const validateField = (email) => {
-    const allowedPattern = /^[a-zA-Z0-9\s]+$/;
-
-    if (!allowedPattern.test(email)) {
-      setFieldError(
-        "Field should contain only alphanumeric characters and spaces. Special characters like '@', '()', etc., are not allowed."
-      );
-    } else {
-      setFieldError(""); // Clear the error if valid
-    }
-  };
 
   const validateForm = () => {
     let isValid = true;
@@ -144,20 +135,21 @@ const RegisterSingleUser = () => {
 
   const createOrUpdateUser = async () => {
     if (!validateForm()) return;
-
+  
     setIsSubmitting(true);
-
-    const department =
-      userDepartment === "Others" ? customDepartment : userDepartment;
-
+  
+    const department = userDepartment === "Others" ? customDepartment : userDepartment;
+    
     const [firstName, lastName] = userName.split(" "); // Split the userName by space
-
+    
+    const fullEmail = userEmail + domain; // Combine userEmail with the domain
+    
     const userData = {
       first_name: toTitleCase(firstName), // Assign first part to first_name
       last_name: toTitleCase(lastName) || "", // Assign second part to last_name or set it to an empty string if not provided
-      username: userEmail,
+      username: fullEmail, // Set full email as the username
       emp_id: userEmpId,
-      email: userEmail,
+      email: fullEmail, // Pass full email with domain
       phone_number: userPhoneNumber,
       department: department,
       location: userCampus,
@@ -176,10 +168,12 @@ const RegisterSingleUser = () => {
       } else {
         response = await user_register(userData);
         toast.success("User created successfully!");
+        console.log(response.data)
       }
 
       navigate("/listuser"); // Redirect to user list after success
     } catch (error) {
+      console.log(error)
       toast.error("Failed to process user.");
     } finally {
       setIsSubmitting(false);
@@ -208,7 +202,7 @@ const RegisterSingleUser = () => {
 
   const validateEmail = (value) => {
     // Allow only lowercase alphanumeric characters and a single '@'
-    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
+    const emailRegex = /^[a-zA-Z0-9\s.]+$/;
     if (!emailRegex.test(value)) {
       setUserEmailError("Email must be lowercase and contain only one '@'.");
     } else {
@@ -217,7 +211,7 @@ const RegisterSingleUser = () => {
   };
 
   const validatePhoneNumber = (value) => {
-    const phoneRegex = /^[0-9]{10}$/;
+    const phoneRegex = /^[6-9][0-9]{9}$/;
     if (!phoneRegex.test(value)) {
       setUserPhoneNumberError("Phone number must be 10 digits.");
     } else {

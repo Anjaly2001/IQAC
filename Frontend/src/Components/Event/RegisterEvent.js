@@ -676,7 +676,7 @@ function RegisterEvent() {
                         htmlFor={`activityTitle${index}`}
                         className="form-label"
                       >
-                         Activity {index + 1} Title {renderAsterisk()}
+                        Activity {index + 1} Title {renderAsterisk()}
                       </label>
                       <InputText
                         id={`activityTitle${index}`}
@@ -868,30 +868,72 @@ function RegisterEvent() {
                       filter
                     />
                   </div>
-                      {/* Proposal and Planning Document Upload */}
-                      <FileUpload
-                        label="Upload Proposal and Planning Document"
-                        files={proposalFiles}
-                        setFiles={setProposalFiles}
-                        inputId="proposalFileInput"
-                      />
-              <div className="flex pt-4 justify-content-between">
-                      <Button
-                        label="Back"
-                        severity="secondary"
-                        icon="pi pi-arrow-left"
-                        onClick={() => stepperRef.current.prevCallback()}
-                      />
-                      <Button
-                        label="Next"
-                        icon="pi pi-arrow-right"
-                        iconPos="right"
-                        onClick={() => stepperRef.current.nextCallback()}
-                      />
+                  {/* Proposal and Planning Document Upload */}
+                  <FileUpload
+                    label="Upload Proposal and Planning Document"
+                    files={proposalFiles}
+                    setFiles={setProposalFiles}
+                    inputId="proposalFileInput"
+                  />
+
+                  <div className="mb-3">
+                    <label htmlFor="tags" className="form-label">
+                      Tags{renderAsterisk()}
+                    </label>
+
+                    {/* MultiSelect for tag selection */}
+                    <MultiSelect
+                      id="tags"
+                      value={tags} // Selected tags
+                      options={tagOptions} // Fetched options
+                      onChange={(e) => setTags(e.value)} // Handle tag selection
+                      placeholder="Select Tags"
+                      className="w-100"
+                      filter // Enable filter for searching tags
+                    />
+
+                    {/* Display selected tags as small boxes (chips) */}
+                    <div className="mt-2">
+                      {tags.length > 0 && (
+                        <div className="tag-boxes">
+                          {tags.map((tagId) => {
+                            // Find the corresponding tag name from tagOptions
+                            const tag = tagOptions.find(
+                              (option) => option.value === tagId
+                            );
+                            return (
+                              <div key={tagId} className="tag-chip">
+                                {tag.label}
+                                <button
+                                  className="close-btn"
+                                  onClick={() => removeTag(tagId)}
+                                >
+                                  &times; {/* Close button symbol */}
+                                </button>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
                     </div>
                   </div>
-                </StepperPanel>
 
+                  <div className="flex pt-4 justify-content-between">
+                    <Button
+                      label="Back"
+                      severity="secondary"
+                      icon="pi pi-arrow-left"
+                      onClick={() => stepperRef.current.prevCallback()}
+                    />
+                    <Button
+                      label="Next"
+                      icon="pi pi-arrow-right"
+                      iconPos="right"
+                      onClick={() => stepperRef.current.nextCallback()}
+                    />
+                  </div>
+                </div>
+              </StepperPanel>
             </Stepper>
           </div>
         </div>

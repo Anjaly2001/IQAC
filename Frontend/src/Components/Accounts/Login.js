@@ -30,7 +30,7 @@ const Login = () => {
   };
 
   const validateField = (email) => {
-    const allowedPattern = /^[a-zA-Z0-9\s]+$/;
+    const allowedPattern = /^[a-zA-Z0-9\s.]+$/;
   
     if (!allowedPattern.test(email)) {
       setFieldError("Field should contain only alphanumeric characters and spaces. Special characters like '@', '()', etc., are not allowed.");

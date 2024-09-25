@@ -665,8 +665,6 @@ function RegisterEvent() {
                 
               </StepperPanel>
 
-
-
               <StepperPanel header=" ">
                 {/* Dynamically render StepperPanel based on the number of activities */}
                 {activities.map((activity, index) => (

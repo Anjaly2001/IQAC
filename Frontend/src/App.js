@@ -83,7 +83,7 @@ const App = () => {
                         <Route path="/eventtype" element={<EventType />} />
                         <Route path="/eventtypelist" element={<EventTypeList />} />
                         <Route path="/eventsummary" component={EventSummary} />
-                        <Route path="/eventproposal" component={EventProposal} />
+                        <Route path="/eventproposal" element={<EventProposal/>} />
 
                         {/* Fallback route for authenticated users */}
                         <Route path="/" element={<Navigate to={getDefaultRoute()} />} />

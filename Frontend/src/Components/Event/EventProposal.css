@@ -78,6 +78,46 @@
   .event-info-table td {
     width: 70%;
   }
+  .activities-control {
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+  
+  .activities-input {
+    width: 60px;
+    text-align: center;
+    margin-right: 10px;
+  }
+  
+  .activities-buttons {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    right: -5px; /* Adjust based on your layout */
+  }
+  
+  .activities-btn {
+    padding: 2px 6px;
+    font-size: 12px;
+    background-color: black;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .activities-btn:focus {
+    outline: none;
+  }
+  
+  .up-arrow {
+    border-radius: 3px 3px 0 0;
+  }
+  
+  .down-arrow {
+    border-radius: 0 0 3px 3px;
+  }
+  
   
   /* RESPONSIVENESS */
   

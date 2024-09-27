@@ -17,6 +17,7 @@ import {
   faUser,
   faAddressBook,
   faBuilding,
+  faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { checkActivePath, mapPathsToSections } from "./common/utils";
 import "./Sidebar.css";
@@ -163,7 +164,7 @@ const Sidebar = () => {
 
             {/* Profile Section  */}
             <SidebarItem
-              icon={faCalendar}
+              icon={faUserCircle}
               title="Profiles"
               open={openSections.profiles}
               toggleSection={() => toggleSection("profiles")}

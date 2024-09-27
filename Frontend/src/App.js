@@ -25,6 +25,9 @@ import EventTypeList from './Components/Event/EventTypeList';
 import ListAcademicYear from './Components/AcademicYear/ListAcademicYear';
 import AddRole from './Components/Role/AddRole';
 import EventProposal from './Components/Event/EventProposal';
+import CampusProfile from './Components/Profiles/CampusProfile';
+import DepartmentProfile from './Components/Profiles/DepartmentProfile';
+import UserProfile from './Components/Profiles/UserProfile';
 
 const App = () => {
     // Fetch authentication status and user role from the custom hook
@@ -84,6 +87,11 @@ const App = () => {
                         <Route path="/eventtypelist" element={<EventTypeList />} />
                         <Route path="/eventsummary" component={EventSummary} />
                         <Route path="/eventproposal" element={<EventProposal/>} />
+                        <Route path="/campusprofile" element={<CampusProfile/>} />
+                        <Route path="/departmentprofile" element={<DepartmentProfile/>} />
+                        <Route path="/userprofile" element={<UserProfile/>} />
+
+
 
                         {/* Fallback route for authenticated users */}
                         <Route path="/" element={<Navigate to={getDefaultRoute()} />} />

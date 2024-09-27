@@ -158,10 +158,25 @@
   font-weight: bold;
 }
 .description-editor {
-  width: 60%; /* Adjust this percentage as needed */
+  width: 80%; /* Adjust this percentage as needed */
   margin: 0 auto; /* To center the editor if needed */
-  margin-left: 31%;
- 
+  margin-left: 10%;
+
+}
+.signature-section {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.signature-box {
+  width: 40%;
+  text-align: center;
+  font-weight: bold;
+}
+
+.signature-box p {
+  margin: 0;
 }
 
   

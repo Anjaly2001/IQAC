@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import "./EventProposal.css"; // External CSS file for styling
 import Sidebar from "../../Sidebar";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Editor } from "primereact/editor";
+
+import { Stepper } from "primereact/stepper";
+import { StepperPanel } from "primereact/stepperpanel";
+import { Button } from "primereact/button";
 
 const EventProposal = () => {
   const [logo, setLogo] = useState(null);
@@ -11,6 +15,10 @@ const EventProposal = () => {
   const [activities, setActivities] = useState(1); // State for number of activities
   const renderAsterisk = () => <span style={{ color: "red" }}>*</span>;
   const [description, setDescription] = useState("");
+  const stepperRef = useRef(null);
+  const [Objective, setObjective] = useState("");
+  const [Outcome, setOutcome] = useState("");
+  const [Profile, setProfile] = useState("");
 
   // Handle logo upload and preview
   const handleLogoUpload = (event) => {
@@ -36,179 +44,428 @@ const EventProposal = () => {
         <div className="col-3">
           <Sidebar />
         </div>
-        <div className="event-proposal-container">
-          {/* Logo Upload */}
-          <div className="logo-upload-container">
-            {logo ? (
-              <img src={logo} alt="Uploaded Logo" className="logo" />
-            ) : (
-              <div className="logo-placeholder"></div>
-            )}
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleLogoUpload}
-              className="logo-upload-input"
-            />
-          </div>
-
-          {/* Blue line */}
-          <hr className="blue-line" />
-
-          {/* Event Proposal Title */}
-          <h2 className="event-proposal-title">EVENT PROPOSAL</h2>
-
-          {/* Table for Event Information */}
-          <table className="event-info-table">
-            <thead>
-              <tr>
-                <th colSpan="2" className="table-header">
-                  EVENT INFORMATION
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Department</td>
-                <td>
-                  <select className="form-control">
-                    <option>Select Department</option>
-                    <option>Computer Science</option>
-                    <option>Management</option>
-                    <option>Commerce</option>
-                  </select>
-                </td>
-              </tr>
-              <tr>
-                <td>Event Title</td>
-                <td>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Enter Event Title"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>No of Activities</td>
-                <td>
-                  <div className="activities-control">
-                    <input
-                      type="number"
-                      className="form-control activities-input"
-                      value={activities}
-                      readOnly
-                    />
-                    <div className="activities-buttons">
-                      <button
-                        className="btn btn-secondary activities-btn up-arrow"
-                        onClick={() => handleActivitiesChange("increase")}
-                      >
-                        ▲
-                      </button>
-                      <button
-                        className="btn btn-secondary activities-btn down-arrow"
-                        onClick={() => handleActivitiesChange("decrease")}
-                      >
-                        ▼
-                      </button>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-
-              <tr>
-                <td>Date and Time</td>
-                <td>
-                  <DatePicker
-                    selected={startDate}
-                    onChange={(date) => setStartDate(date)}
-                    showTimeSelect
-                    dateFormat="Pp"
-                    className="form-control"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Venue</td>
-                <td>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Enter Venue"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Academic Year</td>
-                <td>
-                  <select className="form-control">
-                    <option>Select Academic Year</option>
-                    <option>2023-2024</option>
-                    <option>2024-2025</option>
-                  </select>
-                </td>
-              </tr>
-              <tr>
-                <td>Event Type (Focus)</td>
-                <td>
-                  <select className="form-control">
-                    <option>Select Event Type</option>
-                    <option>Seminar</option>
-                    <option>Workshop</option>
-                    <option>Conference</option>
-                  </select>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div className="need-analysis-container">
-        <table className="need-analysis-table">
-          <thead>
-            <tr>
-              <th colSpan="2" className="need-analysis-header">
-                NEED ANALYSIS
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <div className="mb-3">
-                <label htmlFor="description" className="form-label">
-                  Description {renderAsterisk()}
-                </label>
-                <Editor
-                  id="description"
-                  value={description}
-                  onTextChange={(e) => setDescription(e.htmlValue)}
-                  className="description-editor"
-                  style={{ height: "150px" }}
-                  placeholder="Enter description here..."
+        <Stepper ref={stepperRef} style={{ flexBasis: "50rem" }}>
+          <StepperPanel header=" ">
+            <div className="event-proposal-container">
+              {/* Logo Upload */}
+              <div className="logo-upload-container">
+                {logo ? (
+                  <img src={logo} alt="Uploaded Logo" className="logo" />
+                ) : (
+                  <div className="logo-placeholder"></div>
+                )}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleLogoUpload}
+                  className="logo-upload-input"
                 />
               </div>
-            </tr>
-            <tr>
-              <td>
-                <textarea
-                  className="need-analysis-textarea"
-                  placeholder="Enter your analysis here..."
-                  rows="10"
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
 
-        <div className="need-analysis-footer">
-          <p>
-            Internal Quality Assurance Cell
-            <br />
-            CHRIST (Deemed to be University), Pune Lavasa Campus - 'The Hub of
-            Analytics'
-          </p>
-        </div>
+              {/* Blue line */}
+              <hr className="blue-line" />
+
+              {/* Event Proposal Title */}
+              <h2 className="event-proposal-title">EVENT PROPOSAL</h2>
+
+              {/* Table for Event Information */}
+              <table className="event-info-table">
+                <thead>
+                  <tr>
+                    <th colSpan="2" className="table-header">
+                      EVENT INFORMATION
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Department</td>
+                    <td>
+                      <select className="form-control">
+                        <option>Select Department</option>
+                        <option>Computer Science</option>
+                        <option>Management</option>
+                        <option>Commerce</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Event Title</td>
+                    <td>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Enter Event Title"
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>No of Activities</td>
+                    <td>
+                      <div className="activities-control">
+                        <input
+                          type="number"
+                          className="form-control activities-input"
+                          value={activities}
+                          readOnly
+                        />
+                        <div className="activities-buttons">
+                          <button
+                            className="btn btn-secondary activities-btn up-arrow"
+                            onClick={() => handleActivitiesChange("increase")}
+                          >
+                            ▲
+                          </button>
+                          <button
+                            className="btn btn-secondary activities-btn down-arrow"
+                            onClick={() => handleActivitiesChange("decrease")}
+                          >
+                            ▼
+                          </button>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>Date and Time</td>
+                    <td>
+                      <DatePicker
+                        selected={startDate}
+                        onChange={(date) => setStartDate(date)}
+                        showTimeSelect
+                        dateFormat="Pp"
+                        className="form-control"
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Venue</td>
+                    <td>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Enter Venue"
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Academic Year</td>
+                    <td>
+                      <select className="form-control">
+                        <option>Select Academic Year</option>
+                        <option>2023-2024</option>
+                        <option>2024-2025</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Event Type (Focus)</td>
+                    <td>
+                      <select className="form-control">
+                        <option>Select Event Type</option>
+                        <option>Seminar</option>
+                        <option>Workshop</option>
+                        <option>Conference</option>
+                      </select>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div className="need-analysis-container">
+              <table className="need-analysis-table">
+                <thead>
+                  <tr>
+                    <th colSpan="2" className="need-analysis-header">
+                      NEED ANALYSIS
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <div className="mb-3">
+                      <Editor
+                        id="description"
+                        value={description}
+                        onTextChange={(e) => setDescription(e.htmlValue)}
+                        className="description-editor"
+                        style={{ height: "150px" }}
+                        placeholder="Enter your analysis here..."
+                      />
+                    </div>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div className="need-analysis-footer">
+                <p>
+                  Internal Quality Assurance Cell
+                  <br />
+                  CHRIST (Deemed to be University), Pune Lavasa Campus - 'The
+                  Hub of Analytics'
+                </p>
+              </div>
+            </div>
+            <div className="flex pt-4 justify-content-end">
+              <Button
+                label="Next"
+                icon="pi pi-arrow-right"
+                iconPos="right"
+                onClick={() => stepperRef.current.nextCallback()}
+              />
+            </div>
+          </StepperPanel>
+          <StepperPanel header=" ">
+            <div className="mb-3">
+              <label className="form-label">OBJECTIVES{renderAsterisk()}</label>
+              <Editor
+                value={Objective}
+                onTextChange={(e) => setObjective(e.htmlValue)}
+                style={{ height: "150px" }}
+                placeholder="Enter your Objective here..."
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">
+                EXPECTED OUTCOME{renderAsterisk()}
+              </label>
+              <Editor
+                value={Outcome}
+                onTextChange={(e) => setOutcome(e.htmlValue)}
+                style={{ height: "150px" }}
+                placeholder="Enter your Expected Outcome here..."
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">SPEAKER PROFILE</label>
+              <Editor
+                value={Profile}
+                onTextChange={(e) => setProfile(e.htmlValue)}
+                style={{ height: "150px" }}
+                placeholder="Enter your Speaker Profile here..."
+              />
+            </div>
+
+            {/* Add more steps as needed */}
+            <div className="flex pt-4 justify-content-between">
+              <Button
+                label="Back"
+                severity="secondary"
+                icon="pi pi-arrow-left"
+                onClick={() => stepperRef.current.prevCallback()}
+              />
+              <Button
+                label="Next"
+                icon="pi pi-arrow-right"
+                iconPos="right"
+                onClick={() => stepperRef.current.nextCallback()}
+              />
+            </div>
+          </StepperPanel>
+          <StepperPanel header=" ">
+            <div className="table-container">
+              {/* Income Table */}
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th colSpan="5" className="table-heading">
+                      DETAILS OF INCOME
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>Sl No</th>
+                    <th>Particulars</th>
+                    <th>No. Participants</th>
+                    <th>Rate</th>
+                    <th>Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>Participation Fee [Fest]</td>
+                    <td>
+                      <input type="text" className="input-field" />
+                    </td>
+                    <td>
+                      <input type="text" className="input-field" />
+                    </td>
+                    <td>
+                      <input type="text" className="input-field" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>Sponsorship [Fest]</td>
+                    <td>
+                      <input type="text" className="input-field" />
+                    </td>
+                    <td>
+                      <input type="text" className="input-field" />
+                    </td>
+                    <td>
+                      <input type="text" className="input-field" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td>Participation Fee [Conference]</td>
+                    <td>
+                      <input type="text" className="input-field" />
+                    </td>
+                    <td>
+                      <input type="text" className="input-field" />
+                    </td>
+                    <td>
+                      <input type="text" className="input-field" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>4</td>
+                    <td>Sponsorship [Conference]</td>
+                    <td>
+                      <input type="text" className="input-field" />
+                    </td>
+                    <td>
+                      <input type="text" className="input-field" />
+                    </td>
+                    <td>
+                      <input type="text" className="input-field" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colSpan="4" className="total-label">
+                      Total Income
+                    </td>
+                    <td>
+                      <input type="text" className="input-field" />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              {/* Expenses Table */}
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th colSpan="3" className="table-heading">
+                      DETAILS OF EXPENSES
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>Sl. No.</th>
+                    <th>Particulars</th>
+                    <th>Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>
+                      <input type="text" className="input-field" />
+                    </td>
+                    <td>
+                      <input type="text" className="input-field" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>
+                      <input type="text" className="input-field" />
+                    </td>
+                    <td>
+                      <input type="text" className="input-field" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td>
+                      <input type="text" className="input-field" />
+                    </td>
+                    <td>
+                      <input type="text" className="input-field" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>4</td>
+                    <td>
+                      <input type="text" className="input-field" />
+                    </td>
+                    <td>
+                      <input type="text" className="input-field" />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            {/* Expenditure Table */}
+            <table className="table">
+              <tbody>
+                <tr>
+                  <th colSpan="3" className="total-expenditure-label">
+                    Total Expenditure
+                  </th>
+                </tr>
+                <tr>
+                  <td>
+                    <label>Signature of HOD</label>
+                    <input type="text" className="input-field" />
+                  </td>
+                  <td>
+                    <label>Finance Office</label>
+                    <input type="text" className="input-field" />
+                  </td>
+                </tr>
+                <tr>
+                  <td colSpan="2" className="office-use-label">
+                    Office use only
+                  </td>
+                </tr>
+                <tr>
+                  <td colSpan="2">
+                    <label>Remarks</label>
+                    <textarea className="textarea-field"></textarea>
+                  </td>
+                </tr>
+                <tr>
+                  <td colSpan="2">
+                    <label>Approved By:</label>
+                    <input type="text" className="input-field" />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            {/* Signature Section */}
+            <div className="signature-section">
+              <div className="signature-box">
+                <p>IQAC Coordinator</p>
+                <p>Sign</p>
+              </div>
+              <div className="signature-box">
+                <p>Head of Department</p>
+                <p>Sign</p>
+              </div>
+            </div>
+            {/* Add more steps as needed */}
+            <div className="flex pt-4 justify-content-between">
+              <Button
+                label="Back"
+                severity="secondary"
+                icon="pi pi-arrow-left"
+                onClick={() => stepperRef.current.prevCallback()}
+              />
+              <Button
+                label="Submit"
+                icon="pi pi-arrow-right"
+                iconPos="right"
+                onClick={() => stepperRef.current.nextCallback()}
+              />
+            </div>
+          </StepperPanel>
+        </Stepper>
       </div>
     </div>
   );

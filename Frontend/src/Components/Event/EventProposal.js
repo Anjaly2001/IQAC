@@ -3,11 +3,14 @@ import "./EventProposal.css"; // External CSS file for styling
 import Sidebar from "../../Sidebar";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { Editor } from "primereact/editor";
 
 const EventProposal = () => {
   const [logo, setLogo] = useState(null);
   const [startDate, setStartDate] = useState(new Date()); // State for date and time
   const [activities, setActivities] = useState(1); // State for number of activities
+  const renderAsterisk = () => <span style={{ color: "red" }}>*</span>;
+  const [description, setDescription] = useState("");
 
   // Handle logo upload and preview
   const handleLogoUpload = (event) => {
@@ -39,7 +42,7 @@ const EventProposal = () => {
             {logo ? (
               <img src={logo} alt="Uploaded Logo" className="logo" />
             ) : (
-              <div className="logo-placeholder">Logo Preview</div>
+              <div className="logo-placeholder"></div>
             )}
             <input
               type="file"
@@ -159,6 +162,52 @@ const EventProposal = () => {
               </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+      <div className="need-analysis-container">
+        <table className="need-analysis-table">
+          <thead>
+            <tr>
+              <th colSpan="2" className="need-analysis-header">
+                NEED ANALYSIS
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <div className="mb-3">
+                <label htmlFor="description" className="form-label">
+                  Description {renderAsterisk()}
+                </label>
+                <Editor
+                  id="description"
+                  value={description}
+                  onTextChange={(e) => setDescription(e.htmlValue)}
+                  className="description-editor"
+                  style={{ height: "150px" }}
+                  placeholder="Enter description here..."
+                />
+              </div>
+            </tr>
+            <tr>
+              <td>
+                <textarea
+                  className="need-analysis-textarea"
+                  placeholder="Enter your analysis here..."
+                  rows="10"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div className="need-analysis-footer">
+          <p>
+            Internal Quality Assurance Cell
+            <br />
+            CHRIST (Deemed to be University), Pune Lavasa Campus - 'The Hub of
+            Analytics'
+          </p>
         </div>
       </div>
     </div>

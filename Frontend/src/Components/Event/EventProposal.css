@@ -10,14 +10,14 @@
   
   /* Logo Upload */
   .logo-upload-container {
-    text-align: center;
+    text-align:end;
     margin-bottom: 20px;
   }
   
   .logo-placeholder {
     width: 150px;
     height: 150px;
-    border: 2px dashed #ccc;
+    border:none;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -53,13 +53,13 @@
   /* Table styling */
   .event-info-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: none;
     margin: 0 auto;
     margin-bottom: 40px;
   }
   
   .event-info-table th, .event-info-table td {
-    border: 1px solid black;
+    border: none;
     padding: 10px;
     text-align: left;
   }
@@ -117,7 +117,53 @@
   .down-arrow {
     border-radius: 0 0 3px 3px;
   }
-  
+  /* Need Analysis Section */
+.need-analysis-container {
+  margin-top: 30px;
+}
+
+.need-analysis-table {
+  width: 100%;
+  border-collapse: none;
+  margin-top: 20px;
+}
+
+.need-analysis-header {
+  text-align: center;
+  font-weight: bold;
+  padding: 10px;
+  border: none;
+}
+
+.need-analysis-description {
+  font-style: italic;
+  font-size: 14px;
+  padding: 10px;
+  text-align: center;
+  border: none;
+}
+
+.need-analysis-textarea {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  resize: none;
+  font-size: 14px;
+}
+
+.need-analysis-footer {
+  text-align: center;
+  font-size: 12px;
+  margin-top: 20px;
+  font-weight: bold;
+}
+.description-editor {
+  width: 60%; /* Adjust this percentage as needed */
+  margin: 0 auto; /* To center the editor if needed */
+  margin-left: 31%;
+ 
+}
+
   
   /* RESPONSIVENESS */
   
@@ -178,3 +224,26 @@
       font-weight: bold;
     }
   }  
+  /* Responsive Behavior */
+  @media (max-width: 768px) {
+    .event-proposal-container {
+      margin-left: 0;
+      width: 100%;
+    }
+  
+    .form-group {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .form-group label {
+      width: 100%;
+      margin-bottom: 5px;
+    }
+  
+    .form-group input,
+    .form-group select,
+    .description-editor {
+      width: 100%;
+    }
+  }

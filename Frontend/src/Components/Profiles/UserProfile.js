@@ -50,7 +50,7 @@ const UserProfile = () => {
           <Sidebar />
         </div>
         <div className="col-md-9 d-flex justify-content-center align-items-center">
-          <div className="card p-4 shadow-lg w-75">
+          <div className="card p-6 w-75">
             <h2 className="mb-4">User Profile</h2>
             <div className="profile-details text-left">
               <div className="mb-3"><strong>Name:</strong> {user.name}</div>

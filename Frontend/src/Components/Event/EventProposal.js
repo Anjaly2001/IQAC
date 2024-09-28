@@ -12,6 +12,7 @@ import { Button } from "primereact/button";
 const EventProposal = () => {
   const [logo, setLogo] = useState(null);
   const [startDate, setStartDate] = useState(new Date()); // State for date and time
+  const [endDate, setEndDate] = useState(new Date()); // State for date and time
   const [activities, setActivities] = useState(1); // State for number of activities
   const renderAsterisk = () => <span style={{ color: "red" }}>*</span>;
   const [description, setDescription] = useState("");
@@ -128,17 +129,58 @@ const EventProposal = () => {
                   </tr>
 
                   <tr>
-                    <td>Date and Time</td>
+                    <td>Start Date</td>
+                    <td>
+                      <DatePicker
+                        selected={startDate}
+                        onChange={(date) => setStartDate(date)}
+                        dateFormat="P"
+                        className="form-control date-picker"
+                        placeholderText="Select Start Date"
+                      />
+                    </td>
+                    <td>End Date</td>
+                    <td>
+                      <DatePicker
+                        selected={endDate}
+                        onChange={(date) => setEndDate(date)}
+                        dateFormat="P"
+                        className="form-control date-picker"
+                        placeholderText="Select End Date"
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Start Time</td>
                     <td>
                       <DatePicker
                         selected={startDate}
                         onChange={(date) => setStartDate(date)}
                         showTimeSelect
-                        dateFormat="Pp"
-                        className="form-control"
+                        showTimeSelectOnly
+                        timeIntervals={15}
+                        timeCaption="Time"
+                        dateFormat="p"
+                        className="form-control date-picker"
+                        placeholderText="Select Start Time"
+                      />
+                    </td>
+                    <td>End Time</td>
+                    <td>
+                      <DatePicker
+                        selected={endDate}
+                        onChange={(date) => setEndDate(date)}
+                        showTimeSelect
+                        showTimeSelectOnly
+                        timeIntervals={15}
+                        timeCaption="Time"
+                        dateFormat="p"
+                        className="form-control date-picker"
+                        placeholderText="Select End Time"
                       />
                     </td>
                   </tr>
+
                   <tr>
                     <td>Venue</td>
                     <td>
@@ -198,15 +240,6 @@ const EventProposal = () => {
                   </tr>
                 </tbody>
               </table>
-
-              <div className="need-analysis-footer">
-                <p>
-                  Internal Quality Assurance Cell
-                  <br />
-                  CHRIST (Deemed to be University), Pune Lavasa Campus - 'The
-                  Hub of Analytics'
-                </p>
-              </div>
             </div>
             <div className="flex pt-4 justify-content-end">
               <Button

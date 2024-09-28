@@ -1,7 +1,30 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
-from department_and_events.models import Department,Location
+
+class Location(models.Model):
+    campus = models.CharField(max_length=200, unique=True)
+    logo = models.ImageField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='created_by')
+
+
+class Department(models.Model):
+    TYPE_CHOICES = [
+        ('Department', 'department'),
+        ('Club', 'club'),
+        ('Center', 'center'),
+        ('Office', 'office'),
+        ('Cell', 'cell'),
+        ('Others', 'others'),
+    ]
+    name = models.CharField(max_length=250)
+    type = models.CharField(max_length=20, choices=TYPE_CHOICES, default='others')
+    description = models.CharField(max_length=250, null=True)
+    location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='loc')
+    is_active = models.BooleanField(default=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
 
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
@@ -33,6 +56,7 @@ class User_profile(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s Profile"
+    
     
 class OTP(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

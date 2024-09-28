@@ -35,6 +35,9 @@ urlpatterns = [
     path('create_tag/',views.create_tag, name = 'create_tag'),
     path('list_tag/',views.list_tag, name = 'list_tag'),
     path('delete_tag/<int:id>/',views.delete_tag, name = 'delete_tag'),
+    path('update_tag/<int:id>/',views.update_tag, name = 'update_tag'),
+
+    path('create_event_proposal/',views.create_event_proposal, name = 'create_event_proposal'),
 
 
     path('event_register/',views.event_register,name ='event_register'),

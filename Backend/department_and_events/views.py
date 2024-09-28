@@ -5,10 +5,10 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from authentication.emails import send_event_register
-from authentication.models import CustomUser, User_profile
+from authentication.models import CustomUser, User_profile,Location, Department
 from authentication.serializers import UserRegistrationSerializer
-from .models import Academic_year, Collaborators, Event_Register, Event_type, EventReport, EventStatus, Location, Department, Role, Tag
-from .serializers import AcademicyearSerializer, CollaboratorSerializer, DepartmentSerializer,  DepartmentSerializer, EventListSerializer, EventRegisterSerializer, EventReportFileUploadSerializer, EventReportSerializer, EventStatusSerializer, EventTypeSerializer, LocationSerializer, MultiRoleSerializer, ProposalFileSerializer, RoleSerializer, TagSerializer
+from .models import Academic_year, Collaborators, Event_Proposal, Event_Register, Event_type, EventReport, EventStatus, Expense, Income,  Role, Tag
+from .serializers import AcademicyearSerializer, CollaboratorSerializer, DepartmentSerializer,  DepartmentSerializer, EventListSerializer, EventProposalSerializer, EventRegisterSerializer, EventReportFileUploadSerializer, EventReportSerializer, EventStatusSerializer, EventTypeSerializer, ExpenseSerializer, IncomeSerializer, LocationSerializer, MultiRoleSerializer, ProposalFileSerializer, RoleSerializer, TagSerializer
 from django.contrib.auth.models import User
 from .emails import send_event_status_email
 
@@ -355,6 +355,39 @@ def delete_event_type(request, id):
         event_type = Event_type.objects.get(id=id)
         event_type.delete()
         return Response("Event type deleted successfully")
+    
+
+#________EVENT PROPOSAL API_______________
+
+@api_view(['POST'])
+def create_event_proposal(request):
+    serializer = EventProposalSerializer(data=request.data)
+    
+    if serializer.is_valid():
+        # Save the Event Proposal
+        event_proposal = serializer.save()
+
+        # Get incomes and expenses from the request data
+        incomes_data = request.data.get('incomes', [])
+        expenses_data = request.data.get('expenses', [])
+
+        # Create Income instances
+        for income_data in incomes_data:
+            Income.objects.create(event_proposal=event_proposal, **income_data)
+
+        # Create Expense instances
+        for expense_data in expenses_data:
+            Expense.objects.create(event_proposal=event_proposal, **expense_data)
+
+        # Re-fetch the Event Proposal to include incomes and expenses
+        event_proposal = Event_Proposal.objects.prefetch_related('incomes', 'expenses').get(id=event_proposal.id)
+
+        # Serialize the event proposal with the incomes and expenses
+        response_serializer = EventProposalSerializer(event_proposal)
+        
+        return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # _______EVENT REGISTER API_______________
@@ -601,8 +634,10 @@ def update_tag(request,id):
     if request.method == 'PUT':
         tag = Tag.objects.get(id = id)
         serializer = TagSerializer(tag, data = request.data, partial = True)
-        return Response({'data':serializer.data,'message':'Updated Successfully'})
-    return Response(serializer.errors)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'data':serializer.data,'message':'Updated Successfully'})
+        return Response(serializer.errors)
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])

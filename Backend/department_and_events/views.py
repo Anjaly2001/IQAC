@@ -373,7 +373,24 @@ def create_event_proposal(request):
 
         # Create Income instances
         for income_data in incomes_data:
-            Income.objects.create(event_proposal=event_proposal, **income_data)
+            num_participants = income_data.get('num_participants')
+            rate = income_data.get('rate')
+            
+            if num_participants and rate:
+                # Calculate amount automatically if num_participants and rate are provided
+                amount = num_participants * rate
+            else:
+                # Fallback to 0 if no calculation is possible
+                amount = 0
+
+            # Create the income record with the calculated amount
+            Income.objects.create(
+                event_proposal=event_proposal,
+                particular=income_data.get('particular'),
+                num_participants=num_participants,
+                rate=rate,
+                amount=amount
+            )
 
         # Create Expense instances
         for expense_data in expenses_data:
@@ -382,7 +399,7 @@ def create_event_proposal(request):
         # Re-fetch the Event Proposal to include incomes and expenses
         event_proposal = Event_Proposal.objects.prefetch_related('incomes', 'expenses').get(id=event_proposal.id)
 
-        # Serialize the event proposal with the incomes and expenses
+        # Serialize the event proposal with incomes and expenses included
         response_serializer = EventProposalSerializer(event_proposal)
         
         return Response(response_serializer.data, status=status.HTTP_201_CREATED)

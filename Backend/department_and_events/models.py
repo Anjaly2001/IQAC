@@ -70,9 +70,9 @@ class Event_Proposal(models.Model):
 
 
 class Income(models.Model):
-    event_proposal = models.ForeignKey(Event_Proposal, related_name='incomes', on_delete=models.CASCADE)  # Added related_name
+    event_proposal = models.ForeignKey(Event_Proposal, on_delete=models.CASCADE, related_name='incomes')
     particular = models.CharField(max_length=255)
-    num_participants = models.PositiveIntegerField(null=True, blank=True)
+    num_participants = models.IntegerField(null=True, blank=True)
     rate = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
 
@@ -87,12 +87,12 @@ class Income(models.Model):
 
 
 class Expense(models.Model):
-    event_proposal = models.ForeignKey(Event_Proposal, related_name='expenses', on_delete=models.CASCADE)  # Added related_name
+    event_proposal = models.ForeignKey(Event_Proposal, on_delete=models.CASCADE, related_name='expenses')
     particular = models.CharField(max_length=255)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-
     def __str__(self):
         return f"Expense - {self.particular}"
+
 
 
 class Event_Register(models.Model):

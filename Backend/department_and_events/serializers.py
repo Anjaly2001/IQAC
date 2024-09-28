@@ -66,10 +66,22 @@ class ProposalFileSerializer(serializers.ModelSerializer):
         fields = ['id', 'event', 'file']
 
 class IncomeSerializer(serializers.ModelSerializer):
+    amount = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)  # Make amount optional
+
     class Meta:
         model = Income
         fields = ['id', 'particular', 'num_participants', 'rate', 'amount', 'total_amount']
 
+    def validate(self, data):
+        # Check if amount needs to be calculated
+        num_participants = data.get('num_participants')
+        rate = data.get('rate')
+        
+        if not data.get('amount') and num_participants and rate:
+            # If no amount provided but num_participants and rate exist, calculate the amount
+            data['amount'] = num_participants * rate
+        
+        return data
 class ExpenseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Expense
@@ -115,7 +127,6 @@ class EventProposalSerializer(serializers.ModelSerializer):
             Expense.objects.create(**expense_data)
 
         return event_proposal
-    
 
 class EventRegisterSerializer(serializers.ModelSerializer):
     # Read-only nested serializers for returning full details in the response

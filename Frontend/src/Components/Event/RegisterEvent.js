@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom"; // Use useNavigate instead of useHistory
-import EventSummary from "./EventSummary"; // Import the EventSummary component
 import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
 import { Editor } from "primereact/editor";
-import { InputTextarea } from "primereact/inputtextarea";
 import { Dropdown } from "primereact/dropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Sidebar from "../../Sidebar";
@@ -61,17 +58,11 @@ function RegisterEvent() {
 
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
   const [venue, setVenue] = useState("");
   const [proposalFiles, setProposalFiles] = useState([]);
-
-  const [tag, setTag] = useState("");
   const [submitted, setSubmitted] = useState(false); // New state to check if form is submitted
   const [files, setFiles] = useState([]);
   const [error, setError] = useState(null);
-
-  const [eventTitleError, setEventTitleError] = useState("");
   const [isFormValid, setIsFormValid] = useState(false);
   const stepperRef = useRef(null);
   // const [descriptionError, setDescriptionError] = useState(""); // Check if you're using setDescriptionError somewhere

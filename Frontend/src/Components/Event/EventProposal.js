@@ -4,7 +4,6 @@ import Sidebar from "../../Sidebar";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Editor } from "primereact/editor";
-
 import { Stepper } from "primereact/stepper";
 import { StepperPanel } from "primereact/stepperpanel";
 import { Button } from "primereact/button";
@@ -45,7 +44,7 @@ const EventProposal = () => {
         <div className="col-3">
           <Sidebar />
         </div>
-        <Stepper ref={stepperRef} style={{ flexBasis: "50rem" }}>
+        <Stepper ref={stepperRef} style={{ flexBasis: "80rem" }}>
           <StepperPanel header=" ">
             <div className="event-proposal-container">
               {/* Logo Upload */}
@@ -129,54 +128,28 @@ const EventProposal = () => {
                   </tr>
 
                   <tr>
-                    <td>Start Date</td>
+                    <td>Start Date and Time</td>
                     <td>
                       <DatePicker
                         selected={startDate}
                         onChange={(date) => setStartDate(date)}
-                        dateFormat="P"
-                        className="form-control date-picker"
-                        placeholderText="Select Start Date"
-                      />
-                    </td>
-                    <td>End Date</td>
-                    <td>
-                      <DatePicker
-                        selected={endDate}
-                        onChange={(date) => setEndDate(date)}
-                        dateFormat="P"
-                        className="form-control date-picker"
-                        placeholderText="Select End Date"
+                        showTimeSelect
+                        dateFormat="Pp"
+                        className="form-control"
+                        placeholderText="Select Start Date and Time"
                       />
                     </td>
                   </tr>
                   <tr>
-                    <td>Start Time</td>
-                    <td>
-                      <DatePicker
-                        selected={startDate}
-                        onChange={(date) => setStartDate(date)}
-                        showTimeSelect
-                        showTimeSelectOnly
-                        timeIntervals={15}
-                        timeCaption="Time"
-                        dateFormat="p"
-                        className="form-control date-picker"
-                        placeholderText="Select Start Time"
-                      />
-                    </td>
-                    <td>End Time</td>
+                    <td>End Date and Time</td>
                     <td>
                       <DatePicker
                         selected={endDate}
                         onChange={(date) => setEndDate(date)}
                         showTimeSelect
-                        showTimeSelectOnly
-                        timeIntervals={15}
-                        timeCaption="Time"
-                        dateFormat="p"
-                        className="form-control date-picker"
-                        placeholderText="Select End Time"
+                        dateFormat="Pp"
+                        className="form-control"
+                        placeholderText="Select End Date and Time"
                       />
                     </td>
                   </tr>
@@ -492,7 +465,7 @@ const EventProposal = () => {
               />
               <Button
                 label="Submit"
-                icon="pi pi-arrow-right"
+                
                 iconPos="right"
                 onClick={() => stepperRef.current.nextCallback()}
               />

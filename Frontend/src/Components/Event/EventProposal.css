@@ -180,15 +180,6 @@
   margin: 0;
 }
 
-.date-picker {
-  width: 60%;      /* Makes the width consistent */
-  height: 40px;     /* Sets a fixed height */
-  max-width: 200px; /* Ensures a maximum width */
-  box-sizing: border-box; /* Ensures padding and borders are included in the width and height */
-}
-
-
-  
   /* RESPONSIVENESS */
   
   /* Adjustments for tablets */

@@ -14,6 +14,10 @@ import {
   faSignOutAlt,
   faHandshake,
   faGears,
+  faUser,
+  faAddressBook,
+  faBuilding,
+  faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { checkActivePath, mapPathsToSections } from "./common/utils";
 import "./Sidebar.css";
@@ -25,6 +29,7 @@ const Sidebar = () => {
   const [userRole, setUserRole] = useState("");
   const [userDepartments, setUserDepartments] = useState([]);
   const [openSections, setOpenSections] = useState({
+    profiles:false,
     settings: false,
     campus: false,
     department: false,
@@ -157,7 +162,33 @@ const Sidebar = () => {
               />
             </SidebarItem>
 
-            {/* Settings Section */}
+            {/* Profile Section  */}
+            <SidebarItem
+              icon={faUserCircle}
+              title="Profiles"
+              open={openSections.profiles}
+              toggleSection={() => toggleSection("profiles")}
+            >
+              <SidebarSubItem
+                path="/userprofile"
+                icon={faUser}
+                label="User Profile"
+                isActive={checkActivePath("/userprofile")}
+              />
+              <SidebarSubItem
+                path="/departmentprofile"
+                icon={faAddressBook}
+                label="Department Profile"
+                isActive={checkActivePath("/departmentprofile")}
+              />
+              <SidebarSubItem
+                path="/campusprofile"
+                icon={faBuilding}
+                label="Campus Profile"
+                isActive={checkActivePath("/campusprofile")}
+              />
+            </SidebarItem>
+
             {/* Settings Section */}
             <SidebarItem
               icon={faCog}

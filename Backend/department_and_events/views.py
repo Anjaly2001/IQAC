@@ -360,6 +360,7 @@ def delete_event_type(request, id):
 #________EVENT PROPOSAL API_______________
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def create_event_proposal(request):
     serializer = EventProposalSerializer(data=request.data)
     
@@ -409,6 +410,7 @@ def create_event_proposal(request):
 
 
 @api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def update_event_proposal(request, id):
     try:
         # Fetch the existing event proposal
@@ -466,6 +468,41 @@ def update_event_proposal(request, id):
         return Response(response_serializer.data, status=status.HTTP_200_OK)
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_event_proposal(request):
+    if request.method == 'GET':
+        proposal = Event_Proposal.objects.all()
+        serializer = EventProposalSerializer(proposal, many = True)
+        event_data = [
+            {
+                'id': proposal['id'],
+                'event_title': proposal['event_title']
+                
+            } 
+            for proposal in serializer.data
+        ]
+        
+        return Response(event_data)
+    
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_event_proposal_by_department(request,id):
+    proposal = Event_Proposal.objects.filter(department_id = id)
+    serializer = EventProposalSerializer(proposal, many = True)
+    event_data =[
+        {
+        'id':proposal['id'],
+        'event_title': proposal['event_title']
+        }
+        for proposal in serializer.data
+    ] 
+    return Response(event_data)
+
 
 # _______EVENT REGISTER API_______________
 

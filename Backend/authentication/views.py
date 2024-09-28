@@ -114,10 +114,12 @@ def register(request):
 
             except Exception as e:
                 # Handle unexpected errors
+                print(e)
                 return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         # If user data is invalid, return errors
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    print(serializer.errors)
 
     # Return error for non-POST requests
     return Response({'error': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
@@ -125,6 +127,7 @@ def register(request):
 
 @api_view(['POST'])
 def login_with_email(request):
+    print(request.data)
     email = request.data.get('email')
     email = email.strip().lower()
     if '@christuniversity.in' not in email:
@@ -279,6 +282,9 @@ def multiple_user_registration(request):
             if not location_id:
                 error_message += "Location not found. "
 
+            role = row.get('role', 'department') 
+            role_to_save = 'staff' if role == 'department' else role
+
             # If there are any errors, log them and move on to the next row
             if error_message:
                 row['error'] = error_message
@@ -290,7 +296,7 @@ def multiple_user_registration(request):
                     'username': email,
                     'first_name': row['first_name'],
                     'last_name': row['last_name'],
-                    'role': 'staffs'  # Set default role or modify as needed
+                    'role': 'department' # Set default role or modify as needed
                 }
 
                 user_serializer = UserRegistrationSerializer(data=user_data)
@@ -314,15 +320,16 @@ def multiple_user_registration(request):
 
                         # Assign role and department (use correct department logic here)
                         department = Department.objects.get(id=department_id)
-                        Role.objects.create(
-                            user=user, role='staffs', department=department)
+                        Role.objects.create(users=user, role=role_to_save, department=department)
+                        
 
                         success_row = {
                             'email': email,
                             'emp_id': row['emp_id'],
                             'phone_number': phone_number,
                             'department': row['department'],
-                            'location': row['location']
+                            'location': row['location'],
+                        
                         }
                         success_rows.append(success_row)
                     else:

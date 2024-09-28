@@ -1,5 +1,5 @@
 from authentication.models import CustomUser
-from .models import Academic_year, Activity, Collaborators, Department, Event_Register, Event_type, EventReport, EventReportFileUpload, EventStatus, Location, Proposal_Upload, Role, Tag
+from .models import Academic_year, Activity, Collaborators, Department, Event_Proposal, Event_Register, Event_type, EventReport, EventReportFileUpload, EventStatus, Expense, Income, Location, Proposal_Upload, Role, Tag
 from rest_framework import serializers
 
 
@@ -65,6 +65,68 @@ class ProposalFileSerializer(serializers.ModelSerializer):
         model = Proposal_Upload
         fields = ['id', 'event', 'file']
 
+class IncomeSerializer(serializers.ModelSerializer):
+    amount = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)  # Make amount optional
+
+    class Meta:
+        model = Income
+        fields = ['id', 'particular', 'num_participants', 'rate', 'amount', 'total_amount']
+
+    def validate(self, data):
+        # Check if amount needs to be calculated
+        num_participants = data.get('num_participants')
+        rate = data.get('rate')
+        
+        if not data.get('amount') and num_participants and rate:
+            # If no amount provided but num_participants and rate exist, calculate the amount
+            data['amount'] = num_participants * rate
+        
+        return data
+class ExpenseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Expense
+        fields = ['id', 'particular', 'amount']
+
+
+
+class EventProposalSerializer(serializers.ModelSerializer):
+    incomes = IncomeSerializer(many=True, required=False, default=[])  # Make incomes optional
+    expenses = ExpenseSerializer(many=True, required=False, default=[])  # Make expenses optional
+    total_income = serializers.ReadOnlyField()
+    total_expenditure = serializers.ReadOnlyField()
+
+    class Meta:
+        model = Event_Proposal
+        fields = [
+            'id', 'event_title', 'no_of_activities', 'date_and_time', 'venue', 'academic_year',
+            'event_type', 'need_analysis', 'objectives', 'expected_outcomes', 'speaker_profile',
+            'event_category', 'remarks', 'approved_by', 'incomes', 'expenses',
+            'total_income', 'total_expenditure'
+        ]
+        read_only_fields = ['total_income', 'total_expenditure']
+
+    def create(self, validated_data):
+        incomes_data = validated_data.pop('incomes', [])
+        expenses_data = validated_data.pop('expenses', [])
+        
+        # Create the Event Proposal instance
+        event_proposal = Event_Proposal.objects.create(**validated_data)
+
+        print("Created Event Proposal:", event_proposal)
+
+        # Create Income instances if any
+        for income_data in incomes_data:
+            income_data['event_proposal'] = event_proposal  # Set the foreign key correctly
+            print("Creating Income with data:", income_data)
+            Income.objects.create(**income_data)
+
+        # Create Expense instances if any
+        for expense_data in expenses_data:
+            expense_data['event_proposal'] = event_proposal  # Set the foreign key correctly
+            print("Creating Expense with data:", expense_data)
+            Expense.objects.create(**expense_data)
+
+        return event_proposal
 
 class EventRegisterSerializer(serializers.ModelSerializer):
     # Read-only nested serializers for returning full details in the response

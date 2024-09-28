@@ -138,7 +138,7 @@ const EventType = () => {
                                     <button type="submit" className="btn btn-primary">
                                         {editMode ? "Update Event Type" : "Create Event Type"} {/* Button label changes */}
                                     </button>
-                                 </div>
+                                </div>
                             </form>
                         </div>
                         

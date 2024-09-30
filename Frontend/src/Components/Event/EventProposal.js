@@ -9,7 +9,6 @@ import { StepperPanel } from "primereact/stepperpanel";
 import { Button } from "primereact/button";
 
 const EventProposal = () => {
-  const [logo, setLogo] = useState(null);
   const [startDate, setStartDate] = useState(new Date()); // State for date and time
   const [endDate, setEndDate] = useState(new Date()); // State for date and time
   const [activities, setActivities] = useState(1); // State for number of activities
@@ -38,6 +37,11 @@ const EventProposal = () => {
         <Stepper ref={stepperRef} style={{ flexBasis: "80rem" }}>
           <StepperPanel header=" ">
             <div className="event-proposal-container">
+              {/* Logo
+              <div className="logo-container">
+                <img src={logo} alt="Organization Logo" className="logo" />
+              </div> */}
+
               {/* Blue line */}
               <hr className="blue-line" />
 

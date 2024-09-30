@@ -20,15 +20,6 @@ const EventProposal = () => {
   const [Outcome, setOutcome] = useState("");
   const [Profile, setProfile] = useState("");
 
-  // Handle logo upload and preview
-  const handleLogoUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const logoUrl = URL.createObjectURL(file);
-      setLogo(logoUrl);
-    }
-  };
-
   // Handle number of activities increase and decrease
   const handleActivitiesChange = (action) => {
     if (action === "increase") {
@@ -47,21 +38,6 @@ const EventProposal = () => {
         <Stepper ref={stepperRef} style={{ flexBasis: "80rem" }}>
           <StepperPanel header=" ">
             <div className="event-proposal-container">
-              {/* Logo Upload */}
-              <div className="logo-upload-container">
-                {logo ? (
-                  <img src={logo} alt="Uploaded Logo" className="logo" />
-                ) : (
-                  <div className="logo-placeholder"></div>
-                )}
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleLogoUpload}
-                  className="logo-upload-input"
-                />
-              </div>
-
               {/* Blue line */}
               <hr className="blue-line" />
 

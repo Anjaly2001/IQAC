@@ -5,6 +5,7 @@ const DepartmentProfile = () => {
   return (
     <div className="department-profile">
     <Sidebar />
+    <div></div>
   </div>
   )
 }

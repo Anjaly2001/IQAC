@@ -394,7 +394,7 @@ const EventProposal = () => {
                     Total Expenditure
                   </th>
                 </tr>
-                <tr>
+                {/* <tr>
                   <td>
                     <label>Signature of HOD</label>
                     <input type="text" className="input-field" />
@@ -408,13 +408,16 @@ const EventProposal = () => {
                   <td colSpan="2" className="office-use-label">
                     Office use only
                   </td>
-                </tr>
-                <tr>
-                  <td colSpan="2">
-                    <label>Remarks</label>
-                    <textarea className="textarea-field"></textarea>
-                  </td>
-                </tr>
+                </tr> */}
+               <div className="mb-3">
+              <label className="form-label">REMARKS</label>
+              <Editor
+                value={Profile}
+                onTextChange={(e) => setProfile(e.htmlValue)}
+                style={{ height: "150px" }}
+                placeholder="Enter your Remarks here..."
+              />
+            </div>
                 <tr>
                   <td colSpan="2">
                     <label>Approved By:</label>
@@ -425,7 +428,7 @@ const EventProposal = () => {
             </table>
 
             {/* Signature Section */}
-            <div className="signature-section">
+            {/* <div className="signature-section">
               <div className="signature-box">
                 <p>IQAC Coordinator</p>
                 <p>Sign</p>
@@ -434,7 +437,7 @@ const EventProposal = () => {
                 <p>Head of Department</p>
                 <p>Sign</p>
               </div>
-            </div>
+            </div> */}
             {/* Add more steps as needed */}
             <div className="flex pt-4 justify-content-between">
               <Button

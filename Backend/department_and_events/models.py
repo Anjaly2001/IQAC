@@ -36,6 +36,7 @@ def custom_upload_to(instance, filename):
 
 
 class Event_Proposal(models.Model):
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='dp', null = True)
     event_title = models.CharField(max_length=350)
     no_of_activities = models.IntegerField(null=True)
     date_and_time = models.DateTimeField(auto_now_add=True)
@@ -92,7 +93,25 @@ class Expense(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     def __str__(self):
         return f"Expense - {self.particular}"
+    
 
+class EventProposalStatus(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('approved_by_department', 'Approved_by_Department'),
+        ('approved_by_IQAC', 'Approved_by_IQAC'),
+        ('rejected_by_department', 'Rejected_by_Department'),
+        ('rejected_by_IQAC', 'Rejected_by_IQAC'),
+        ('report_send_to_department', 'Report_send_to_Department'),
+        ('report_send_to_IQAC', 'Report_send_to_IQAC')
+    ]
+    event = models.ForeignKey(Event_Proposal, on_delete=models.CASCADE)
+    status = models.CharField(max_length=250, choices=STATUS_CHOICES, default='pending')
+    comments = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"Report Status: {self.status} for {self.report}"
+    
 
 
 class Event_Register(models.Model):

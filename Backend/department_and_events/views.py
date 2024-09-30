@@ -360,6 +360,7 @@ def delete_event_type(request, id):
 #________EVENT PROPOSAL API_______________
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def create_event_proposal(request):
     serializer = EventProposalSerializer(data=request.data)
     
@@ -405,6 +406,102 @@ def create_event_proposal(request):
         return Response(response_serializer.data, status=status.HTTP_201_CREATED)
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_event_proposal(request, id):
+    try:
+        # Fetch the existing event proposal
+        event_proposal = Event_Proposal.objects.get(id=id)
+    except Event_Proposal.DoesNotExist:
+        return Response({"error": "Event Proposal not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    # Update event proposal data
+    serializer = EventProposalSerializer(event_proposal, data=request.data, partial=True)
+    if serializer.is_valid():
+        # Save updated event proposal
+        event_proposal = serializer.save()
+
+        # Get incomes and expenses data from request
+        incomes_data = request.data.get('incomes', [])
+        expenses_data = request.data.get('expenses', [])
+
+        # Update incomes
+        for income_data in incomes_data:
+            income_id = income_data.get('id')
+            if income_id:
+                # Update existing income
+                try:
+                    income_instance = Income.objects.get(id=income_id, event_proposal=event_proposal)
+                    for attr, value in income_data.items():
+                        setattr(income_instance, attr, value)
+                    income_instance.save()
+                except Income.DoesNotExist:
+                    return Response({"error": f"Income with id {income_id} not found."}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                # Create new income
+                Income.objects.create(event_proposal=event_proposal, **income_data)
+
+        # Update expenses
+        for expense_data in expenses_data:
+            expense_id = expense_data.get('id')
+            if expense_id:
+                # Update existing expense
+                try:
+                    expense_instance = Expense.objects.get(id=expense_id, event_proposal=event_proposal)
+                    for attr, value in expense_data.items():
+                        setattr(expense_instance, attr, value)
+                    expense_instance.save()
+                except Expense.DoesNotExist:
+                    return Response({"error": f"Expense with id {expense_id} not found."}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                # Create new expense
+                Expense.objects.create(event_proposal=event_proposal, **expense_data)
+
+        # Re-fetch the event proposal with related incomes and expenses
+        event_proposal = Event_Proposal.objects.prefetch_related('incomes', 'expenses').get(id=event_proposal.id)
+        
+        # Serialize the updated event proposal
+        response_serializer = EventProposalSerializer(event_proposal)
+        return Response(response_serializer.data, status=status.HTTP_200_OK)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_event_proposal(request):
+    if request.method == 'GET':
+        proposal = Event_Proposal.objects.all()
+        serializer = EventProposalSerializer(proposal, many = True)
+        event_data = [
+            {
+                'id': proposal['id'],
+                'event_title': proposal['event_title']
+                
+            } 
+            for proposal in serializer.data
+        ]
+        
+        return Response(event_data)
+    
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_event_proposal_by_department(request,id):
+    proposal = Event_Proposal.objects.filter(department_id = id)
+    serializer = EventProposalSerializer(proposal, many = True)
+    event_data =[
+        {
+        'id':proposal['id'],
+        'event_title': proposal['event_title']
+        }
+        for proposal in serializer.data
+    ] 
+    return Response(event_data)
 
 
 # _______EVENT REGISTER API_______________

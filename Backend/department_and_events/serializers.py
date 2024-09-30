@@ -98,7 +98,7 @@ class EventProposalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event_Proposal
         fields = [
-            'id', 'event_title', 'no_of_activities', 'date_and_time', 'venue', 'academic_year',
+            'id', 'event_title', 'department','no_of_activities', 'date_and_time', 'venue', 'academic_year',
             'event_type', 'need_analysis', 'objectives', 'expected_outcomes', 'speaker_profile',
             'event_category', 'remarks', 'approved_by', 'incomes', 'expenses',
             'total_income', 'total_expenditure'

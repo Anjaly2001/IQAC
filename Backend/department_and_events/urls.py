@@ -38,6 +38,9 @@ urlpatterns = [
     path('update_tag/<int:id>/',views.update_tag, name = 'update_tag'),
 
     path('create_event_proposal/',views.create_event_proposal, name = 'create_event_proposal'),
+    path('update_event_proposal/<int:id>/',views.update_event_proposal, name = 'update_event_proposal'),
+    path('list_event_proposal/',views.list_event_proposal, name = 'list_event_proposal'),
+    path('list_event_proposal_by_department/<int:id>/',views.list_event_proposal_by_department, name = 'list_event_proposal_by_department'),
 
 
     path('event_register/',views.event_register,name ='event_register'),

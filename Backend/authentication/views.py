@@ -442,12 +442,14 @@ def user_list(request):
             profile = User_profile.objects.get(user=user)
             department = profile.department.name if profile.department else None
             campus = profile.location.campus if profile.location else None
+            campus_logo = profile.location.logo.url if profile.location and profile.location.logo else None  
             phone_number = profile.phone_number
             emp_id = profile.emp_id
         except User_profile.DoesNotExist:
             # If no profile exists, set default values
             department = None
             campus = None
+            campus_logo = None
             phone_number = None
             emp_id = None
 
@@ -460,6 +462,7 @@ def user_list(request):
             'emp_id': emp_id,
             'phone_number': phone_number,
             'campus': campus,
+            'campus_logo':campus_logo,
             'department': department,
             'status': user.is_active,
             'last_login': user.last_login,

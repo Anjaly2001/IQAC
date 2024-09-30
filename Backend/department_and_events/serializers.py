@@ -104,6 +104,7 @@ class EventProposalSerializer(serializers.ModelSerializer):
             'total_income', 'total_expenditure'
         ]
         read_only_fields = ['total_income', 'total_expenditure']
+    
 
     def create(self, validated_data):
         incomes_data = validated_data.pop('incomes', [])

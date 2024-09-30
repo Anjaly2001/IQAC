@@ -16,6 +16,7 @@ urlpatterns = [
     path('campus_list/',views.campus_list, name = 'campus_list'),
     path('campus_delete/<int:id>/',views.campus_delete, name = 'campus_delete'),
     path('campus_update/<int:id>/',views.campus_update, name = 'campus_update'),
+    path('campus_details_by_user/',views.campus_details_by_user, name = 'campus_details_by_user'),
 
     path('campus_name_list/',views.campus_name_list,name = 'campus_name_list'),
 

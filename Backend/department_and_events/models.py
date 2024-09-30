@@ -4,6 +4,7 @@ from django.utils.text import slugify
 import datetime
 from django.conf import settings
 from authentication.models import Location,Department
+from django.utils import timezone
 
 
 
@@ -39,7 +40,8 @@ class Event_Proposal(models.Model):
     department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='dp', null = True)
     event_title = models.CharField(max_length=350)
     no_of_activities = models.IntegerField(null=True)
-    date_and_time = models.DateTimeField(auto_now_add=True)
+    startdate_and_time = models.DateTimeField(null=True, default=timezone.now)
+    enddate_and_time = models.DateTimeField(null=True, default=timezone.now)
     venue = models.TextField(max_length=250, null=True)
     academic_year = models.ForeignKey(Academic_year, on_delete=models.CASCADE, null=True)
     event_type = models.ForeignKey(Event_type, on_delete=models.CASCADE, null=True)

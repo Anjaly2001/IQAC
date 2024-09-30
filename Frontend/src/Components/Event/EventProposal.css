@@ -1,124 +1,125 @@
 /* Container for the form */
 .event-proposal-container {
-    width: 90%;
-    max-width: 1200px;
-    margin: 0 auto;
-    text-align: center;
-    font-family: Arial, sans-serif;
-    padding: 20px;
-  }
-  
-  /* Logo Upload */
-  .logo-upload-container {
-    text-align:end;
-    margin-bottom: 20px;
-  }
-  
-  .logo-placeholder {
-    width: 150px;
-    height: 150px;
-    border:none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #888;
-    margin-bottom: 10px;
-  }
-  
-  .logo {
-    max-width: 150px;
-    height: auto;
-    margin-bottom: 10px;
-  }
-  
-  .logo-upload-input {
-    margin-top: 10px;
-  }
-  
-  /* Blue Line */
-  .blue-line {
-    border: 0;
-    height: 3px;
-    background-color:darkblue;
-    margin-bottom: 20px;
-  }
-  
-  /* Title styling */
-  .event-proposal-title {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-  }
-  
-  /* Table styling */
-  .event-info-table {
-    width: 100%;
-    border-collapse: none;
-    margin: 0 auto;
-    margin-bottom: 40px;
-  }
-  
-  .event-info-table th, .event-info-table td {
-    border: none;
-    padding: 10px;
-    text-align: left;
-  }
-  
-  .table-header {
-    background-color: #f2f2f2;
-    font-weight: bold;
-    text-align: center;
-  }
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
 
-  .event-info-table td:first-child {
-    width: 30%;
-    font-weight: bold;
-  }
-  
-  .event-info-table td {
-    width: 70%;
-  }
-  .activities-control {
-    display: flex;
-    align-items: center;
-    position: relative;
-  }
-  
-  .activities-input {
-    width: 100%;
-    text-align: left;
-    margin-right: 10px;
-  }
-  
-  .activities-buttons {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    right: 12px; /* Adjust based on your layout */
-  }
-  
-  .activities-btn {
-    padding: 2px 6px;
-    font-size: 7px;
-    background-color: white;
-    color: black;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .activities-btn:focus {
-    outline: none;
-    left:-5;
-  }
-  
-  .up-arrow {
-    border-radius: 3px 3px 0 0;
-  }
-  
-  .down-arrow {
-    border-radius: 0 0 3px 3px;
-  }
-  /* Need Analysis Section */
+/* Logo Upload */
+.logo-upload-container {
+  text-align: end;
+  margin-bottom: 20px;
+}
+
+.logo-placeholder {
+  width: 150px;
+  height: 150px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+  margin-bottom: 10px;
+}
+
+.logo {
+  max-width: 150px;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.logo-upload-input {
+  margin-top: 10px;
+}
+
+/* Blue Line */
+.blue-line {
+  border: 0;
+  height: 3px;
+  background-color: darkblue;
+  margin-bottom: 20px;
+}
+
+/* Title styling */
+.event-proposal-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* Table styling */
+.event-info-table {
+  width: 100%;
+  border-collapse: none;
+  margin: 0 auto;
+  margin-bottom: 40px;
+}
+
+.event-info-table th,
+.event-info-table td {
+  border: none;
+  padding: 10px;
+  text-align: left;
+}
+
+.table-header {
+  background-color: #f2f2f2;
+  font-weight: bold;
+  text-align: center;
+}
+
+.event-info-table td:first-child {
+  width: 30%;
+  font-weight: bold;
+}
+
+.event-info-table td {
+  width: 70%;
+}
+.activities-control {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.activities-input {
+  width: 100%;
+  text-align: left;
+  margin-right: 10px;
+}
+
+.activities-buttons {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  right: 12px; /* Adjust based on your layout */
+}
+
+.activities-btn {
+  padding: 2px 6px;
+  font-size: 7px;
+  background-color: white;
+  color: black;
+  border: none;
+  cursor: pointer;
+}
+
+.activities-btn:focus {
+  outline: none;
+  left: -5;
+}
+
+.up-arrow {
+  border-radius: 3px 3px 0 0;
+}
+
+.down-arrow {
+  border-radius: 0 0 3px 3px;
+}
+/* Need Analysis Section */
 .need-analysis-container {
   margin-top: 30px;
 }
@@ -159,10 +160,9 @@
   font-weight: bold;
 }
 .description-editor {
-  width: 80%; /* Adjust this percentage as needed */
+  width: 86%; /* Adjust this percentage as needed */
   margin: 0 auto; /* To center the editor if needed */
-  margin-left: 10%;
-
+  margin-left: 7%;
 }
 .signature-section {
   display: flex;
@@ -180,85 +180,87 @@
   margin: 0;
 }
 
-  /* RESPONSIVENESS */
-  
-  /* Adjustments for tablets */
-  @media screen and (max-width: 768px) {
-    .logo-container {
-      text-align: center;
-    }
-  
-    .logo {
-      max-width: 120px;
-    }
-  
-    .event-proposal-title {
-      font-size: 20px;
-    }
-  
-    .event-info-table th, .event-info-table td {
-      padding: 8px;
-    }
-  
-    .event-info-table td:first-child, .event-info-table td {
-      width: 100%;
-      display: block;
-      text-align: center;
-    }
-  
-    .event-info-table tr {
-      display: block;
-      margin-bottom: 10px;
-    }
-  
-    .event-info-table th {
-      display: none;
-    }
+/* RESPONSIVENESS */
+
+/* Adjustments for tablets */
+@media screen and (max-width: 768px) {
+  .logo-container {
+    text-align: center;
   }
-  
-  /* Adjustments for mobile screens */
-  @media screen and (max-width: 480px) {
-    .event-proposal-container {
-      padding: 10px;
-    }
-  
-    .logo {
-      max-width: 100px;
-    }
-  
-    .event-proposal-title {
-      font-size: 18px;
-    }
-  
-    .event-info-table td {
-      padding: 6px;
-    }
-  
-    .event-info-table td:first-child {
-      font-size: 16px;
-      font-weight: bold;
-    }
-  }  
-  /* Responsive Behavior */
-  @media (max-width: 768px) {
-    .event-proposal-container {
-      margin-left: 0;
-      width: 100%;
-    }
-  
-    .form-group {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  
-    .form-group label {
-      width: 100%;
-      margin-bottom: 5px;
-    }
-  
-    .form-group input,
-    .form-group select,
-    .description-editor {
-      width: 100%;
-    }
+
+  .logo {
+    max-width: 120px;
   }
+
+  .event-proposal-title {
+    font-size: 20px;
+  }
+
+  .event-info-table th,
+  .event-info-table td {
+    padding: 8px;
+  }
+
+  .event-info-table td:first-child,
+  .event-info-table td {
+    width: 100%;
+    display: block;
+    text-align: center;
+  }
+
+  .event-info-table tr {
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .event-info-table th {
+    display: none;
+  }
+}
+
+/* Adjustments for mobile screens */
+@media screen and (max-width: 480px) {
+  .event-proposal-container {
+    padding: 10px;
+  }
+
+  .logo {
+    max-width: 100px;
+  }
+
+  .event-proposal-title {
+    font-size: 18px;
+  }
+
+  .event-info-table td {
+    padding: 6px;
+  }
+
+  .event-info-table td:first-child {
+    font-size: 16px;
+    font-weight: bold;
+  }
+}
+/* Responsive Behavior */
+@media (max-width: 768px) {
+  .event-proposal-container {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .form-group {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .form-group label {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+
+  .form-group input,
+  .form-group select,
+  .description-editor {
+    width: 100%;
+  }
+}

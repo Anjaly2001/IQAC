@@ -155,7 +155,7 @@ const EventProposal = () => {
                     </td>
                   </tr>
                   <tr>
-                    <td>Event Type (Focus)</td>
+                    <td>Event Type</td>
                     <td>
                       <select className="form-control">
                         <option>Select Event Type</option>

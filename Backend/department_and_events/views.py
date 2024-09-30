@@ -1,3 +1,4 @@
+import logging
 from django.shortcuts import render
 from rest_framework.decorators import api_view, permission_classes, parser_classes
 from rest_framework.permissions import IsAuthenticated
@@ -242,6 +243,29 @@ def campus_update(request, id):
         return Response(serializer.errors)
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def campus_details_by_user(request):
+    # Get the logged-in user
+    user = request.user
+
+    # Fetch the User_profile associated with the logged-in user
+    profile = get_object_or_404(User_profile, user=user)
+
+    # Access the location linked to the user's profile
+    location = profile.location
+
+    if location:
+        # Return the campus (location) details and logo if available
+        return Response({
+            "campus": location.campus,  # Assuming 'campus' is a field in the Location model
+            "logo": location.logo.url if location.logo else None  # Return logo URL if exists
+        })
+    else:
+        # If no location is found for the user, return an error response
+        return Response({"error": "No campus location found for the user"}, status=404)
+    
+    
 # ________ACADEMIC_YEAR API________
 
 @api_view(['POST'])

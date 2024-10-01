@@ -12,10 +12,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Sidebar from '../../Sidebar';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons'; // Ensure this line is present
 import { ToastContainer, toast } from 'react-toastify';
-import { event_list,event_delete } from '../../axios/api';
+import { fetchEventProposalsByDepartment,event_delete } from '../../axios/api';
+import axios from 'axios';
 
 
-const ListEvents = () => {
+
+const ListEvents = ({ departmentId }) => {
   const [pendingReports, setPendingReports] = useState([]);
   // const [filteredReports, setFilteredReports] = useState([]);
   const [globalFilter, setGlobalFilter] = useState('');
@@ -25,25 +27,26 @@ const ListEvents = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchPendingReports();
-  }, []);
+    if (departmentId) {  // Ensure departmentId exists before fetching
+      fetchPendingReports(departmentId);  // Pass departmentId to fetchPendingReports
+    }
+  }, [departmentId]);
 
-  const fetchPendingReports = async () => {
+  const fetchPendingReports = async (deptId) => {
     setLoading(true);  // Start loading
     setError(null);    // Clear previous errors
 
     try {
-      const reports = await event_list(); // Call the event_list function
-      // console.log(reports)
-      setPendingReports(reports); // Set the reports data
+      const reports = await fetchEventProposalsByDepartment(deptId); // Pass department ID to API
+      setPendingReports(reports); // Set the reports data in state
     } catch (error) {
-      console.error('Error fetching reports:', error);
-      setError('Failed to fetch reports.');
-      console.log(error)
+      console.error('Error fetching event proposals:', error);
+      setError('Failed to fetch event proposals.'); // Set error state
     } finally {
       setLoading(false); // End loading
     }
   };
+
 
   const approveEvent = (id) => {
     try {

@@ -18,6 +18,7 @@ import {
   faAddressBook,
   faBuilding,
   faUserCircle,
+  faEdit,
 } from "@fortawesome/free-solid-svg-icons";
 import { checkActivePath, mapPathsToSections } from "./common/utils";
 import "./Sidebar.css";
@@ -29,7 +30,7 @@ const Sidebar = () => {
   const [userRole, setUserRole] = useState("");
   const [userDepartments, setUserDepartments] = useState([]);
   const [openSections, setOpenSections] = useState({
-    profiles:false,
+    profiles: false,
     settings: false,
     campus: false,
     department: false,
@@ -73,22 +74,22 @@ const Sidebar = () => {
   const toggleSection = (section, parent = null) => {
     setOpenSections((prev) => {
       const newOpenSections = { ...prev };
-  
+
       // If it's a nested section (like settings), keep the parent section open
       if (parent !== null) {
         newOpenSections[parent] = true; // Ensure parent stays open
       }
-  
+
       // Toggle the current section (whether parent or child)
       newOpenSections[section] = !prev[section];
-  
+
       // Save the new openSections state in localStorage
       localStorage.setItem("openSections", JSON.stringify(newOpenSections));
-  
+
       return newOpenSections;
     });
   };
-  
+
 
   const handleLogout = () => {
     localStorage.removeItem("access_token");
@@ -148,159 +149,165 @@ const Sidebar = () => {
             )}
 
             {/* Roles Section */}
-            <SidebarItem
-              icon={faHandshake}
-              title="Roles"
-              open={openSections.role}
-              toggleSection={() => toggleSection("role")}
-            >
-              <SidebarSubItem
-                path="/addrole"
-                icon={faPlus}
-                label="Add Role"
-                isActive={checkActivePath("/addrole")}
-              />
-            </SidebarItem>
+            {userRole === "Admin" && (
+              <SidebarItem
+                icon={faHandshake}
+                title="Roles"
+                open={openSections.role}
+                toggleSection={() => toggleSection("role")}
+              >
+                <SidebarSubItem
+                  path="/addrole"
+                  icon={faPlus}
+                  label="Add Role"
+                  isActive={checkActivePath("/addrole")}
+                />
+              </SidebarItem>
+            )}
 
             {/* Profile Section  */}
-            <SidebarItem
-              icon={faUserCircle}
-              title="Profiles"
-              open={openSections.profiles}
-              toggleSection={() => toggleSection("profiles")}
-            >
-              <SidebarSubItem
-                path="/userprofile"
-                icon={faUser}
-                label="User Profile"
-                isActive={checkActivePath("/userprofile")}
-              />
-              <SidebarSubItem
-                path="/departmentprofile"
-                icon={faAddressBook}
-                label="Department Profile"
-                isActive={checkActivePath("/departmentprofile")}
-              />
-              <SidebarSubItem
-                path="/campusprofile"
-                icon={faBuilding}
-                label="Campus Profile"
-                isActive={checkActivePath("/campusprofile")}
-              />
-            </SidebarItem>
-
-            {/* Settings Section */}
-            <SidebarItem
-              icon={faCog}
-              title="Settings"
-              open={openSections.settings}
-              toggleSection={() => toggleSection("settings")}
-            >
-              {/* Campus */}
+            {userRole === "Admin" && (
               <SidebarItem
-                icon={faGears}
-                title="Campus"
-                open={openSections.campus}
-                toggleSection={() => toggleSection("campus", "settings")} // Pass "settings" as the parent
+                icon={faUserCircle}
+                title="Profiles"
+                open={openSections.profiles}
+                toggleSection={() => toggleSection("profiles")}
               >
                 <SidebarSubItem
-                  path="/createCampus"
-                  icon={faPlus}
-                  label="New Campus"
-                  isActive={checkActivePath("/createCampus")}
+                  path="/userprofile"
+                  icon={faUser}
+                  label="User Profile"
+                  isActive={checkActivePath("/userprofile")}
                 />
                 <SidebarSubItem
-                  path="/listCampus"
-                  icon={faEye}
-                  label="Campus List"
-                  isActive={checkActivePath("/listCampus")}
+                  path="/departmentprofile"
+                  icon={faAddressBook}
+                  label="Department Profile"
+                  isActive={checkActivePath("/departmentprofile")}
+                />
+                <SidebarSubItem
+                  path="/campusprofile"
+                  icon={faBuilding}
+                  label="Campus Profile"
+                  isActive={checkActivePath("/campusprofile")}
                 />
               </SidebarItem>
+            )}
 
-              {/* Department */}
+            {/* Settings Section: Only visible to Admin */}
+            {userRole === "Admin" && (
               <SidebarItem
-                icon={faGears}
-                title="Department"
-                open={openSections.department}
-                toggleSection={() => toggleSection("department", "settings")} // Pass "settings" as the parent
+                icon={faCog}
+                title="Settings"
+                open={openSections.settings}
+                toggleSection={() => toggleSection("settings")}
               >
-                <SidebarSubItem
-                  path="/createdepartments"
-                  icon={faPlus}
-                  label="New Department"
-                  isActive={checkActivePath("/createdepartments")}
-                />
-                <SidebarSubItem
-                  path="/listdepartment"
-                  icon={faEye}
-                  label="Department List"
-                  isActive={checkActivePath("/listdepartment")}
-                />
-              </SidebarItem>
+                {/* Campus */}
+                <SidebarItem
+                  icon={faGears}
+                  title="Campus"
+                  open={openSections.campus}
+                  toggleSection={() => toggleSection("campus", "settings")} // Pass "settings" as the parent
+                >
+                  <SidebarSubItem
+                    path="/createCampus"
+                    icon={faPlus}
+                    label="New Campus"
+                    isActive={checkActivePath("/createCampus")}
+                  />
+                  <SidebarSubItem
+                    path="/listCampus"
+                    icon={faEye}
+                    label="Campus List"
+                    isActive={checkActivePath("/listCampus")}
+                  />
+                </SidebarItem>
 
-              {/* Academic Year */}
-              <SidebarItem
-                icon={faGears}
-                title="Academic Year"
-                open={openSections.AcademicYear}
-                toggleSection={() => toggleSection("AcademicYear", "settings")} // Pass "settings" as the parent
-              >
-                <SidebarSubItem
-                  path="/academicyear"
-                  icon={faPlus}
-                  label="New Academic Year"
-                  isActive={checkActivePath("/academicyear")}
-                />
-                <SidebarSubItem
-                  path="/listacademicyear"
-                  icon={faEye}
-                  label="Academic Year List"
-                  isActive={checkActivePath("/listacademicyear")}
-                />
-              </SidebarItem>
+                {/* Department */}
+                <SidebarItem
+                  icon={faGears}
+                  title="Department"
+                  open={openSections.department}
+                  toggleSection={() => toggleSection("department", "settings")} // Pass "settings" as the parent
+                >
+                  <SidebarSubItem
+                    path="/createdepartments"
+                    icon={faPlus}
+                    label="New Department"
+                    isActive={checkActivePath("/createdepartments")}
+                  />
+                  <SidebarSubItem
+                    path="/listdepartment"
+                    icon={faEye}
+                    label="Department List"
+                    isActive={checkActivePath("/listdepartment")}
+                  />
+                </SidebarItem>
 
-              {/* Event Type */}
-              <SidebarItem
-                icon={faGears}
-                title="Event Type"
-                open={openSections.eventtype}
-                toggleSection={() => toggleSection("eventtype", "settings")} // Pass "settings" as the parent
-              >
-                <SidebarSubItem
-                  path="/eventtype"
-                  icon={faPlus}
-                  label="New Event Type"
-                  isActive={checkActivePath("/eventtype")}
-                />
-                <SidebarSubItem
-                  path="/eventtypelist"
-                  icon={faEye}
-                  label="Event Type List"
-                  isActive={checkActivePath("/eventtypelist")}
-                />
-              </SidebarItem>
+                {/* Academic Year */}
+                <SidebarItem
+                  icon={faGears}
+                  title="Academic Year"
+                  open={openSections.AcademicYear}
+                  toggleSection={() => toggleSection("AcademicYear", "settings")} // Pass "settings" as the parent
+                >
+                  <SidebarSubItem
+                    path="/academicyear"
+                    icon={faPlus}
+                    label="New Academic Year"
+                    isActive={checkActivePath("/academicyear")}
+                  />
+                  <SidebarSubItem
+                    path="/listacademicyear"
+                    icon={faEye}
+                    label="Academic Year List"
+                    isActive={checkActivePath("/listacademicyear")}
+                  />
+                </SidebarItem>
 
-              {/* Tags */}
-              <SidebarItem
-                icon={faGears}
-                title="Tags"
-                open={openSections.tags}
-                toggleSection={() => toggleSection("tags", "settings")} // Pass "settings" as the parent
-              >
-                <SidebarSubItem
-                  path="/createTag"
-                  icon={faPlus}
-                  label="New Tag"
-                  isActive={checkActivePath("/createTag")}
-                />
-                <SidebarSubItem
-                  path="/listTag"
-                  icon={faEye}
-                  label="Tag List"
-                  isActive={checkActivePath("/listTag")}
-                />
+                {/* Event Type */}
+                <SidebarItem
+                  icon={faGears}
+                  title="Event Type"
+                  open={openSections.eventtype}
+                  toggleSection={() => toggleSection("eventtype", "settings")} // Pass "settings" as the parent
+                >
+                  <SidebarSubItem
+                    path="/eventtype"
+                    icon={faPlus}
+                    label="New Event Type"
+                    isActive={checkActivePath("/eventtype")}
+                  />
+                  <SidebarSubItem
+                    path="/eventtypelist"
+                    icon={faEye}
+                    label="Event Type List"
+                    isActive={checkActivePath("/eventtypelist")}
+                  />
+                </SidebarItem>
+
+                {/* Tags */}
+                <SidebarItem
+                  icon={faGears}
+                  title="Tags"
+                  open={openSections.tags}
+                  toggleSection={() => toggleSection("tags", "settings")} // Pass "settings" as the parent
+                >
+                  <SidebarSubItem
+                    path="/createTag"
+                    icon={faPlus}
+                    label="New Tag"
+                    isActive={checkActivePath("/createTag")}
+                  />
+                  <SidebarSubItem
+                    path="/listTag"
+                    icon={faEye}
+                    label="Tag List"
+                    isActive={checkActivePath("/listTag")}
+                  />
+                </SidebarItem>
               </SidebarItem>
-            </SidebarItem>
+            )}
 
             {/* Events Section */}
             <SidebarItem
@@ -332,51 +339,44 @@ const Sidebar = () => {
             {/* Directly render departments without a parent toggle */}
             {userRole === "Department" &&
               Object.keys(userDepartments).length > 0 &&
-              Object.entries(userDepartments).map(
-                ([departmentName, role], index) => (
-                  <SidebarItem
-                    key={index}
-                    icon={faGears}
-                    title={departmentName}
-                    open={openSections[`department_${departmentName}`]} // Use department name as key
-                    toggleSection={() =>
-                      toggleSection(`department_${departmentName}`)
-                    } // Pass department name to toggleSection
-                  >
-                    {/* Conditionally render actions based on the role in this specific department */}
-                    {role === "Department" || role === "campusAdmin" ? (
-                      <>
-                        <SidebarSubItem
-                          path={`/department`}
-                          icon={faPlus}
-                          label="Create Event"
-                          isActive={checkActivePath(`/department`)}
-                        />
-                        <SidebarSubItem
-                          path={`/department/${departmentName}/edit-event`}
-                          icon={faGears}
-                          label="Edit Event"
-                          isActive={checkActivePath(
-                            `/department/${departmentName}/edit-event`
-                          )}
-                        />
-                      </>
-                    ) : (
-                      <>
-                        {/* Add viewer-specific options if applicable */}
-                        <SidebarSubItem
-                          path={`/department/${departmentName}/view-events`}
-                          icon={faEye}
-                          label="View Events"
-                          isActive={checkActivePath(
-                            `/department/${departmentName}/view-events`
-                          )}
-                        />
-                      </>
-                    )}
-                  </SidebarItem>
-                )
-              )}
+              Object.entries(userDepartments).map(([departmentName, { id, role }], index) => ( // Destructure to get department ID
+                <SidebarItem
+                  key={index}
+                  icon={faGears}
+                  title={departmentName}
+                  open={openSections[`department_${id}`]} // Use department ID as key
+                  toggleSection={() => toggleSection(`department_${id}`)} // Pass department ID to toggleSection
+                >
+                  {/* Conditionally render actions based on the role in this specific department */}
+                  {role === "Department" || role === "campusAdmin" ? (
+                    <>
+                      <SidebarSubItem
+                        path={`/department/${id}/create-event`} // Department-specific create event
+                        icon={faPlus}
+                        label="Create Event"
+                        isActive={checkActivePath(`/department/${id}/create-event`)}
+                      />
+                      <SidebarSubItem
+                        path={`/department/${id}/edit-event`} // Department-specific edit event
+                        icon={faEdit}
+                        label="Edit Event"
+                        isActive={checkActivePath(`/department/${id}/edit-event`)}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      {/* Add viewer-specific options if applicable */}
+                      <SidebarSubItem
+                        path={`/department/${id}/listevents`} // Department-specific event list
+                        icon={faEye}
+                        label="Events List"
+                        isActive={checkActivePath(`/department/${id}/listevents`)}
+                      />
+                    </>
+                  )}
+                </SidebarItem>
+              ))}
+
             <Nav.Item>
               <Nav.Link onClick={handleLogout} className="text-light fw-bold">
                 <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />

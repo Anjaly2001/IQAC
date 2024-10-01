@@ -19,6 +19,13 @@ const EventProposal = () => {
   const [Outcome, setOutcome] = useState("");
   const [Profile, setProfile] = useState("");
 
+   // State to track the selected option from the dropdown
+    const [selectedOption, setSelectedOption] = useState('');
+
+   // Function to handle dropdown change
+    const handleSelectChange = (e) => {
+      setSelectedOption(e.target.value);
+    }
   // Handle number of activities increase and decrease
   const handleActivitiesChange = (action) => {
     if (action === "increase") {
@@ -252,85 +259,76 @@ const EventProposal = () => {
           </StepperPanel>
           <StepperPanel header=" ">
             <div className="table-container">
-              {/* Income Table */}
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th colSpan="5" className="table-heading">
-                      DETAILS OF INCOME
-                    </th>
-                  </tr>
-                  <tr>
-                    <th>Sl No</th>
-                    <th>Particulars</th>
-                    <th>No. Participants</th>
-                    <th>Rate</th>
-                    <th>Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>Participation Fee [Fest]</td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>Sponsorship [Fest]</td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>Participation Fee [Conference]</td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>4</td>
-                    <td>Sponsorship [Conference]</td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colSpan="4" className="total-label">
-                      Total Income
-                    </td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+            <div>
+      {/* Dropdown to select Fest or Conference */}
+      <div>
+        <label>Select Event Type:</label>
+        <select value={selectedOption} onChange={handleSelectChange}>
+          <option value="">Select an option</option>
+          <option value="fest">Fest</option>
+          <option value="conference">Conference</option>
+        </select>
+      </div>
+
+      {/* Conditionally render the table based on the selected option */}
+      {selectedOption && (
+        <div>
+          {/* Income Table */}
+          <table className="table">
+            <thead>
+              <tr>
+                <th colSpan="5" className="table-heading">
+                  DETAILS OF INCOME ({selectedOption === 'fest' ? 'Fest' : 'Conference'})
+                </th>
+              </tr>
+              <tr>
+                <th>Sl No</th>
+                <th>Particulars</th>
+                <th>No. Participants</th>
+                <th>Rate</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Participation Fee [{selectedOption}]</td>
+                <td>
+                  <input type="text" className="input-field" />
+                </td>
+                <td>
+                  <input type="text" className="input-field" />
+                </td>
+                <td>
+                  <input type="text" className="input-field" />
+                </td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Sponsorship [{selectedOption}]</td>
+                <td>
+                  <input type="text" className="input-field" />
+                </td>
+                <td>
+                  <input type="text" className="input-field" />
+                </td>
+                <td>
+                  <input type="text" className="input-field" />
+                </td>
+              </tr>
+              <tr>
+                <td colSpan="4" className="total-label">
+                  Total Income
+                </td>
+                <td>
+                  <input type="text" className="input-field" />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
 
               {/* Expenses Table */}
               <table className="table">

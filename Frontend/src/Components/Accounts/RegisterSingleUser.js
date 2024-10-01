@@ -229,7 +229,7 @@ const RegisterSingleUser = () => {
           </div>
           <div className="col-md-8 mt-1 pt-5">
             <div className="container mt-4">
-              <div className="text-center fw-bold fs-5 mb-4">Register User</div>
+            <h4 className="fw-bold text-center">Register User</h4>
               <div className="register mt-5">
                 <div className="user-actions mb-4">
                   <div className="row mb-4">

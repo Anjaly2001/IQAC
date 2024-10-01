@@ -105,7 +105,8 @@ const EventType = () => {
                 <div className="col-md-10 mt-5 pt-5">
                     <div className="container mt-3 p-6">
                         <div className="d-flex flex-column align-items-center mb-4">
-                            <h2>{editMode ? "Update Event Type" : "Create Event Type"}</h2> {/* Conditional title */}
+                        <h4 className="fw-bold text-center">
+                            {editMode ? "Update Event Type" : "Create Event Type"}</h4> {/* Conditional title */}
                             <form onSubmit={handleSubmit} className="w-100">
                                 <div className="mb-3">
                                     <label htmlFor="title" className="form-label">Title{renderAsterisk()}</label>

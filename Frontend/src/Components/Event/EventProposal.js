@@ -19,6 +19,7 @@ const EventProposal = () => {
   const [Objective, setObjective] = useState("");
   const [Outcome, setOutcome] = useState("");
   const [Profile, setProfile] = useState("");
+  const [Remarks, setRemarks] = useState("");
   // const [isApproved, setIsApproved] = useState(false);
 
   const navigate = useNavigate();
@@ -425,8 +426,8 @@ const EventProposal = () => {
                 <div className="mb-3">
                   <label className="form-label">REMARKS</label>
                   <Editor
-                    value={Profile}
-                    onTextChange={(e) => setProfile(e.htmlValue)}
+                    value={Remarks}
+                    onTextChange={(e) => setRemarks(e.htmlValue)}
                     style={{ height: "150px" }}
                     placeholder="Enter your Remarks here..."
                   />

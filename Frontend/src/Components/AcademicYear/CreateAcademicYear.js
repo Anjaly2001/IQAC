@@ -158,7 +158,8 @@ const CreateAcademicYear = () => {
                 <div className="col-md-10 mt-1 pt-6">
                     <div className="container mt-5 p-6">
                         <div className="d-flex flex-column align-items-center mb-5 mt-5">
-                            <h2>{isEdit ? 'Edit Academic Year' : 'Create Academic Year'}</h2>
+                        <h4 className="fw-bold text-center">
+                            {isEdit ? 'Edit Academic Year' : 'Create Academic Year'}</h4>
                             <form onSubmit={handleSubmit} className="w-100">
                                 <div className="row mb-4">
                                     <div className="col-md-6 mt-4">

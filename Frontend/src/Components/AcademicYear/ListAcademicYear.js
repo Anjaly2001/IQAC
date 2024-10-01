@@ -60,7 +60,7 @@ const ListAcademicYear = () => {
                 </div>
                 <div className="col-md-10 mt-5 pt-6">
                     <div className="container mt-4 p-6 text-center">
-                        <h3>Academic Years</h3>
+                    <h4 className="fw-bold text-center">Academic Year List</h4>
                         <table className="table table-striped mt-5">
                             <thead>
                                 <tr>

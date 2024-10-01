@@ -132,7 +132,8 @@ const CreateDepartment = ({ onAddDepartment }) => {
                 <div className="col-md-10 mt-5 pt-5">
                     <div className="container mt-3" style={{ maxWidth: '800px' }}>
                         <div className="text-center fw-bold fs-5 mb-4">
-                            <h1>{isEdit ? 'Edit Department' : 'Create Department'}</h1>
+                        <h4 className="fw-bold text-center">
+                            {isEdit ? 'Edit Department' : 'Create Department'}</h4>
                         </div>
                         <div className="d-flex flex-column align-items-center mb-4">
                             <div className="p-field w-100 mb-3">

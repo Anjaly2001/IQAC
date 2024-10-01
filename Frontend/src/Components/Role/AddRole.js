@@ -192,7 +192,7 @@ const handleDeleteRole = async (roleId) => {
           <Sidebar />
         </div>
         <div className="col-md-10 p-7 ">
-          <h1 className="text-center fw-bold fs-5 mb-4">Role Settings</h1>
+        <h4 className="fw-bold text-center">Role Settings</h4>
 
 {/* Top Dropdown for Default Campus and Department */}
           <div className="row mt-8">

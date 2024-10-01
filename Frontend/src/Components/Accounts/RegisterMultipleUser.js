@@ -226,7 +226,7 @@ const handleSuccess = (response) => {
                     </div>
                     <div className="col-md-8 mt-1 pt-5">
                         <div className="container mt-3">
-                            <div className="text-center fw-bold fs-5 mb-4">Register Users</div>
+                        <h4 className="fw-bold text-center">Register Users</h4>
                             <div className="register">
 
                                 {/* Link to download the sample CSV format */}

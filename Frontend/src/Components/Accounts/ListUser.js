@@ -143,9 +143,11 @@ const ListUser = () => {
           <div className="col-md-2 p-0">
             <Sidebar />
           </div>
+          
           <div className="col-md-10 mt-1 pt-5">
             <div className="container mt-3 p-5">
-              <div className="table-container">
+            <h4 className="fw-bold text-center">List User</h4>
+              <div className="table-container mt-4">
               <DataTable
                   value={users}
                   paginator

@@ -102,7 +102,8 @@ const CreateCampus = () => {
                     <div className="col-md-6 mt-5 pt-5">
                         <div className="container mt-3">
                             <div className="text-center fw-bold fs-5 mb-4">
-                                {isEdit ? 'Edit Campus' : 'Create Campus'}
+                            <h4 className="fw-bold text-center">
+                                {isEdit ? 'Edit Campus' : 'Create Campus'}</h4>
                             </div>
                             <div className="register">
                                 <FormField

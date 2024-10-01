@@ -54,7 +54,7 @@ const ListCampus = () => {
 
     const renderHeader = () => (
         <div className="d-flex  justify-content-between align-items-center">
-            <div className="fw-bold fs-5">List of Campuses</div>
+            <h4 className="fw-bold text-center">List Of Campuses</h4>
             <IconField iconPosition="left">
                 <InputIcon className="pi pi-search" />
                 <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Keyword Search" />

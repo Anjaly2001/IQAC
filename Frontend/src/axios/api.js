@@ -464,6 +464,18 @@ export const event_list= async () => {
   }
 };
 
+export const fetchEventProposalsByDepartment = async (departmentId) => {
+  try {
+    const response = await axiosInstance.get(
+      `/list_event_proposal_by_department/${departmentId}/`
+    );
+    return response.data; // Return the data from the response
+  } catch (error) {
+    console.error('Error fetching event proposals:', error);
+    throw error; // Propagate the error to handle it in the calling function
+  }
+};
+
 
 export const event_delete = async (eventId) => {
   try {

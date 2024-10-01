@@ -162,7 +162,7 @@ const ProposalStatus = () => {
     );
   };
 
-  return (
+return (
     <div className="container-fluid">
       <div className="row">
         <div className="col-md-2 p-0">
@@ -171,7 +171,7 @@ const ProposalStatus = () => {
         <div className="col-md-10 mt-5 pt-5 p-6">
           <div className="container mt-3">
             <div className="d-flex justify-content-center mb-4">
-              <h4 className="fw-bold text-center">Event List</h4>
+              <h4 className="fw-bold text-center">Event Proposal Status</h4>
             </div>
             <div className="d-flex justify-content-end mb-4">
               <div className="input-group" style={{ width: "300px" }}>
@@ -201,13 +201,6 @@ const ProposalStatus = () => {
                   header="Event Title"
                   filter
                   filterPlaceholder="Search title"
-                  style={{ minWidth: "12rem" }}
-                />
-                <Column
-                  field="collaborators"
-                  header="Collaborators"
-                  filter
-                  filterPlaceholder="Search collaborators"
                   style={{ minWidth: "12rem" }}
                 />
                 <Column

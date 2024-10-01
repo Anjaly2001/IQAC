@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import { useNavigate } from 'react-router-dom';
 import "./EventProposal.css"; // External CSS file for styling
 import Sidebar from "../../Sidebar";
 import DatePicker from "react-datepicker";
@@ -18,12 +19,19 @@ const EventProposal = () => {
   const [Objective, setObjective] = useState("");
   const [Outcome, setOutcome] = useState("");
   const [Profile, setProfile] = useState("");
-  const [isApproved, setIsApproved] = useState(false);
+  // const [isApproved, setIsApproved] = useState(false);
 
-  // Function to handle approval (this can be tied to your approval logic)
-  const handleApproval = () => {
-    setIsApproved(true); // Set to true when the form is approved
+  const navigate = useNavigate();
+
+  const handleSubmit = () => {
+    stepperRef.current.nextCallback(); // Call nextCallback
+    navigate('/proposalstatus'); // Navigate to the desired page
   };
+
+  // // Function to handle approval (this can be tied to your approval logic)
+  // const handleApproval = () => {
+  //   setIsApproved(true); // Set to true when the form is approved
+  // };
 
   // State to track the selected option from the dropdown
   const [selectedOption, setSelectedOption] = useState("");
@@ -464,7 +472,7 @@ const EventProposal = () => {
               <Button
                 label="Submit"
                 iconPos="right"
-                onClick={() => stepperRef.current.nextCallback()}
+                onClick={handleSubmit}
               />
             </div>
           </StepperPanel>

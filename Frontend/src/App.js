@@ -27,6 +27,7 @@ import EventProposal from './Components/Event/EventProposal';
 import CampusProfile from './Components/Profiles/CampusProfile';
 import DepartmentProfile from './Components/Profiles/DepartmentProfile';
 import UserProfile from './Components/Profiles/UserProfile';
+import ProposalStatus from './Components/Event/ProposalStatus';
 
 const App = () => {
     // Fetch authentication status and user role from the custom hook
@@ -89,6 +90,7 @@ const App = () => {
                         <Route path="/campusprofile" element={<CampusProfile/>} />
                         <Route path="/departmentprofile" element={<DepartmentProfile/>} />
                         <Route path="/userprofile" element={<UserProfile/>} />
+                        <Route path="/proposalstatus" element={<ProposalStatus/>} />
 
 
 

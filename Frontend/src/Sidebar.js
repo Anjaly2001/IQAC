@@ -317,16 +317,16 @@ const Sidebar = () => {
               toggleSection={() => toggleSection("eventStatus")}
             >
               <SidebarSubItem
-                path="/registerEvent"
-                icon={faPlus}
-                label="Register Event"
-                isActive={checkActivePath("/registerEvent")}
-              />
-              <SidebarSubItem
                 path="/eventproposal"
                 icon={faPlus}
                 label="Event Proposal"
                 isActive={checkActivePath("/eventproposal")}
+              />
+              <SidebarSubItem
+                path="/registerEvent"
+                icon={faPlus}
+                label="Register Event"
+                isActive={checkActivePath("/registerEvent")}
               />
               <SidebarSubItem
                 path="/listevents"

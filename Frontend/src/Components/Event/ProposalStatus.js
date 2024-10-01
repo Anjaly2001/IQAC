@@ -4,25 +4,25 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faEye,
-    faDownload,
-    faTrash,
-    faPlus,
-    faEdit,
+  faEye,
+  faDownload,
+  faTrash,
+  faPlus,
+  faEdit,
+  faCheck,
+  faTimes,
 } from "@fortawesome/free-solid-svg-icons";
-import "primereact/resources/themes/lara-light-indigo/theme.css"; // Choose a theme
+import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Sidebar from "../../Sidebar";
-import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons"; // Ensure this line is present
 import { ToastContainer, toast } from "react-toastify";
 import { event_list, event_delete } from "../../axios/api";
 
 const ProposalStatus = () => {
   const [pendingReports, setPendingReports] = useState([]);
-  // const [filteredReports, setFilteredReports] = useState([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -34,28 +34,22 @@ const ProposalStatus = () => {
   }, []);
 
   const fetchPendingReports = async () => {
-    setLoading(true); // Start loading
-    setError(null); // Clear previous errors
+    setLoading(true);
+    setError(null);
 
     try {
-      const reports = await event_list(); // Call the event_list function
-      // console.log(reports)
-      setPendingReports(reports); // Set the reports data
+      const reports = await event_list();
+      setPendingReports(reports);
     } catch (error) {
       console.error("Error fetching reports:", error);
       setError("Failed to fetch reports.");
-      console.log(error);
     } finally {
-      setLoading(false); // End loading
+      setLoading(false);
     }
   };
 
   const approveEvent = (id) => {
     try {
-      // Assuming you will make an API call to approve the event in the future
-      // const response = await event_update_status(id, 'Approved');
-
-      // For now, just update the state locally
       setPendingReports(
         pendingReports.map((event) =>
           event.id === id ? { ...event, status: "Approved" } : event
@@ -70,10 +64,6 @@ const ProposalStatus = () => {
 
   const rejectEvent = (id) => {
     try {
-      // Assuming you will make an API call to reject the event in the future
-      // const response = await event_update_status(id, 'Rejected');
-
-      // For now, just update the state locally
       setPendingReports(
         pendingReports.map((event) =>
           event.id === id ? { ...event, status: "Rejected" } : event
@@ -99,42 +89,38 @@ const ProposalStatus = () => {
   };
 
   const deleteEvent = async (id) => {
-    const token = localStorage.getItem("access_token");
     try {
-      const response = await event_delete(id);
-      setPendingReports(pendingReports.filter((event) => event.id !== id)); // Update state
+      await event_delete(id);
+      setPendingReports(pendingReports.filter((event) => event.id !== id));
       toast.success("Event deleted successfully!");
     } catch (error) {
       console.error("Error deleting event:", error);
       toast.error("Failed to delete event. Please try again.");
     }
   };
+
   const editReport = (reportId) => {
-    console.log("Edit Event Proposal", reportId);
     navigate(`/editproposal/${reportId}`);
   };
 
+  // Define action buttons based on status
   const actionBodyTemplate = (rowData) => {
     return (
       <React.Fragment>
-        <button className="btn btn-link" onClick={() => viewReport(rowData.id)}>
-          <FontAwesomeIcon icon={faEye} />
-        </button>
         <button
           className="btn btn-link"
-          onClick={() => downloadReport(rowData.id)}
+          onClick={() => viewReport(rowData.id)}
+          title="View"
         >
-          <FontAwesomeIcon icon={faDownload} />
+          <FontAwesomeIcon icon={faEye} />
         </button>
-        <button className="btn btn-link" onClick={() => editReport(rowData.id)}>
-          <FontAwesomeIcon icon={faEdit} />
-        </button>
+
         {rowData.status === "Pending" && (
           <>
             <button
               className="btn btn-link text-success"
               onClick={() => approveEvent(rowData.id)}
-              style={{ border: "1px solid red" }}
+              title="Approve"
             >
               <FontAwesomeIcon icon={faCheck} />
             </button>
@@ -142,27 +128,73 @@ const ProposalStatus = () => {
             <button
               className="btn btn-link text-danger"
               onClick={() => rejectEvent(rowData.id)}
+              title="Reject"
             >
               <FontAwesomeIcon icon={faTimes} />
             </button>
+
+            <button
+              className="btn btn-link"
+              onClick={() => editReport(rowData.id)}
+              title="Edit"
+            >
+              <FontAwesomeIcon icon={faEdit} />
+            </button>
           </>
         )}
+
+        {rowData.status === "Rejected" && (
+          <button
+            className="btn btn-link"
+            onClick={() => editReport(rowData.id)}
+            title="Edit"
+          >
+            <FontAwesomeIcon icon={faEdit} />
+          </button>
+        )}
+
+        {rowData.status === "Approved" && (
+          <>
+            <button
+              className="btn btn-link"
+              onClick={() => downloadReport(rowData.id)}
+              title="Download"
+            >
+              <FontAwesomeIcon icon={faDownload} />
+            </button>
+
+            <button
+              className="btn btn-link"
+              onClick={() => editReport(rowData.id)}
+              title="Edit"
+            >
+              <FontAwesomeIcon icon={faEdit} />
+            </button>
+          </>
+        )}
+
         {rowData.status !== "Approved" && (
           <button
             className="btn btn-link text-danger"
             onClick={() => deleteEvent(rowData.id)}
+            title="Delete"
           >
             <FontAwesomeIcon icon={faTrash} />
           </button>
         )}
-        <button className="btn btn-link" onClick={() => navigate("/addreport")}>
+
+        <button
+          className="btn btn-link"
+          onClick={() => navigate("/addreport")}
+          title="Add New Report"
+        >
           <FontAwesomeIcon icon={faPlus} />
         </button>
       </React.Fragment>
     );
   };
 
-return (
+  return (
     <div className="container-fluid">
       <div className="row">
         <div className="col-md-2 p-0">
@@ -220,6 +252,7 @@ return (
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

@@ -18,7 +18,20 @@ const EventProposal = () => {
   const [Objective, setObjective] = useState("");
   const [Outcome, setOutcome] = useState("");
   const [Profile, setProfile] = useState("");
+  const [isApproved, setIsApproved] = useState(false);
 
+  // Function to handle approval (this can be tied to your approval logic)
+  const handleApproval = () => {
+    setIsApproved(true); // Set to true when the form is approved
+  };
+
+  // State to track the selected option from the dropdown
+  const [selectedOption, setSelectedOption] = useState("");
+
+  // Function to handle dropdown change
+  const handleSelectChange = (e) => {
+    setSelectedOption(e.target.value);
+  };
   // Handle number of activities increase and decrease
   const handleActivitiesChange = (action) => {
     if (action === "increase") {
@@ -155,7 +168,7 @@ const EventProposal = () => {
                     </td>
                   </tr>
                   <tr>
-                    <td>Event Type (Focus)</td>
+                    <td>Event Type</td>
                     <td>
                       <select className="form-control">
                         <option>Select Event Type</option>
@@ -252,85 +265,77 @@ const EventProposal = () => {
           </StepperPanel>
           <StepperPanel header=" ">
             <div className="table-container">
-              {/* Income Table */}
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th colSpan="5" className="table-heading">
-                      DETAILS OF INCOME
-                    </th>
-                  </tr>
-                  <tr>
-                    <th>Sl No</th>
-                    <th>Particulars</th>
-                    <th>No. Participants</th>
-                    <th>Rate</th>
-                    <th>Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>Participation Fee [Fest]</td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>Sponsorship [Fest]</td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>Participation Fee [Conference]</td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>4</td>
-                    <td>Sponsorship [Conference]</td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colSpan="4" className="total-label">
-                      Total Income
-                    </td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <div>
+                {/* Dropdown to select Fest or Conference */}
+                <div>
+                  <label>Select Event Type:</label>
+                  <select value={selectedOption} onChange={handleSelectChange}>
+                    <option value="">Select an option</option>
+                    <option value="fest">Fest</option>
+                    <option value="conference">Conference</option>
+                  </select>
+                </div>
+
+                {/* Conditionally render the table based on the selected option */}
+                {selectedOption && (
+                  <div>
+                    {/* Income Table */}
+                    <table className="table">
+                      <thead>
+                        <tr>
+                          <th colSpan="5" className="table-heading">
+                            DETAILS OF INCOME (
+                            {selectedOption === "fest" ? "Fest" : "Conference"})
+                          </th>
+                        </tr>
+                        <tr>
+                          <th>Sl No</th>
+                          <th>Particulars</th>
+                          <th>No. Participants</th>
+                          <th>Rate</th>
+                          <th>Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>1</td>
+                          <td>Participation Fee [{selectedOption}]</td>
+                          <td>
+                            <input type="text" className="input-field" />
+                          </td>
+                          <td>
+                            <input type="text" className="input-field" />
+                          </td>
+                          <td>
+                            <input type="text" className="input-field" />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>2</td>
+                          <td>Sponsorship [{selectedOption}]</td>
+                          <td>
+                            <input type="text" className="input-field" />
+                          </td>
+                          <td>
+                            <input type="text" className="input-field" />
+                          </td>
+                          <td>
+                            <input type="text" className="input-field" />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colSpan="4" className="total-label">
+                            Total Income
+                          </td>
+                          <td>
+                            <input type="text" className="input-field" />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
 
               {/* Expenses Table */}
               <table className="table">
@@ -394,7 +399,7 @@ const EventProposal = () => {
                     Total Expenditure
                   </th>
                 </tr>
-                <tr>
+                {/* <tr>
                   <td>
                     <label>Signature of HOD</label>
                     <input type="text" className="input-field" />
@@ -408,24 +413,37 @@ const EventProposal = () => {
                   <td colSpan="2" className="office-use-label">
                     Office use only
                   </td>
-                </tr>
-                <tr>
-                  <td colSpan="2">
-                    <label>Remarks</label>
-                    <textarea className="textarea-field"></textarea>
-                  </td>
-                </tr>
-                <tr>
-                  <td colSpan="2">
-                    <label>Approved By:</label>
-                    <input type="text" className="input-field" />
-                  </td>
-                </tr>
+                </tr> */}
+                <div className="mb-3">
+                  <label className="form-label">REMARKS</label>
+                  <Editor
+                    value={Profile}
+                    onTextChange={(e) => setProfile(e.htmlValue)}
+                    style={{ height: "150px" }}
+                    placeholder="Enter your Remarks here..."
+                  />
+                </div>
+                {/* <tr>
+          <td colSpan="2">
+            <label>Approved By:</label>
+            <input
+              type="text"
+              className="input-field"
+              disabled={!isApproved} // Input is disabled until approved
+            />
+          </td>
+        </tr>
+        <tr>
+          <td colSpan="2">
+            {/* Example approval button, replace with actual logic */}
+            {/* <button onClick={handleApproval}>Approve</button>
+          </td>
+        </tr> */}
               </tbody>
-            </table>
+            </table> 
 
             {/* Signature Section */}
-            <div className="signature-section">
+            {/* <div className="signature-section">
               <div className="signature-box">
                 <p>IQAC Coordinator</p>
                 <p>Sign</p>
@@ -434,7 +452,7 @@ const EventProposal = () => {
                 <p>Head of Department</p>
                 <p>Sign</p>
               </div>
-            </div>
+            </div> */}
             {/* Add more steps as needed */}
             <div className="flex pt-4 justify-content-between">
               <Button
@@ -445,7 +463,6 @@ const EventProposal = () => {
               />
               <Button
                 label="Submit"
-                
                 iconPos="right"
                 onClick={() => stepperRef.current.nextCallback()}
               />

@@ -335,7 +335,7 @@ function RegisterEvent() {
 
     try {
       const response = await register_event(requestData);
-      console.log(response);
+      console.log(response.data);
       const eventId = response.data.id; // Extract event ID from response
       console.log(eventId);
       setSubmitted(true);

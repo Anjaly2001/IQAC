@@ -477,6 +477,8 @@ export const fetchEventProposalsByDepartment = async (departmentId) => {
 };
 
 
+
+
 export const event_delete = async (eventId) => {
   try {
     const response = await axiosInstance.delete(`/department_and_events/event_delete/${eventId}/`);
@@ -485,3 +487,17 @@ export const event_delete = async (eventId) => {
     throw new Error("Error deleting role");
   }
 };
+
+
+export const department_list_by_user = async (userId) => {
+  try {
+    const response = await axiosInstance.get(
+      `department_and_events/department_list_by_user/${userId}/`
+    );
+    return response.data; // Ensure that response.data contains what you're expecting
+  } catch (error) {
+    console.error("Error fetching department list:", error);
+    throw error; // Ensure the calling function handles this error appropriately
+  }
+};
+

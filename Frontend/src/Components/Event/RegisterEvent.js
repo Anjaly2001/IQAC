@@ -13,7 +13,6 @@ import { Stepper } from "primereact/stepper";
 import { StepperPanel } from "primereact/stepperpanel";
 import { Button } from "primereact/button";
 
-
 import {
   campus_name_list,
   department_list_by_campus,
@@ -335,7 +334,7 @@ function RegisterEvent() {
 
     try {
       const response = await register_event(requestData);
-      console.log(response.data);
+      console.log(response);
       const eventId = response.data.id; // Extract event ID from response
       console.log(eventId);
       setSubmitted(true);

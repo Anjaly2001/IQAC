@@ -12,6 +12,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const EventProposal = () => {
+  const [campus, setCampus] = useState(""); // Holds the selected campus ID
+  const [campuses, setCampuses] = useState([]); // Holds the list of campuses
+  const [department, setDepartment] = useState(""); // Holds the selected department ID
+  const [departments, setDepartments] = useState([]); // Holds the list of departments
+  const [user, setUser] = useState("");
+  const [users, setUsers] = useState("");
   const [startDate, setStartDate] = useState(new Date()); // State for date and time
   const [endDate, setEndDate] = useState(new Date()); // State for date and time
   const [activities, handleActivitiesChange] = useState(1); // State for number of activities
@@ -31,6 +37,21 @@ const EventProposal = () => {
   ]);
   const [incomeErrors, setIncomeErrors] = useState([]); // Track errors for income rows
   const [expenseErrors, setExpenseErrors] = useState([]); // Track errors for expense rows
+
+  // State for dropdown selections
+  const [selectedCampus, setSelectedCampus] = useState("");
+  const [selectedDepartment, setSelectedDepartment] = useState("");
+  const [selectedUser, setSelectedUser] = useState("");
+
+  // Sample options for dropdowns (replace with your actual options)
+  const campusOptions = ["Campus 1", "Campus 2", "Campus 3"];
+  const departmentOptions = ["Department 1", "Department 2", "Department 3"];
+  const userOptions = ["User 1", "User 2", "User 3"];
+
+  // Handle dropdown changes
+  const handleCampusChange = (e) => setSelectedCampus(e.target.value);
+  const handleDepartmentChange = (e) => setSelectedDepartment(e.target.value);
+  const handleUserChange = (e) => setSelectedUser(e.target.value);
 
   // Handle input change for amount field with validation
   const handleInputChange = (index, field, value, tableType) => {
@@ -106,6 +127,84 @@ const EventProposal = () => {
 
               {/* Event Proposal Title */}
               <h2 className="event-proposal-title">EVENT PROPOSAL</h2>
+
+              {/* Select campus, department, and user in the same row */}
+              <form onSubmit={handleSubmit}>
+                <div className="row mb-3">
+
+                  {/* Select Campus */}
+                  <div className="col-md-4">
+                    <label htmlFor="campus" className="form-label">
+                      Campus {renderAsterisk()}
+                    </label>
+                    <select
+                      id="campus"
+                      className="form-select"
+                      value={campus}
+                      onChange={(e) => setCampus(e.target.value)}
+                    >
+                      <option value="" disabled>
+                        Select Campus
+                      </option>
+                      {campuses.map((campus) => (
+                        <option key={campus.id} value={campus.id}>
+                          {campus.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Select Department */}
+                  <div className="col-md-4">
+                    <label htmlFor="department" className="form-label">
+                      Department {renderAsterisk()}
+                    </label>
+                    <select
+                      id="department"
+                      className="form-select"
+                      value={department}
+                      onChange={(e) => setDepartment(e.target.value)}
+                      disabled={!campus}
+                    >
+                      <option value="" disabled>
+                        Select Department
+                      </option>
+                      {departments.map((dept) => (
+                        <option key={dept.id} value={dept.id}>
+                          {dept.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Select User */}
+                  <div className="col-md-4">
+                    <label htmlFor="user" className="form-label">
+                      User {renderAsterisk()}
+                    </label>
+                    <select
+                      id="user"
+                      className="form-select"
+                      value={user}
+                      onChange={(e) => setUser(e.target.value)}
+                      disabled={!department}
+                    >
+                      <option value="" disabled>
+                        Select User
+                      </option>
+                      {Array.isArray(users) && users.length > 0 ? (
+                        users.map((user) => (
+                          <option key={user.id} value={user.id}>
+                            {user.name}
+                          </option>
+                        ))
+                      ) : (
+                        <option disabled>No Users Available</option>
+                      )}
+                    </select>
+                  </div>
+                </div>
+              </form>
 
               {/* Table for Event Information */}
               <table className="event-info-table">

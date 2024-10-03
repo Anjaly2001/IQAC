@@ -34,6 +34,8 @@ const AddRole = () => {
   const [showAdditionalFields, setShowAdditionalFields] = useState(false);
 
   const [roles, setRoles] = useState([]); // Add state to store user roles
+  const [isRolesFetched, setIsRolesFetched] = useState(false); // New state to track when roles are fetched
+
 
   // Fetch campuses when the component is mounted
 
@@ -127,6 +129,7 @@ const AddRole = () => {
         setRoles([]); // If no roles found, clear the roles state
         toast.error("No roles found for this user");
       }
+      setIsRolesFetched(true); // Set the flag to indicate roles have been fetched
     } catch (error) {
       console.error("Failed to fetch user roles", error);
       toast.error("Failed to fetch user roles");
@@ -279,76 +282,68 @@ const handleDeleteRole = async (roleId) => {
           {selectedUser && roles.length === 0 && <p>No roles assigned to this user.</p>}
         </div>
 
-          <div className="mt-3 mb-5">
-            {!showAdditionalFields && (
-              <button className="btn btn-success" onClick={handleAddRoleClick}>
-                <FontAwesomeIcon icon={faPlus} /> Add Role
-              </button>
-            )}
+        <div className="mt-3 mb-5">
+            <button
+              className="btn btn-success"
+              onClick={handleAddRoleClick}
+              disabled={!isRolesFetched} // Disable button until roles are fetched
+            >
+              <FontAwesomeIcon icon={faPlus} /> Add Role
+            </button>
           </div>
-
           {showAdditionalFields && (
-            <>
-            <span className="m-5 p-5 fw-bold fs-5">New Role</span>
-
-            
-              <div className="row mt-4">
-                {/* Bottom Dropdown for Assigning New Role (Separate from Top Dropdowns) */}
-                <div className="col-md-4">
-                  <label htmlFor="role" className="form-label mx-2">
-                    Role
-                  </label>
-                  <div className="col-md-4"></div>
-                  <Dropdown
-                    id="role"
-                    value={selectedRole}
-                    options={[
-                      { label: "Department HOD", value: "departmentHOD" },
-                      { label: "IQAC User", value: "IQACuser" },
-                      { label: "Staffs", value: "Staffs" },
-  
-                      // Add more roles as needed
-                    ]} // Sample roles
-                    onChange={(e) => setSelectedRole(e.value)}
-                    placeholder="Select Role"
-                  />
-                </div>
-                <div className="col-md-4">
-                  <label htmlFor="newCampus" className="form-label mx-2">
-                    New Campus
-                  </label>
-                  <div className="col-md-4"></div>
-                  <Dropdown
-                    id="newCampus"
-                    value={selectedNewCampus}
-                    options={campuses}
-                    onChange={(e) => setSelectedNewCampus(e.value)}
-                    placeholder="Select New Campus"
-                  />
-                </div>
-                <div className="col-md-4">
-                  <label htmlFor="newDepartment" className="form-label mx-2">
-                    New Department
-                  </label>
-                  <div className="col-md-4"></div>
-                  <Dropdown
-                    id="newDepartment"
-                    value={selectedNewDepartment}
-                    options={newDepartments}
-                    onChange={(e) => setSelectedNewDepartment(e.value)}
-                    placeholder="Select New Department"
-                  />
-                </div>
+            <div className="row">
+              <div className="col-md-3">
+                <label htmlFor="newCampus" className="form-label mx-2">
+                  New Campus
+                </label>
+                <Dropdown
+                  id="newCampus"
+                  value={selectedNewCampus}
+                  options={campuses}
+                  onChange={(e) => setSelectedNewCampus(e.value)}
+                  placeholder="Select Campus"
+                />
               </div>
-
-              <div className="row mt-6">
-                <div className="col-md-12 text-start">
-                  <button className="btn btn-primary" onClick={handleSave}>
-                    <FontAwesomeIcon icon={faSave} /> Save
-                  </button>
-                </div>
+              <div className="col-md-3">
+                <label htmlFor="newDepartment" className="form-label mx-2">
+                  New Department
+                </label>
+                <Dropdown
+                  id="newDepartment"
+                  value={selectedNewDepartment}
+                  options={newDepartments}
+                  onChange={(e) => setSelectedNewDepartment(e.value)}
+                  placeholder="Select Department"
+                  disabled={!selectedNewCampus}
+                />
               </div>
-            </>
+              <div className="col-md-3">
+                <label htmlFor="role" className="form-label mx-2">
+                  New Role
+                </label>
+                <Dropdown
+                  id="role"
+                  value={selectedRole}
+                  options={[
+                    { label: "Admin", value: "admin" },
+                    { label: "User", value: "user" },
+                    { label: "Moderator", value: "moderator" },
+                  ]}
+                  onChange={(e) => setSelectedRole(e.value)}
+                  placeholder="Select Role"
+                />
+              </div>
+              <div className="col-md-3 d-flex align-items-end">
+                <button
+                  className="btn btn-primary"
+                  onClick={handleSave}
+                  disabled={!selectedRole || !selectedNewCampus || !selectedNewDepartment}
+                >
+                  <FontAwesomeIcon icon={faSave} /> Save
+                </button>
+              </div>
+            </div>
           )}
         </div>
       </div>

@@ -2,72 +2,57 @@ import React, { useEffect, useState } from 'react';
 import Sidebar from '../../Sidebar';
 
 const UserProfile = ({ role }) => {
-  const [user, setUser] = useState({
-    name: '',
-    empId: '',
-    email: '',
-    phone: '',
-    campus: '',
-    department: '',
-    eventsConducted: 0,
-    events: []
-  });
-  
+  // State to hold user data fetched from an API
+  const [user, setUser] = useState(null);
+
   // Additional state to handle dropdown selections
   const [selectedUser, setSelectedUser] = useState('');
   const [selectedDepartment, setSelectedDepartment] = useState('');
   const [selectedCampus, setSelectedCampus] = useState('');
 
   useEffect(() => {
-    // Mocking user data fetch
-    const loggedInUser = {
-      name: 'Alwin Joseph',
-      empId: 'CUL123',
-      email: 'alwin@christuniversity.in',
-      phone: '+91 9876543210',
-      campus: 'Pune Lavasa Campus',
-      department: 'Computer Science',
-      eventsConducted: 5,
-      events: [
-        { title: 'Tech Fest 2024', date: '2024-05-10' },
-        { title: 'AI Workshop', date: '2024-04-12' },
-        { title: 'Cyber Security Seminar', date: '2024-03-15' },
-        { title: 'Data Science Bootcamp', date: '2024-02-20' },
-        { title: 'Hackathon 2024', date: '2024-01-25' }
-      ]
+    // Simulate an API call to fetch the logged-in user's data
+    // Replace this with actual API logic to get user data
+    const fetchUserData = async () => {
+      try {
+        // Example API call to get user data (replace with your actual API endpoint)
+        const response = await fetch('/api/user');
+        const data = await response.json();
+        setUser(data);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
     };
-    setUser(loggedInUser);
+
+    fetchUserData();
   }, []);
 
   const viewEvents = () => {
-    alert(
-      user.events
-        .map((event, index) => `${index + 1}. ${event.title} on ${event.date}`)
-        .join('\n')
-    );
+    if (user && user.events) {
+      alert(
+        user.events
+          .map((event, index) => `${index + 1}. ${event.title} on ${event.date}`)
+          .join('\n')
+      );
+    }
   };
 
   const renderRoleBasedView = () => {
-    switch (role) {
-      case 'HOD':
+    if (!user) return <p>Loading user data...</p>;
+
+    switch (user.role) {
+      case 'Admin':
+      case 'UniversityViewer':
         return (
           <>
             <div className="mb-3">
-              <label>Select User</label>
-              <select className="form-control" onChange={e => setSelectedUser(e.target.value)}>
-                <option value="">Select User</option>
-                <option value="User1">User 1</option>
-                <option value="User2">User 2</option>
+              <label>Select Campus</label>
+              <select className="form-control" onChange={e => setSelectedCampus(e.target.value)}>
+                <option value="">Select Campus</option>
+                <option value="Pune">Pune Lavasa</option>
+                <option value="Bangalore">Bangalore</option>
               </select>
             </div>
-            <button className="btn btn-primary" onClick={viewEvents}>View</button>
-          </>
-        );
-      case 'IQAC':
-      case 'CampusViewer':
-      case 'CampusAdmin':
-        return (
-          <>
             <div className="mb-3">
               <label>Select Department</label>
               <select className="form-control" onChange={e => setSelectedDepartment(e.target.value)}>
@@ -87,18 +72,25 @@ const UserProfile = ({ role }) => {
             <button className="btn btn-primary" onClick={viewEvents}>View</button>
           </>
         );
-      case 'Admin':
-      case 'UniversityViewer':
+      case 'HOD':
         return (
           <>
             <div className="mb-3">
-              <label>Select Campus</label>
-              <select className="form-control" onChange={e => setSelectedCampus(e.target.value)}>
-                <option value="">Select Campus</option>
-                <option value="Pune">Pune Lavasa</option>
-                <option value="Bangalore">Bangalore</option>
+              <label>Select User</label>
+              <select className="form-control" onChange={e => setSelectedUser(e.target.value)}>
+                <option value="">Select User</option>
+                <option value="User1">User 1</option>
+                <option value="User2">User 2</option>
               </select>
             </div>
+            <button className="btn btn-primary" onClick={viewEvents}>View</button>
+          </>
+        );
+      case 'IQAC':
+      case 'CampusViewer':
+      case 'CampusAdmin':
+        return (
+          <>
             <div className="mb-3">
               <label>Select Department</label>
               <select className="form-control" onChange={e => setSelectedDepartment(e.target.value)}>

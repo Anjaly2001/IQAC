@@ -34,19 +34,21 @@ const EventProposal = () => {
 
   // Handle input change for amount field with validation
   const handleInputChange = (index, field, value, tableType) => {
-    let updatedRows = tableType === 'income' ? [...incomeRows] : [...expenseRows];
-    let updatedErrors = tableType === 'income' ? [...incomeErrors] : [...expenseErrors];
+    let updatedRows =
+      tableType === "income" ? [...incomeRows] : [...expenseRows];
+    let updatedErrors =
+      tableType === "income" ? [...incomeErrors] : [...expenseErrors];
 
     updatedRows[index][field] = value;
 
     // Validation for amount field (should only accept numbers)
-    if (field === 'amount' && isNaN(value)) {
-      updatedErrors[index] = 'Please enter a valid number';
+    if (field === "amount" && isNaN(value)) {
+      updatedErrors[index] = "Please enter a valid number";
     } else {
-      updatedErrors[index] = '';
+      updatedErrors[index] = "";
     }
 
-    if (tableType === 'income') {
+    if (tableType === "income") {
       setIncomeRows(updatedRows);
       setIncomeErrors(updatedErrors);
     } else {
@@ -57,24 +59,26 @@ const EventProposal = () => {
 
   // Handle adding a new row for income or expenses
   const handleAddRow = (tableType) => {
-    if (tableType === 'income') {
-      setIncomeRows([...incomeRows, { particulars: '', amount: '' }]);
-      setIncomeErrors([...incomeErrors, '']);
+    if (tableType === "income") {
+      setIncomeRows([...incomeRows, { particulars: "", amount: "" }]);
+      setIncomeErrors([...incomeErrors, ""]);
     } else {
-      setExpenseRows([...expenseRows, { particulars: '', amount: '' }]);
-      setExpenseErrors([...expenseErrors, '']);
+      setExpenseRows([...expenseRows, { particulars: "", amount: "" }]);
+      setExpenseErrors([...expenseErrors, ""]);
     }
   };
 
   // Handle deleting a row
   const handleDeleteRow = (index, tableType) => {
-    let updatedRows = tableType === 'income' ? [...incomeRows] : [...expenseRows];
-    let updatedErrors = tableType === 'income' ? [...incomeErrors] : [...expenseErrors];
+    let updatedRows =
+      tableType === "income" ? [...incomeRows] : [...expenseRows];
+    let updatedErrors =
+      tableType === "income" ? [...incomeErrors] : [...expenseErrors];
 
     updatedRows.splice(index, 1);
     updatedErrors.splice(index, 1);
 
-    if (tableType === 'income') {
+    if (tableType === "income") {
       setIncomeRows(updatedRows);
       setIncomeErrors(updatedErrors);
     } else {
@@ -308,116 +312,198 @@ const EventProposal = () => {
           <StepperPanel header=" ">
             <div className="table-container">
               <div>
-  {/* Income Table */}
-  <table className="table">
-        <thead>
-          <tr>
-            <th colSpan="3" className="table-heading">DETAILS OF INCOME</th>
-          </tr>
-          <tr>
-            <th>Sl No</th>
-            <th>Particulars</th>
-            <th>Amount</th>
-            <th></th> {/* No label for actions column */}
-          </tr>
-        </thead>
-        <tbody>
-          {incomeRows.map((row, index) => (
-            <tr key={index}>
-              <td>{index + 1}</td>
-              <td>
-                <input
-                  type="text"
-                  value={row.particulars}
-                  onChange={(e) => handleInputChange(index, 'particulars', e.target.value, 'income')}
-                  className="input-field"
-                />
-              </td>
-              <td>
-                <input
-                  type="text"
-                  value={row.amount}
-                  onChange={(e) => handleInputChange(index, 'amount', e.target.value, 'income')}
-                  className="input-field"
-                />
+                {/* Income Table */}
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th colSpan="3" className="table-heading">
+                        DETAILS OF INCOME
+                      </th>
+                    </tr>
+                    <tr>
+                      <th>Sl No</th>
+                      <th>Particulars</th>
+                      <th>Amount</th>
+                      <th></th> {/* No label for actions column */}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {incomeRows.map((row, index) => (
+                      <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td>
+                          <input
+                            type="text"
+                            value={row.particulars}
+                            onChange={(e) =>
+                              handleInputChange(
+                                index,
+                                "particulars",
+                                e.target.value,
+                                "income"
+                              )
+                            }
+                            className="input-field"
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="text"
+                            value={row.amount}
+                            onChange={(e) =>
+                              handleInputChange(
+                                index,
+                                "amount",
+                                e.target.value,
+                                "income"
+                              )
+                            }
+                            className="input-field"
+                          />
 
-                {/* Error message for amount validation */}
-                {incomeErrors[index] && (
-                  <div className="error-message" style={{ color: 'red' }}>
-                    {incomeErrors[index]}
-                  </div>
-                )}
-              </td>              
-              <td>
-                <FontAwesomeIcon icon={faPlus} onClick={() => handleAddRow('income')} />
-                {incomeRows.length > 1 && (
-                  <FontAwesomeIcon
-                    icon={faTrash}
-                    onClick={() => handleDeleteRow(index, 'income')}
-                    style={{ marginLeft: '10px' }}
-                  />
-                )}
-              </td>
-              
-            </tr>
-          ))}
-        </tbody>
+                          {/* Error message for amount validation */}
+                          {incomeErrors[index] && (
+                            <div
+                              className="error-message"
+                              style={{ color: "red" }}
+                            >
+                              {incomeErrors[index]}
+                            </div>
+                          )}
+                        </td>
+                        <td>
+                          <FontAwesomeIcon
+                            icon={faPlus}
+                            onClick={() => handleAddRow("income")}
+                          />
+                          {incomeRows.length > 1 && (
+                            <FontAwesomeIcon
+                              icon={faTrash}
+                              onClick={() => handleDeleteRow(index, "income")}
+                              style={{ marginLeft: "10px" }}
+                            />
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+
+                    {/* Total Income Row */}
+                    <tr>
+                      <td colSpan="2" className="text-right">
+                        <strong>Total Income</strong>
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          value={incomeRows.reduce(
+                            (total, row) =>
+                              total + (parseFloat(row.amount) || 0),
+                            0
+                          )}
+                          readOnly
+                          className="input-field"
+                        />
+                      </td>
+                      <td></td> {/* Empty cell for the actions column */}
+                    </tr>
+                  </tbody>
                 </table>
               </div>
 
+              {/* Expenses Table */}
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th colSpan="3" className="table-heading">
+                      DETAILS OF EXPENSES
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>Sl No</th>
+                    <th>Particulars</th>
+                    <th>Amount</th>
+                    <th></th> {/* No label for actions column */}
+                  </tr>
+                </thead>
+                <tbody>
+                  {expenseRows.map((row, index) => (
+                    <tr key={index}>
+                      <td>{index + 1}</td>
+                      <td>
+                        <input
+                          type="text"
+                          value={row.particulars}
+                          onChange={(e) =>
+                            handleInputChange(
+                              index,
+                              "particulars",
+                              e.target.value,
+                              "expense"
+                            )
+                          }
+                          className="input-field"
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          value={row.amount}
+                          onChange={(e) =>
+                            handleInputChange(
+                              index,
+                              "amount",
+                              e.target.value,
+                              "expense"
+                            )
+                          }
+                          className="input-field"
+                        />
 
-      {/* Expenses Table */}
-      <table className="table">
-        <thead>
-          <tr>
-            <th colSpan="3" className="table-heading">DETAILS OF EXPENSES</th>
-          </tr>
-          <tr>
-            <th>Sl No</th>
-            <th>Particulars</th>
-            <th>Amount</th>
-            <th></th> {/* No label for actions column */}
-          </tr>
-        </thead>
-        <tbody>
-          {expenseRows.map((row, index) => (
-            <tr key={index}>
-              <td>{index + 1}</td>
-              <td>
-                <input
-                  type="text"
-                  value={row.particulars}
-                  onChange={(e) => handleInputChange(index, 'particulars', e.target.value, 'expense')}
-                  className="input-field"
-                />
-              </td>
-              <td>
-                <input
-                  type="text"
-                  value={row.amount}
-                  onChange={(e) => handleInputChange(index, 'amount', e.target.value, 'expense')}
-                  className="input-field"
-                />
-                {/* Error message for amount validation */}
-                {expenseErrors[index] && (
-                  <div className="error-message" style={{ color: 'red' }}>
-                    {expenseErrors[index]}
-                  </div>
-                )}
-              </td>
-              <td>
-                <FontAwesomeIcon icon={faPlus} onClick={() => handleAddRow('expense')} />
-                {expenseRows.length > 1 && (
-                  <FontAwesomeIcon
-                    icon={faTrash}
-                    onClick={() => handleDeleteRow(index, 'expense')}
-                    style={{ marginLeft: '10px' }}
-                  />
-                )}
-              </td>
-            </tr>           
-          ))}
-        </tbody>
+                        {/* Error message for amount validation */}
+                        {expenseErrors[index] && (
+                          <div
+                            className="error-message"
+                            style={{ color: "red" }}
+                          >
+                            {expenseErrors[index]}
+                          </div>
+                        )}
+                      </td>
+                      <td>
+                        <FontAwesomeIcon
+                          icon={faPlus}
+                          onClick={() => handleAddRow("expense")}
+                        />
+                        {expenseRows.length > 1 && (
+                          <FontAwesomeIcon
+                            icon={faTrash}
+                            onClick={() => handleDeleteRow(index, "expense")}
+                            style={{ marginLeft: "10px" }}
+                          />
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+
+                  {/* Total Expenses Row */}
+                  <tr>
+                    <td colSpan="2" className="text-right">
+                      <strong>Total Expenses</strong>
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        value={expenseRows.reduce(
+                          (total, row) => total + (parseFloat(row.amount) || 0),
+                          0
+                        )}
+                        readOnly
+                        className="input-field"
+                      />
+                    </td>
+                    <td></td> {/* Empty cell for the actions column */}
+                  </tr>
+                </tbody>
               </table>
             </div>
 

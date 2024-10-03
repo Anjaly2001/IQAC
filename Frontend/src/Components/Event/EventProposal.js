@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import "./EventProposal.css"; // External CSS file for styling
 import Sidebar from "../../Sidebar";
 import DatePicker from "react-datepicker";
@@ -8,6 +8,8 @@ import { Editor } from "primereact/editor";
 import { Stepper } from "primereact/stepper";
 import { StepperPanel } from "primereact/stepperpanel";
 import { Button } from "primereact/button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const EventProposal = () => {
   const [startDate, setStartDate] = useState(new Date()); // State for date and time
@@ -20,27 +22,46 @@ const EventProposal = () => {
   const [Outcome, setOutcome] = useState("");
   const [Profile, setProfile] = useState("");
   const [Remarks, setRemarks] = useState("");
-  // const [isApproved, setIsApproved] = useState(false);
+  const [incomeRows, setIncomeRows] = useState([
+    { particulars: "", amount: "" },
+  ]);
+  const [expenseRows, setExpenseRows] = useState([
+    { particulars: "", amount: "" },
+  ]);
 
   const navigate = useNavigate();
 
-  const handleSubmit = () => {
-    stepperRef.current.nextCallback(); // Call nextCallback
-    navigate('/proposalstatus'); // Navigate to the desired page
+  // Handle adding a new row for income
+  const handleAddIncomeRow = () => {
+    setIncomeRows([...incomeRows, { particulars: "", amount: "" }]);
+  };
+  // Handle adding a new row for expenses
+  const handleAddExpenseRow = () => {
+    setExpenseRows([...expenseRows, { particulars: "", amount: "" }]);
   };
 
-  // // Function to handle approval (this can be tied to your approval logic)
-  // const handleApproval = () => {
-  //   setIsApproved(true); // Set to true when the form is approved
-  // };
+  // Handle deleting a row
+  const handleDeleteRow = (rows, setRows, index) => {
+    const newRows = [...rows];
+    newRows.splice(index, 1);
+    setRows(newRows);
+  };
+  // Handle input change
+  const handleInputChange = (rows, setRows, index, field, value) => {
+    const newRows = [...rows];
+    if (field === "amount" && isNaN(value)) return; // Prevent letters in the amount field
+    newRows[index][field] = value;
+    setRows(newRows);
+  };
+
+  const handleSubmit = () => {
+    stepperRef.current.nextCallback(); // Call nextCallback
+    navigate("/proposalstatus"); // Navigate to the desired page
+  };
 
   // State to track the selected option from the dropdown
   const [selectedOption, setSelectedOption] = useState("");
 
-  // Function to handle dropdown change
-  const handleSelectChange = (e) => {
-    setSelectedOption(e.target.value);
-  };
   // Handle number of activities increase and decrease
   const handleActivitiesChange = (action) => {
     if (action === "increase") {
@@ -275,75 +296,98 @@ const EventProposal = () => {
           <StepperPanel header=" ">
             <div className="table-container">
               <div>
-                {/* Dropdown to select Fest or Conference */}
-                <div>
-                  <label>Select Event Type:</label>
-                  <select value={selectedOption} onChange={handleSelectChange}>
-                    <option value="">Select an option</option>
-                    <option value="fest">Fest</option>
-                    <option value="conference">Conference</option>
-                  </select>
-                </div>
-
-                {/* Conditionally render the table based on the selected option */}
-                {selectedOption && (
-                  <div>
-                    {/* Income Table */}
-                    <table className="table">
-                      <thead>
-                        <tr>
-                          <th colSpan="5" className="table-heading">
-                            DETAILS OF INCOME (
-                            {selectedOption === "fest" ? "Fest" : "Conference"})
-                          </th>
-                        </tr>
-                        <tr>
-                          <th>Sl No</th>
-                          <th>Particulars</th>
-                          <th>No. Participants</th>
-                          <th>Rate</th>
-                          <th>Amount</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>1</td>
-                          <td>Participation Fee [{selectedOption}]</td>
-                          <td>
-                            <input type="text" className="input-field" />
-                          </td>
-                          <td>
-                            <input type="text" className="input-field" />
-                          </td>
-                          <td>
-                            <input type="text" className="input-field" />
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>2</td>
-                          <td>Sponsorship [{selectedOption}]</td>
-                          <td>
-                            <input type="text" className="input-field" />
-                          </td>
-                          <td>
-                            <input type="text" className="input-field" />
-                          </td>
-                          <td>
-                            <input type="text" className="input-field" />
-                          </td>
-                        </tr>
-                        <tr>
-                          <td colSpan="4" className="total-label">
-                            Total Income
-                          </td>
-                          <td>
-                            <input type="text" className="input-field" />
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                )}
+                {/* Income Table */}
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th colSpan="3" className="table-heading">
+                        DETAILS OF INCOME
+                      </th>
+                    </tr>
+                    <tr>
+                      <th>Sl No</th>
+                      <th>Particulars</th>
+                      <th>Amount</th>
+                      <th>
+                        <FontAwesomeIcon
+                          icon={faPlus}
+                          onClick={handleAddIncomeRow}
+                          style={{ cursor: "pointer" }}
+                        />
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {incomeRows.map((row, index) => (
+                      <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td>
+                          <input
+                            type="text"
+                            value={row.particulars}
+                            onChange={(e) =>
+                              handleInputChange(
+                                incomeRows,
+                                setIncomeRows,
+                                index,
+                                "particulars",
+                                e.target.value
+                              )
+                            }
+                            className="input-field"
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="text"
+                            value={row.amount}
+                            onChange={(e) =>
+                              handleInputChange(
+                                incomeRows,
+                                setIncomeRows,
+                                index,
+                                "amount",
+                                e.target.value
+                              )
+                            }
+                            className="input-field"
+                          />
+                        </td>
+                        <td>
+                          {incomeRows.length > 1 && (
+                            <FontAwesomeIcon
+                              icon={faTrash}
+                              onClick={() =>
+                                handleDeleteRow(
+                                  incomeRows,
+                                  setIncomeRows,
+                                  index
+                                )
+                              }
+                              style={{ cursor: "pointer" }}
+                            />
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                    <tr>
+                      <td colSpan="2" className="total-label">
+                        Total Income
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          className="input-field"
+                          readOnly
+                          value={incomeRows.reduce(
+                            (acc, row) => acc + Number(row.amount || 0),
+                            0
+                          )}
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
 
               {/* Expenses Table */}
@@ -355,51 +399,75 @@ const EventProposal = () => {
                     </th>
                   </tr>
                   <tr>
-                    <th>Sl. No.</th>
+                    <th>Sl No</th>
                     <th>Particulars</th>
                     <th>Amount</th>
+                    <th>
+                      <FontAwesomeIcon
+                        icon={faPlus}
+                        onClick={handleAddExpenseRow}
+                        style={{ cursor: "pointer" }}
+                      />
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>4</td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                    <td>
-                      <input type="text" className="input-field" />
-                    </td>
-                  </tr>
+                  {expenseRows.map((row, index) => (
+                    <tr key={index}>
+                      <td>{index + 1}</td>
+                      <td>
+                        <input
+                          type="text"
+                          value={row.particulars}
+                          onChange={(e) =>
+                            handleInputChange(
+                              expenseRows,
+                              setExpenseRows,
+                              index,
+                              "particulars",
+                              e.target.value
+                            )
+                          }
+                          className="input-field"
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          value={row.amount}
+                          onChange={(e) =>
+                            handleInputChange(
+                              expenseRows,
+                              setExpenseRows,
+                              index,
+                              "amount",
+                              e.target.value
+                            )
+                          }
+                          className="input-field"
+                        />
+                      </td>
+                      <td>
+                        {expenseRows.length > 1 && (
+                          <FontAwesomeIcon
+                            icon={faTrash}
+                            onClick={() =>
+                              handleDeleteRow(
+                                expenseRows,
+                                setExpenseRows,
+                                index
+                              )
+                            }
+                            style={{ cursor: "pointer" }}
+                          />
+                        )}
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
+
             {/* Expenditure Table */}
             <table className="table">
               <tbody>
@@ -408,21 +476,6 @@ const EventProposal = () => {
                     Total Expenditure
                   </th>
                 </tr>
-                {/* <tr>
-                  <td>
-                    <label>Signature of HOD</label>
-                    <input type="text" className="input-field" />
-                  </td>
-                  <td>
-                    <label>Finance Office</label>
-                    <input type="text" className="input-field" />
-                  </td>
-                </tr>
-                <tr>
-                  <td colSpan="2" className="office-use-label">
-                    Office use only
-                  </td>
-                </tr> */}
                 <div className="mb-3">
                   <label className="form-label">REMARKS</label>
                   <Editor
@@ -432,36 +485,9 @@ const EventProposal = () => {
                     placeholder="Enter your Remarks here..."
                   />
                 </div>
-                {/* <tr>
-          <td colSpan="2">
-            <label>Approved By:</label>
-            <input
-              type="text"
-              className="input-field"
-              disabled={!isApproved} // Input is disabled until approved
-            />
-          </td>
-        </tr>
-        <tr>
-          <td colSpan="2">
-            {/* Example approval button, replace with actual logic */}
-            {/* <button onClick={handleApproval}>Approve</button>
-          </td>
-        </tr> */}
               </tbody>
-            </table> 
+            </table>
 
-            {/* Signature Section */}
-            {/* <div className="signature-section">
-              <div className="signature-box">
-                <p>IQAC Coordinator</p>
-                <p>Sign</p>
-              </div>
-              <div className="signature-box">
-                <p>Head of Department</p>
-                <p>Sign</p>
-              </div>
-            </div> */}
             {/* Add more steps as needed */}
             <div className="flex pt-4 justify-content-between">
               <Button
@@ -470,11 +496,7 @@ const EventProposal = () => {
                 icon="pi pi-arrow-left"
                 onClick={() => stepperRef.current.prevCallback()}
               />
-              <Button
-                label="Submit"
-                iconPos="right"
-                onClick={handleSubmit}
-              />
+              <Button label="Submit" iconPos="right" onClick={handleSubmit} />
             </div>
           </StepperPanel>
         </Stepper>

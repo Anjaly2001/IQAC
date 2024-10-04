@@ -7,7 +7,9 @@ import Sidebar from '../../Sidebar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDownload } from '@fortawesome/free-solid-svg-icons';
 import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
+import { Column } from 'primereact/column'; 
+import './RegisterMultipleUser.css';
+
 
 // FileInput Component
 const FileInput = ({ onFileChange }) => {

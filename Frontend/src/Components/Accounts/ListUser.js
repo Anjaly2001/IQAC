@@ -8,6 +8,7 @@ import { Tag } from "primereact/tag";
 import { users_list, user_active, user_delete } from "../../axios/api";
 import { toast } from "react-toastify";
 import Sidebar from "../../Sidebar";
+import "./ListUser.css";
 
 const ListUser = () => {
   const navigate = useNavigate();

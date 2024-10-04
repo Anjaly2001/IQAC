@@ -122,15 +122,15 @@ const EventProposal = () => {
                 <img src={logo} alt="Organization Logo" className="logo" />
               </div> */}
 
-              {/* Blue line */}
-              <hr className="blue-line" />
+              {/* Blue line
+              <hr className="blue-line" /> */}
 
               {/* Event Proposal Title */}
-              <h2 className="event-proposal-title">EVENT PROPOSAL</h2>
+              <h2 className="event-proposal-title mt-6">EVENT PROPOSAL</h2>
 
               {/* Select campus, department, and user in the same row */}
               <form onSubmit={handleSubmit}>
-                <div className="row mb-3">
+                <div className="row mb-3 mt-6">
 
                   {/* Select Campus */}
                   <div className="col-md-4">
@@ -207,7 +207,7 @@ const EventProposal = () => {
               </form>
 
               {/* Table for Event Information */}
-              <table className="event-info-table">
+              <table className="event-info-table mt-6">
                 <thead>
                   <tr>
                     <th colSpan="2" className="table-header">

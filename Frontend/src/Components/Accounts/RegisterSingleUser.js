@@ -29,8 +29,6 @@ const RegisterSingleUser = () => {
   const [userPhoneNumberError, setUserPhoneNumberError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [userRole, setUserRole] = useState("");
-  const [userRoleError, setUserRoleError] = useState("");
-  const [fieldError, setFieldError] = useState("");
   const [userId, setUserId] = useState(null); // For local state
   const [email, setEmail] = useState("");
 

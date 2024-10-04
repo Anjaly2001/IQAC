@@ -184,6 +184,14 @@ Container for the form
 
 /* Adjustments for tablets */
 @media screen and (max-width: 768px) {
+  .logo-container {
+    text-align: center;
+  }
+
+  .logo {
+    max-width: 120px;
+  }
+
   .event-proposal-title {
     font-size: 20px;
   }
@@ -214,6 +222,10 @@ Container for the form
 @media screen and (max-width: 480px) {
   .event-proposal-container {
     padding: 10px;
+  }
+
+  .logo {
+    max-width: 100px;
   }
 
   .event-proposal-title {
